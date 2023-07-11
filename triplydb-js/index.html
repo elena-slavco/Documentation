@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../img/favicon.ico" rel="shortcut icon"/>
+<title>TriplyDB.js - Triply Documentation</title>
+<link href="../css/theme.css" rel="stylesheet"/>
+<link href="../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "TriplyDB.js";
+        var mkdocs_page_input_path = "triplydb-js/index.md";
+        var mkdocs_page_url = null;
+      </script>
+<script defer="" src="../js/jquery-3.6.0.min.js"></script>
+<!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href=".."> Triply Documentation
+        </a><div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../triply-db-getting-started/">Getting started</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyETL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../triply-etl/">Overview</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../triply-etl/getting-started/">Getting started</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../triply-etl/cli/">Command Line Interface (CLI)</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../triply-etl/changelog/">Changelog</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../triply-etl/maintenance/">Maintenance</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Yasgui</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../yasgui/">Introduction</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="..">Triply Documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href=".."></a> »</li>
+<li>TriplyDB.js</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<p><strong>TriplyDB.js</strong> is the official programming library for interacting with <a href="https://triply.cc/docs/triply-db-getting-started">TriplyDB</a>. TriplyDB.js allows you to automate operations that would otherwise be performed in the TriplyDB GUI.</p>
+<p>TriplyDB.js is implemented in <a href="https://www.typescriptlang.org">TypeScript</a>. TypeScript is a type-safe language that transpiles to <a href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a>. This allows you to use TriplyDB.js in web browsers as well as on servers (using <a href="https://nodejs.org">Node.js</a>). TriplyDB.js is open source and its source code is published on <a href="https://github.com/TriplyDB/TriplyDB-JS">GitHub</a>.</p>
+<p>Please contact <a href="mailto:support@triply.cc">support@triply.cc</a> for questions and suggestions.</p>
+<h1 id="overview">Overview</h1>
+<p>TriplyDB.js contains several classes, each with their own methods. The documentation for every method includes at least one code example. These code examples can be run by inserting them into the following overall script.</p>
+<p>Notice that <code>process.env.TOKEN</code> picks up an API token that is stored in the environment variable called <code>TOKEN</code>. Follow the steps on <a href="https://triply.cc/docs/triply-api/#creating-an-api-token">this page</a> to create a new API token in the TriplyDB GUI.</p>
+<pre><code class="language-ts">require('source-map-support/register')
+import App from '@triply/triplydb'
+const triply = App.get({ token: process.env.TOKEN })
+async function run() {
+  // This is where the code examples in this reference section should be placed.
+}
+run().catch(e =&gt; {
+  console.error(e)
+  process.exit(1)
+})
+process.on('uncaughtException', function (e) {
+  console.error('Uncaught exception', e)
+  process.exit(1)
+})
+process.on('unhandledRejection', (reason, p) =&gt; {
+  console.error('Unhandled Rejection at: Promise', p, 'reason:', reason)
+  process.exit(1)
+})
+</code></pre>
+<p>The following sections document the various TriplyDB.js classes. Each class comes with its own methods. Classes are related through methods that connect them. For example, calling the <code>getAccount</code> method on a <code>App</code> object returns an <code>Account</code> object.</p>
+<div class="mermaid">classDiagram
+  class Account {
+    asOrganization()
+    asUser()
+  }
+  Account --&gt; Dataset: getDataset
+  Account --&gt; Dataset: getDatasets
+  Account --&gt; Query: getQuery
+  Account --&gt; Query: getQueries
+  Account --&gt; Story: getStory
+  Account --&gt; Story: getStories
+
+  class App {
+    getInfo()
+  }
+  App --&gt; Account: getAccount
+  App --&gt; Account: getAccounts
+  App --&gt; Organization: getOrganization
+  App --&gt; User: getUser
+
+  class Asset {
+    getInfo()
+  }
+
+  class Dataset {
+    getInfo()
+  }
+  Dataset --&gt; Asset: getAsset
+  Dataset --&gt; Asset: getAssets
+  Dataset --&gt; Service: getService
+  Dataset --&gt; Service: getServices
+
+  class Organization {
+  }
+  Account &lt;|-- Organization
+  Organization --&gt; User: getMember
+  Organization --&gt; User: getMembers
+
+  class Query {
+    getInfo()
+  }
+
+  class Story {
+    getInfo()
+  }
+
+  class User {
+  }
+  Account &lt;|-- User
+  User --&gt; Organization: getOrganizations
+</div>
+<h1 id="app">App</h1>
+<p>Instances of the <code>App</code> class are specific application connections that are set-up with a TriplyDB server.</p>
+<p>Connections to TriplyDB servers can be created with and without setting an API token. When no API token is set, the connection can be used to perform read-only operations over public data. When an API token is set, the connection can be used to perform read/write operations over public/private data the API token grants access to.</p>
+<p>The following snippet creates an instance of the <code>App</code> object that establishes read-only access to the TriplyDB server at <a href="https://triplydb.com">https://triplydb.com</a>:</p>
+<pre><code class="language-ts">import App from '@triply/triplydb'
+const triply = App.get({ url: 'https://api.triplydb.com' })
+</code></pre>
+<p>Notice that the URL must point to the API of the TriplyDB server that the <code>App</code> object connects to. The API URL is typically created by adding the <code>api.</code> subdomain in front of the server's host name. For example, since [1] is the web-based GUI for the TriplyDB server, then [2] is the corresponding API for that instance.</p>
+<pre><code>[1] https://triplydb.com
+[2] https://api.triplydb.com
+</code></pre>
+<p>When an API token is specified, the operations that can be performed through the <code>App</code> object are determined by:</p>
+<ol>
+<li>The access level of the token: either “Read access”, “Write acces”, or “Management access”.</li>
+<li>The credentials of the user account for which the API token is created. When a user is a member of an organization, she has access to all its datasets, stories, and queries; a user always has access to her own datasets, stores and queries.</li>
+</ol>
+<p>The following token access levels are available:</p>
+<ol>
+<li>“Read access” allows:</li>
+<li>Read operations over data with access level “Public”.</li>
+<li>Read operations over data with access level “Internal”.</li>
+<li>Read operations over data with access level “Private” that belongs to the user who created the token.</li>
+<li>Read operations over data with access level “Private” that belongs to organizations to which the user who created the token is a member.</li>
+<li>“Write acces” allows:</li>
+<li>All operations allows by “Read acces”.</li>
+<li>Write operations over data that has access setting “Internal”.</li>
+<li>Write operations over data </li>
+<li>“Management access” allows the following operations to be performed: creating organizations, adding/removing members to/from organizations.</li>
+</ol>
+<p>The following creates a <code>App</code> object with an API token that is made available through an environment variable (see section <a href="https://triply.cc/docs/triplydb-js#setting-up-a-readwrite-project">Setting up a secure read/write project</a>):</p>
+<pre><code class="language-ts">import App from '@triply/triplydb'
+const triply = App.get({ token: process.env.TOKEN })
+</code></pre>
+<p>It is typical for one TriplyDB.js script to have exactly one <code>App</code> object.</p>
+<h2 id="appgetaccountname-string">App.getAccount(name?: string)</h2>
+<p>Returns the TriplyDB account with the given <code>name</code>.</p>
+<p>If <code>name</code> is omitted, the TriplyDB account that is associated with the current API token is returned.</p>
+<h3 id="examples">Examples</h3>
+<ul>
+<li>The following snippet returns the account called <code>'Triply'</code>.</li>
+</ul>
+<p><code>ts
+  const account = await triply.getAccount('Triply')</code></p>
+<ul>
+<li>The following snippet returns the current account. This is the account for which the currently configured API token was created.</li>
+</ul>
+<p><code>ts
+  const account = await triply.getAccount()</code></p>
+<h3 id="see-also">See also</h3>
+<p>This method returns an account object. See class <a href="#account">Account</a> for an overview of the methods that can be called on such objects.</p>
+<p>Class <a href="#account">Account</a> has two specializations: class <a href="#organization">Organization</a> and class <a href="#user">User</a>. In line with these class specializations, there are also two method specializations:</p>
+<ul>
+<li>
+<p>Method <a href="#appgetorganizationname-string"><code>App.getOrganization(name: string)</code></a> returns an organization object.</p>
+</li>
+<li>
+<p>Method <a href="#appgetusername-string"><code>App.getUser(name?: string)</code></a> returns a user object.</p>
+</li>
+</ul>
+<h2 id="appgetaccounts">App.getAccounts()</h2>
+<p>Returns an <a href="#async-iterator">async iterator</a> over all accounts in the TriplyDB server.</p>
+<h3 id="example">Example</h3>
+<ul>
+<li>The following snippet prints the display names for all accounts in the TriplyDB server at <a href="https://triplydb.com">https://triplydb.com</a>:</li>
+</ul>
+<p><code>ts
+  const triply = App.get({ url: 'https://api.triplydb.com' })
+  for await (const account of triply.getAccounts()) {
+    console.log((await account.getInfo()).name)
+  }</code></p>
+<ul>
+<li>The following snippet returns an array that contains all account objects:</li>
+</ul>
+<p><code>ts
+  console.log(await triply.getAccounts().toArray())</code></p>
+<p>See class <a href="#account">Account</a> for an overview of the methods that can be used with account objects.</p>
+<h2 id="appgetinfo">App.getInfo()</h2>
+<p>Returns information about the TriplyDB server that the <a href="#app"><code>App</code></a> is connected to.</p>
+<p>Information is returned in a dictionary object. Individual keys can be accessed for specific information values.</p>
+<h3 id="examples_1">Examples</h3>
+<ul>
+<li>The following snippet prints the contact email for the TriplyDB server:</li>
+</ul>
+<pre><code class="language-ts">console.log((await triply.getInfo()).contactEmail)
+</code></pre>
+<ul>
+<li>The following snippet returns an object describing the used TriplyDB server:</li>
+</ul>
+<pre><code class="language-ts">console.log(await triply.getInfo())
+</code></pre>
+<h2 id="appgetorganizationname-string">App.getOrganization(name: string)</h2>
+<p>Returns the TriplyDB organization with the given <code>name</code>.</p>
+<p>This method is similar to <a href="#appgetaccountname-string"><code>App.getAccount(name?: string)</code></a>, but differs in the following ways:</p>
+<ul>
+<li>
+<p>This method only works for accounts that represent TriplyDB organizations.</p>
+</li>
+<li>
+<p>This method returns an organization object. Class <a href="#organization">Organization</a> is a specialization of class <a href="#account">Account</a>.</p>
+</li>
+</ul>
+<h3 id="examples_2">Examples</h3>
+<p>The following snippet returns the organization called <code>'Triply'</code>:</p>
+<pre><code class="language-ts">const organization = await triply.getOrganization('Triply')
+</code></pre>
+<p>See class <a href="#organization">Organization</a> for an overview of the methods that can be used with organization objects.</p>
+<h3 id="alternatives">Alternatives</h3>
+<p>This method is a shorthand for calling the following two methods:</p>
+<ul>
+<li>
+<p>Call method <a href="#appgetaccountname-string"><code>App.getAccount(name?: string)</code></a> to retrieve an account object.</p>
+</li>
+<li>
+<p>Then call method <a href="#accountasorganization"><code>Account.asOrganization()</code></a> to cast the account object into an organization object.</p>
+</li>
+</ul>
+<p>The following snippet returns the same result as the previous example, but uses two methods instead of one:</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+const organization = account.asOrganization()
+</code></pre>
+<h3 id="see-also_1">See also</h3>
+<p>This method returns an organization object. See class <a href="#organization">Organization</a> for an overview of the methods that can be called on such objects.</p>
+<h2 id="appgetusername-string">App.getUser(name?: string)</h2>
+<p>Returns the TriplyDB user with the given <code>name</code>.</p>
+<p>If <code>name</code> is omitted, the TriplyDB user that is associated with the current API token is returned. This only works if an API token is configured for the current <a href="#app"><code>App</code></a> object.</p>
+<h3 id="examples_3">Examples</h3>
+<p>The following snippet returns the user with name <code>'somebody'</code>:</p>
+<pre><code class="language-ts">const user = await triply.getUser('somebody')
+</code></pre>
+<p>The following snippet returns the user for whom the API token was created. This only works if an API token was configured when the <a href="#app"><code>App</code></a> object was created:</p>
+<pre><code class="language-ts">const me = await triply.getUser()
+</code></pre>
+<h3 id="alternatives_1">Alternatives</h3>
+<p>This method is a shorthand for the following two methods:</p>
+<ol>
+<li>
+<p>Call method <a href="#appgetaccountname-string"><code>App.getAccount()</code></a> to retrieve an account object.</p>
+</li>
+<li>
+<p>Then call method <a href="#accountasuser"><code>Account.asUser()</code></a> to cast the account object into a user object.</p>
+</li>
+</ol>
+<p>The following snippet returns the same result as the previous examples, but uses two methods instead of one:</p>
+<pre><code class="language-ts">const account = await triply.getAccount('somebody')
+const user = account.asUser()
+</code></pre>
+<h3 id="see-also_2">See also</h3>
+<p>This method returns a user object. See class <a href="#user">User</a> for an overview of the methods that can be called on such objects.</p>
+<h2 id="appiscompatiblewithminimumversion-string">App.isCompatibleWith(minimumVersion: string)</h2>
+<p>Succeeds if and only if the currently connected to TriplyDB server has a version that is identical to or higher than the given minimum version.</p>
+<h3 id="arguments">Arguments</h3>
+<ul>
+<li>Argument <code>minimumVersion</code> must be a string that uses Semantic Versioning. For example <code>'1.2.3'</code>.</li>
+</ul>
+<h3 id="see-also_3">See also</h3>
+<p>To inspect the current version of the connected-to TriplyDB server, use <a href="#appgetinfo"><code>App.getInfo()</code></a>.</p>
+<h1 id="account">Account</h1>
+<p>Instances of the <code>Account</code> class denote TriplyDB accounts. Accounts can be either organizations (<a href="#organization"><code>Organization</code></a>) or users (<a href="#user"><code>User</code></a>).</p>
+<p>Account objects are obtained by calling the following method:</p>
+<ul>
+<li><a href="#appgetaccountname-string"><code>App.getAccount(name?: string)</code></a></li>
+</ul>
+<h2 id="accountadddatasetname-string-metadata-object">Account.addDataset(name: string, metadata?: object)</h2>
+<p>Adds a new TriplyDB dataset with the given <code>name</code> to the current account.</p>
+<p>The optional <code>metadata</code> argument is used to specify the metadata for the dataset.</p>
+<h3 id="access-restrictions">Access restrictions</h3>
+<p>Creating a new dataset only succeeds if an API token is configured that provides write access to the current account.</p>
+<p>The default access level for a newly created dataset is <code>private</code>. If you want to publish a dataset with a different access level, you must specify the <code>accessLevel</code> key in the <code>metadata</code> argument.</p>
+<h3 id="arguments_1">Arguments</h3>
+<p>The <code>name</code> argument specifies the URL-friendly name of the new dataset. The name must only contain alphanumeric characters and hyphens (<code>[A-Za-z0-9\-]</code>).</p>
+<p>The full URL of the newly created dataset has the following structure:</p>
+<pre><code>https://{host}/{account}/{dataset}
+</code></pre>
+<p>The <code>metadata</code> argument optionally specifies the access level and other important metadata:</p>
+<dl>
+<dt><code>accessLevel</code></dt>
+<dd>
+<p>The access level of the dataset. The following values are supported:</p>
+<dl>
+<dt><code>'private'</code> (default)</dt>
+<dd>The dataset can only be accessed by organization members.</dd>
+<dt><code>'internal'</code> </dt>
+<dd>The dataset can only be accessed by users that are logged into the TriplyDB server.</dd>
+<dt><code>'public'</code></dt>
+<dd>The dataset can be accessed by everybody.</dd>
+</dl>
+<p>When no access level is specified, the most restrictive access level (<code>private</code>) is used.</p>
+</dd>
+<dt><code>description</code></dt>
+<dd>The human-readable description of the dataset. This description can make use of Markdown.</dd>
+<dt><code>displayName</code></dt>
+<dd>The human-readable name of the dataset. This name may contain spaces and other characters that are not allowed in the URL-friendly name.</dd>
+<dt><code>license</code></dt>
+<dd>
+<p>The license of the dataset. The following license strings are currently supported:</p>
+<ul>
+<li><code>'CC-BY-SA'</code></li>
+<li><code>'CC0 1.0'</code></li>
+<li><code>'GFDL'</code></li>
+<li><code>'ODC-By'</code></li>
+<li><code>'ODC-ODbL'</code></li>
+<li><code>'PDDL'</code></li>
+<li><code>'None'</code> (default)</li>
+</ul>
+</dd>
+<dt><code>prefixes</code></dt>
+<dd>The IRI prefix declarations that are configured for the dataset. This is specified as a dictionary object whose keys are aliases and whose values are IRI prefixes.</dd>
+</dl>
+<h3 id="examples_4">Examples</h3>
+<p>The following snippet creates a new dataset called <code>'iris'</code> under the account called <code>'Triply'</code>:</p>
+<ul>
+<li>The dataset has private access, because the access level is not specified explicitly.</li>
+<li>The dataset has a description.</li>
+<li>The dataset has a display name.</li>
+<li>The dataset has the PDDL license.</li>
+</ul>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+const dataset = await account.addDataset('iris', {
+  description: 'A multivariate dataset that quantifies morphologic variation of Iris flowers.',
+  displayName: 'Iris',
+  license: 'PDDL',
+  name: 'iris',
+  prefixes: {
+    def: 'https://triplydb.com/Triply/iris/def/',
+    id: 'https://triplydb.com/Triply/iris/id/',
+  },
+})
+</code></pre>
+<h3 id="see-also_4">See also</h3>
+<p>This method returns a dataset object. See the <a href="#dataset">Dataset</a> section for an overview of the methods that can be called on such objects.</p>
+<h2 id="accountaddqueryname-string-metadata-object">Account.addQuery(name: string, metadata: object)</h2>
+<p>Adds a new SPARQL query to the account.</p>
+<h3 id="arguments_2">Arguments</h3>
+<p><strong>Required:</strong></p>
+<dl>
+<dt><code>name: string</code> </dt>
+<dd>The URL-friendly name of the new query. The name must only contain alphanumeric characters and hyphens (<code>[A-Za-z0-9\-]</code>).</dd>
+<dt><code>queryString: string</code> </dt>
+<dd>The SPARQL query string (e.g., <code>'select * { ?s ?p ?o }'</code>).</dd>
+<dt><code>dataset: Dataset</code> </dt>
+<dd>An instance of class <a href="#dataset"><code>Dataset</code></a> that the current API token gives access to.</dd>
+or
+  <dt><code>service: Service</code> </dt>
+<dd>An instance of class <a href="#service"><code>Service</code></a> that the current API token gives access to and that you want to be associated with this query. The Service given will be used as a preferred service for this query.</dd>
+</dl>
+<p><strong>Optional:</strong></p>
+<p>The <code>metadata</code> argument specifies the required Dataset or Service and access level. Other important metadata can be set optionally:</p>
+<dl>
+<dt><code>accessLevel</code> </dt>
+<dd> The access level of the query. If none is set it defaults to <code>'private'</code>. The following values are supported:
+    <dl>
+<dt><code>'private'</code></dt>
+<dd>The query can only be accessed by the <a href="#account"><code>Account</code></a> object for which it is created.</dd>
+<dt><code>'internal'</code></dt>
+<dd>The query can only be accessed by people who are logged into the TriplyDB server.</dd>
+<dt><code>'public'</code></dt>
+<dd>The query can be accessed by everybody.</dd>
+</dl>
+</dd>
+<dt><code>description: string</code> </dt>
+<dd>A human-readable description of the query.</dd>
+<dt><code>displayName: string</code></dt>
+<dd>The human-readable name of the query. This name may include spaces and other characters that are not allowed in the URL-friendly <code>name</code>.</dd>
+<dt><code>output: string</code></dt>
+<dd>The visualization plugin that is used to display the result set of the query. If none is set it defaults to <code>'table'</code>.
+    <dl>
+<dt><code>'boolean'</code></dt>
+<dd>The [boolean](https://triply.cc/docs/yasgui#table) view is a special view for ask queries. The value is either 'true' or 'false', and is visualized as  <code>`X`</code>(False) or <code>`V`</code>(True).</dd>
+<dt><code>'gallery'</code></dt>
+<dd>The [gallery](https://triply.cc/docs/yasgui#gallery) view allows SPARQL results to be displayed in an HTML gallery.</dd>
+<dt><code>'gchart'</code></dt>
+<dd>The [gchart](https://triply.cc/docs/yasgui#charts) renders geographical, temporal and numerical data in interactive charts such as bar-, line- and pie charts.</dd>
+<dt><code>'geo'</code></dt>
+<dd>The [geo](https://triply.cc/docs/yasgui#geo) allows SPARQL results that contain GeoSPARQL semantics to be automatically interpreted and displayed on a 2D map.</dd>
+<dt><code>'geoEvents'</code></dt>
+<dd>The [geoEvents](https://triply.cc/docs/yasgui#geoEvents) plugin renders geographical events as a story map.</dd>
+<dt><code>'geo3d'</code></dt>
+<dd>The [geo3d](https://triply.cc/docs/yasgui#geo3d) allows SPARQL results that contain GeoSPARQL semantics to be automatically interpreted and displayed on a 3D globe.</dd>
+<dt><code>'markup'</code></dt>
+<dd>The [markup](https://triply.cc/docs/yasgui#markup) can be used to render a variety of markup languages. This requires the use of the `?markup` variable to identify which variable to render.</dd>
+<dt><code>'network'</code></dt>
+<dd>The [network](https://triply.cc/docs/yasgui#network) renders SPARQL Construct results in a graph representation. The maximum amount of results that can be visualized is 1.000 due to performance.</dd>
+<dt><code>'pivot'</code></dt>
+<dd>The [pivot](https://triply.cc/docs/yasgui#pivot) view renders SPARQL results in an interactive pivot table where you are able to aggregate the results by dragging your binding variables to columns or rows.</dd>
+<dt><code>'response'</code></dt>
+<dd>The [response](https://triply.cc/docs/yasgui#response) view shows the body of the response and offers a easy way to download the result as a file.</dd>
+<dt><code>'table'</code></dt>
+<dd>The [table](https://triply.cc/docs/yasgui#table) view allows SPARQL results to be displayed in a table. Each
+      column in the table corresponds to a variable that belongs to the
+      outer projection.</dd>
+<dt><code>'timeline'</code></dt>
+<dd>The [timeline](https://triply.cc/docs/yasgui#timeline) timeline renders the SPARQL results on a Timeline. </dd>
+</dl>
+</dd>
+<dt><code>variables: Variable[]</code></dt>
+<dd>
+    A list of objects with the following keys:
+    <dl>
+<dt>IRI variable</dt>
+<dd>An object of the form <code>Variable</code> (see below)</dd>
+</dl></dd>
+</dl>
+<p>Instances of <code>Variable</code> are objects that can have the following keys:</p>
+<p><strong>Required:</strong></p>
+<dl>
+<dt><code>name: string</code> </dt>
+<dd>A SPARQL variable name. The variable name must appear in the query string. The question mark (<code>?</code>) or dollar sign (<code>$</code>) is not included.</dd>
+<dt><code>termType: 'Literal'|'NamedNode'</code> </dt>
+<dd>The kind of variable. This must be either <code>'Literal'</code> for literals or <code>'NamedNode'</code> for IRIs.</dd>
+</dl>
+<p><strong>Optional:</strong></p>
+<dl>
+<dt><code>allowedValues: string[]</code></dt>
+<dd>The list of string values that is allowed for this variable.</dd>
+<dt><code>datatype: string</code> (if <code>termType='Literal'</code>)</dt>
+<dd>The datatype IRI for the literal variable.</dd>
+<dt><code>language: string</code> (if <code>termType='Literal'</code>)</dt>
+<dd>The language tag for the literal variable. Setting this implies that the dataset IRI is <code>rdf:langString</code>.
+<dt><code>defaultValue: string</code></dt>
+<dd>The default string value for the </dd>
+<dt><code>required: boolean</code></dt>
+<dd>Whether a query request must include an explicit value for this variable. The default value is <code>false</code>.</dd>
+</dd></dl>
+<h3 id="example_1">Example</h3>
+<p>The following snippet creates a query with the given query string:</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getUser()
+const myDataset = await user.getDataset('my-dataset')
+const query = await user.addQuery('my-query', {
+  dataset: myDataset,
+  queryString: 'select (count(*) as ?n) { ?s ?p ?o. }',
+  output: 'response',
+})
+</code></pre>
+<h2 id="accountaddstoryname-string-metadata-object">Account.addStory(name: string, metadata?: object)</h2>
+<p>Adds a new data story.</p>
+<h3 id="required">Required</h3>
+<dl>
+<dt><code>name: string</code></dt>
+<dd>The URL-friendly name of the data story. The name must only contain alphanumeric characters and hyphens (<code>[A-Za-z0-9\-]</code>).</dd>
+</dl>
+<h3 id="optional">Optional</h3>
+<dl>
+<dt><code>accessLevel</code> </dt>
+<dd>
+<p>The access level of the dataset. If none is given the default of <code>'private'</code> is used. The following values are supported:</p>
+<dl>
+<dt><code>'private'</code></dt>
+<dd>The dataset can only be accessed by the <a href="#account"><code>Account</code></a> object for which it is created.</dd>
+<dt><code>'internal'</code></dt>
+<dd>The dataset can only be accessed by people who are logged into the TriplyDB server.
+      <dt><code>'public'</code></dt>
+<dd>The dataset can be accessed by everybody.</dd>
+</dd></dl>
+</dd>
+<dt><code>content: StoryElementUpdate[]</code> </dt>
+<dd>A list of story elements. The building blocks of the Story.</dd>
+<dt><code>displayName: string</code> </dt>
+<dd>The human-readable name of the data story. This name may include spaces and other characters that are not allowed in the URL-friendly name.</dd>
+</dl>
+<p>A story element is an object with the following keys:</p>
+<dl>
+<dt>caption: string</dt>
+<dd>The caption is an explanatory text about a specific query.</dd>
+<dt><code>id: string</code></dt>
+<dd>Each Story element gets an Id when it is created. When you want to update a Story element you will need this Id. The Id is only required when updating an element and not needed when adding an object.</dd>
+<dt>paragraph: string</dt>
+<dd>The Markdown content of a story paragraph. Only allowed when the type is set to <code>'paragraph'</code> </dd>
+<dt><code>query: Query</code></dt>
+<dd>An instance of class <a href="#query"><code>Query</code></a>.</dd>
+<dt>queryVersion: number
+<dd>The version that is used of the specified query.</dd>
+<dt><code>type</code></dt>
+<dd>Either <code>'paragraph'</code> or <code>'query'</code>.</dd>
+</dt></dl>
+<h3 id="examples_5">Examples</h3>
+<p>Example 1 - creates a new story that has access level <code>'private'</code>:</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getUser()
+const newStory = await user.addStory('name-of-story')
+</code></pre>
+<p>Example 2 - creates a new story that has access level <code>'public'</code>:</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getUser()
+const newStory = await user.addStory('name-of-story', {
+  accessLevel: 'public',
+})
+</code></pre>
+<h2 id="accountasorganization">Account.asOrganization()</h2>
+<p>Casts the TriplyDB account object to its corresponding organization object.</p>
+<p>Class <a href="#organization">Organization</a> is a specialization of class <a href="#account">Account</a>.</p>
+<p>Calling this method on an <code>Organization</code> object does nothing.</p>
+<h3 id="examples_6">Examples</h3>
+<p>The following snippet retrieves the account named <code>'Triply'</code> and casts it to an organization:</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+const organization = account.asOrganization()
+</code></pre>
+<h3 id="alternatives_2">Alternatives</h3>
+<p>This method is not needed if the organization is directly retrieved with the specialization method <a href="#appgetorganizationname-string"><code>App.getOrganization(name: string)</code></a>.</p>
+<p>The following snippet returns the same result as the above example, but in a more direct way:</p>
+<pre><code class="language-ts">const organization = await triply.getOrganization('Triply')
+</code></pre>
+<h3 id="see-also_5">See also</h3>
+<p>This method returns an organization object. See class <a href="#organization">Organization</a> for an overview of the methods that can be called on such objects.</p>
+<h2 id="accountasuser">Account.asUser()</h2>
+<p>Casts the TriplyDB account object to its corresponding user object.</p>
+<p>Class <a href="#user">User</a> is a specialization of class <a href="#account">Account</a>.</p>
+<p>Calling this method on a <a href="#user">User</a> object does nothing.</p>
+<h3 id="examples_7">Examples</h3>
+<p>The following snippet retrieves the account that represents the current user, and casts it to a user object:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const user = account.asUser()
+</code></pre>
+<h3 id="alternatives_3">Alternatives</h3>
+<p>This method is not needed if the user is directly retrieved with the specialization method <a href="#appgetusername-string"><code>App.getUser(name?: string)</code></a>.</p>
+<p>The following snippet returns the same result as the above example, but in a more direct way:</p>
+<pre><code class="language-ts">const user = await triply.getUser()
+</code></pre>
+<h3 id="see-also_6">See also</h3>
+<p>This method returns an organization object. See class <a href="#organization">Organization</a> for an overview of the methods that can be called on such objects.</p>
+<h2 id="accountensuredatasetname-string-metadata-object">Account.ensureDataset(name: string, metadata?: object)</h2>
+<p>Ensures the existence of a dataset with the given <code>name</code> and with the specified <code>metadata</code> if given.</p>
+<p>Calling this method ensures that the necessary changes (if any) are made in the connected-to TriplyDB server that result in an end state in which a dataset with the given <code>name</code> and <code>metadata</code> exists.</p>
+<p>This method is useful in practice, because it removes the burden on the programmer to have to write custom code for checking for the existence of a dataset, and conditionally create a new dataset or make metadata changes to an existing dataset.</p>
+<p>The changes made as a result of calling this method depend on the current state of the connected-to TriplyDB server:</p>
+<ul>
+<li>If this account does not yet have a dataset with the given <code>name</code>, then the behavior is identical to calling <a href="#accountadddatasetname-string-metadata-object"><code>Account.addDataset(name: string, metadata?: object)</code></a> with the same arguments.</li>
+<li>If this account already has a dataset with the given <code>name</code> and with the same <code>metadata</code>, then this method makes no changes.</li>
+</ul>
+<h3 id="example_2">Example</h3>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+const myDataset = await account.ensureDataset(`my-dataset`, {
+  license: 'PDDL',
+})
+</code></pre>
+<h3 id="see-also_7">See also</h3>
+<p>The meaning of the argument to this method are identical to those of the <a href="#accountadddatasetname-string-metadata-object"><code>Account.addDataset(name: string, metadata?: object)</code></a> method.</p>
+<h2 id="accountgetdatasetname-string">Account.getDataset(name: string)</h2>
+<p>Returns the dataset with the given <code>name</code> that is published by this account.</p>
+<h3 id="examples_8">Examples</h3>
+<p>The following snippet prints the name of the Iris dataset that is published by the Triply account:</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+const dataset = await triply.getDataset('iris')
+console.log((await dataset.getInfo()).name)
+</code></pre>
+<h3 id="see-also_8">See also</h3>
+<p>This method returns a dataset object. See class <a href="#dataset">Dataset</a> for an overview of the methods that can be called on such objects.</p>
+<h2 id="accountgetdatasets">Account.getDatasets()</h2>
+<p>Returns an <a href="#async-iterator">async iterator</a> over the accessible datasets for the current account.</p>
+<h3 id="access-restrictions_1">Access restrictions</h3>
+<p>The iterator only includes datasets that are accessible for the current connection with a TriplyDB server:</p>
+<ul>
+<li>
+<p>If no API token is configured, the iterator will include all and only public datasets belonging to this account.</p>
+</li>
+<li>
+<p>If an API token is configured, the iterator will include all public and internal datasets belonging to this account, and will include all private datasets belonging to this account if the API token gives read access to the account.</p>
+</li>
+</ul>
+<h3 id="examples_9">Examples</h3>
+<ul>
+<li>The following snippet prints the names of all accessible dataset under the Triply account:</li>
+</ul>
+<p><code>ts
+  const account = await triply.getAccount('Triply')
+  for await (const dataset of account.getDatasets()) {
+    console.log((await dataset.getInfo()).name)
+  }</code></p>
+<ul>
+<li>The following snippet prints the list of names of all accessible datasets under the Triply account:</li>
+</ul>
+<p><code>ts
+  const account = await triply.getAccount('Triply')
+  console.log(await account.getDatasets().toArray())</code></p>
+<h2 id="accountgetinfo">Account.getInfo()</h2>
+<p>Returns information about this account.</p>
+<p>Information is returned in a dictionary object. Individual keys can be accessed for specific information values.</p>
+<p>The information object for accounts includes the following keys:</p>
+<dl>
+<dt><code>avatarUrl</code></dt>
+<dd>A URL to the account image.</dd>
+<dt><code>accountName</code></dt>
+<dd>The URL-friendly name of the account.</dd>
+<dt><code>name</code></dt>
+<dd>The human-readable display name of the account</dd>
+<dt><code>description</code></dt>
+<dd>The human-readable description of the account.</dd>
+<dt><code>createdAt</code></dt>
+<dd>The date and time on which the account was created.</dd>
+<dt><code>datasetCount</code></dt>
+<dd>The number of datasets for the account.</dd>
+<dt><code>queryCount</code></dt>
+<dd>The number of queries for the account.</dd>
+<dt><code>storyCount</code></dt>
+<dd>The number of stories for the account</dd>
+<dt><code>pinnedDatasets</code></dt>
+<dd>An array containing the pinned dataset for the account.</dd>
+<dt><code>pinnedItems</code></dt>
+<dd>An array containing the pinned items (datasets, stories and queries) for the account.</dd>
+<dt><code>type</code></dt>
+<dd>The account type: either <code>organization</code> or <code>user</code>.</dd>
+<dt><code>role</code></dt>
+<dd>The role of the account</dd>
+<dt><code>orgs</code></dt>
+<dd>An array of organizations of which the account is a member.</dd>
+<dt><code>Email address</code></dt>
+<dd>The email address of the account.</dd>
+<dt><code>updatedAt</code></dt>
+<dd>The date and time on which the account was last updated.</dd>
+<dt><code>lastActivity</code></dt>
+<dd>The date and time on which the account was last online on TriplyDB.</dd>
+</dl>
+<h3 id="examples_10">Examples</h3>
+<ul>
+<li>The following snippet prints the full information object for the account called ‘Triply’:</li>
+</ul>
+<p><code>ts
+  const account = await triply.getAccount('Triply')
+  console.log(await account.getInfo())</code></p>
+<p>The output for this snippet can look as follows:</p>
+<p><code>json
+  {
+    'accountName': 'Triply',
+    'avatarUrl': 'https://www.gravatar.com/avatar/9bc28997dd1074e405e1c66196d5e117?d=mm',
+    'createdAt': 'Mon Mar 19 2018 14:39:18 GMT+0000 (Coordinated Universal Time)',
+    'datasetCount': 16,
+    'name': 'Triply',
+    'queryCount': 37,
+    'storyCount': 7,
+    'type': 'org',
+    'updatedAt': 'Tue Nov 27 2018 09:29:38 GMT+0000 (Coordinated Universal Time)'
+  }</code></p>
+<ul>
+<li>The following snippet prints the name of the account called ‘Triply’:</li>
+</ul>
+<p><code>ts
+  const account = await triply.getAccount('Triply')
+  console.log((await account.getInfo()).name)</code></p>
+<h2 id="accountgetpinneditems">Account.getPinnedItems()</h2>
+<p>Returns the list of datasets, stories and queries that are pinned for the current account.</p>
+<p>A pinned item is an item that is displayed in a prominent way on the account web page.</p>
+<h3 id="order-considerations">Order considerations</h3>
+<p>The order in which the pinned datasets are returned reflects the order in which they appear on the organization homepage (from top-left to bottom-right).</p>
+<h3 id="examples_11">Examples</h3>
+<p>The following snippet prints the names of the items that are pinned on the Triply account page:</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+for await (const item of account.getPinnedItems()) {
+  console.log((await item.getInfo()).name)
+}
+</code></pre>
+<h3 id="see-also_9">See also</h3>
+<p>This method returns various types of objects. Each class has different functionalities:</p>
+<ul>
+<li>See class <a href="#dataset">Dataset</a> for an overview of the methods for dataset objects.</li>
+<li>See class <a href="#query">Query</a> for an overview of the methods for query objects.</li>
+<li>See class <a href="#story">Story</a> for an overview of the methods for story objects.</li>
+</ul>
+<h2 id="accountgetqueryname-string">Account.getQuery(name: string)</h2>
+<p>Returns the TriplyDB query with the given <code>name</code>.</p>
+<h3 id="examples_12">Examples</h3>
+<p>The following snippet prints the query string for a query called <code>animal-gallery</code> that belongs to the account called <code>Triply</code>:</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+const query = await account.getQuery('animal-gallery')
+console.log((await query.getInfo()).requestConfig?.payload.query)
+</code></pre>
+<h3 id="see-also_10">See also</h3>
+<p>See class <a href="#query">Query</a> for an overview of the methods for query objects.</p>
+<h2 id="accountgetqueries">Account.getQueries()</h2>
+<p>Returns an <a href="#async-iterator">async iterator</a> over the accessible queries that belong to the account.</p>
+<h3 id="access-restrictions_2">Access restrictions</h3>
+<p>The iterator only includes datasets that are accessible for the current connection with a TriplyDB server:</p>
+<ul>
+<li>
+<p>If no API token is configured, the iterator will include all and only public queries belonging to this account.</p>
+</li>
+<li>
+<p>If an API token is configured, the iterator will include all public and internal queries that belong to this account, and will include all private queries that belong to this account if the API token gives read access to the account.</p>
+</li>
+</ul>
+<h3 id="examples_13">Examples</h3>
+<p>The following snippet prints the names of the queries that belong to the account called <code>Triply</code>:</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+for await (const query of account.getQueries()) {
+  console.log((await query.getInfo()).name)
+}
+</code></pre>
+<h3 id="see-also_11">See also</h3>
+<p>See class <a href="#query">Query</a> for an overview of the methods for query objects.</p>
+<h2 id="accountensurestoryname-string-metadata-object">Account.ensureStory(name: string, metadata: object)</h2>
+<p>Ensures the existence of a story with the given <code>name</code> and with the specified <code>metadata</code>, if given.</p>
+<p>Calling this method ensures that the necessary changes (if any) are made in the connected-to TriplyDB server that result in an end state in which a story with the given <code>name</code> and <code>metadata</code> exists.</p>
+<p>This method is useful in practice, because it removes the burden on the programmer to have to write custom code for checking for the existence of a story, and conditionally create a new story or make metadata changes to an existing story.</p>
+<p>The changes made as a result of calling this method depend on the current state of the connected-to TriplyDB server:</p>
+<ul>
+<li>If this account does not yet have a story with the given <code>name</code>, then the behavior is identical to calling <a href="#accountaddstoryname-string-metadata-object"><code>Account.addStory(name: string, metadata?: object)</code></a> with the same arguments.</li>
+<li>If this account already has a story with the given <code>name</code> and with the same <code>metadata</code>, then this method returns that story.</li>
+</ul>
+<h3 id="optional_1">Optional</h3>
+<dl>
+<dt><code>displayName</code></dt>
+<dd>Accepts a string value to be used as the display name for the story.</dd>
+<dt><code>accessLevel</code></dt>
+<dd>Accepts either of the following values: <code>'private'</code> (default), <code>'internal'</code>, <code>'public'</code>.</dd>
+<dt><code>content</code></dt>
+<dd>Accepts a list of StoryElementUpdate objects, defined below.</dd>
+</dl>
+<p><strong>Note:</strong>
+If no <code>accessLevel</code> is specified, the default used is 'private'.</p>
+<p><strong>Examples</strong></p>
+<p>Example 1: To ensure a <code>Story</code> only requires a <code>name</code> of type string. It's access level will default to private</p>
+<pre><code class="language-ts">await someUser.ensureStory(`someStoryName`)
+</code></pre>
+<p>Example 2: Ensure a <code>Story</code> setting it's <code>accessLevel</code> and <code>displayName</code>.</p>
+<pre><code class="language-ts">await someUser.ensureStory(`someStoryName`, {
+  accessLevel: 'public',
+  displayName: `This is a Story`,
+})
+</code></pre>
+<h2 id="accountaddstoryname-string-newstoryoptions-object">Account.addStory(name: string, newStoryOptions?: object)</h2>
+<h3 id="required_1">Required</h3>
+<p>Adds and returns the TriplyDB story with the given <code>name</code>.</p>
+<h3 id="optional_2">Optional</h3>
+<p>The optional new story object that can be passed accepts the following properties:</p>
+<dl>
+<dt><code>displayName</code></dt>
+<dd>Accepts a string value to be used as a display name for the story</dd>
+<dt><code>accessLevel</code></dt>
+<dd>Sets the access level for the story. Accepts either of the following: <code>'private'</code> (default), <code>'internal'</code>, <code>'public'</code>.</dd>
+</dl>
+<p>If <strong>no</strong> <code>accesslevel</code> is specified, the default value <code>private</code> is used.</p>
+<p><strong>Examples</strong>:</p>
+<p>Example 1 - creates a newStory that is 'private'</p>
+<pre><code class="language-ts">const newStory = await someUser.addStory('name-of-story')
+</code></pre>
+<p>Example 2 - creates a newStory that is 'public'</p>
+<pre><code class="language-ts">const newStory = await someUser.addStory('name-of-story', {
+  accessLevel: 'public',
+})
+</code></pre>
+<h2 id="accountgetstoryname-string">Account.getStory(name: string)</h2>
+<p>Returns the TriplyDB story with the given <code>name</code>.</p>
+<h3 id="examples_14">Examples</h3>
+<p>The following snippet prints the paragraphs in the story called <code>the-iris-dataset</code> that is published under the account called <code>Triply</code>. Stories are sequences of paragraphs and queries. This program prints the paragraphs in the sequence in which they appear in the story.</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+const story = await account.getStory('the-iris-dataset')
+</code></pre>
+<h3 id="see-also_12">See also</h3>
+<p>See class <a href="#story">Story</a> for an overview of the methods for story objects.</p>
+<h2 id="accountgetstories">Account.getStories()</h2>
+<p>Returns an iterator with the TriplyDB stories that belong to the account.</p>
+<h3 id="examples_15">Examples</h3>
+<p>The following snippet prints the names of the queries that belong to the Triply account:</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+for await (const story of account.getStories()) {
+  console.log((await story.getInfo()).name)
+}
+</code></pre>
+<h3 id="see-also_13">See also</h3>
+<p>See class <a href="#story">Story</a> for an overview of the methods for story objects.</p>
+<h2 id="accountpinitemsitems-arraydatasetstoryquery">Account.pinItems(items: array[Dataset|Story|Query])</h2>
+<p>Pins the given datasets, stores, and/or queries to the home page of this account.</p>
+<p>The pinned elements can be seen by people who visit the account online. They are also included in the account metadata.</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getUser()
+const query = await user.getQuery('name-of-query')
+const newStory = await user.getStory('name-of-story')
+user.pinItems([query,newStory])
+</code></pre>
+<h2 id="accountsetavatarfile-string">Account.setAvatar(file: string)</h2>
+<p>Sets a new image that characterizes this account.</p>
+<p>A circular version of this image is displayed inside the TriplyDB GUI. This image is also published as part of account metadata.</p>
+<h3 id="examples_16">Examples</h3>
+<p>The following snippet uploads the local image in file <code>logo.svg</code> and set it as the characterizing image for the Triply account:</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+await account.setAvatar('logo.svg')
+</code></pre>
+<h2 id="accountupdatemetadata-object">Account.update(metadata: object)</h2>
+<p>Updates the metadata for this account.</p>
+<p>To update the metadata profile with information within the metadata itself, we need the following steps:</p>
+<ol>
+<li>Obtain the relevant piece of information as a variable/const: <code>getObject()</code></li>
+<li>Update the metadata profile with the obtained information stored in the variable/const: <code>update()</code></li>
+</ol>
+<p><strong>getObject()</strong>
+Define a constant (<code>const</code>) and assign it to <code>ctx.store.getObjects()</code>.
+The arguments for the function will be the subject, predicate, and graph. The function retrieves the <strong>object</strong> so the other 3 parts of a quad need to be specified.</p>
+<p><strong>update()</strong>
+Update the relevant part of the metadata profile with the corresponding piece of information. <code>.update({})</code></p>
+<p><strong>Example</strong>
+If one wants to update the <em>display name</em> of a metadata profile with the object of the following triple within the metadata:
+<code>&lt;https://example.org/example&gt; &lt;https://schema.org/name&gt; 'Example Name'@en</code></p>
+<pre><code class="language-ts">async (ctx) =&gt; {
+  // Fetch displayName
+  const displayName = ctx.store
+    .getObjects(
+      'https://example.org/example',
+      'https://schema.org/name',
+      graph.metadata
+    )
+    .find(
+      (node) =&gt; node.termType === 'Literal' &amp;&amp; node.language === 'en'
+    )?.value;
+
+  // Specify the environment variable, if necessary
+  const _dataset =
+    process.env['MODE'] === 'Production'
+      ? (await app.triplyDb.getOrganization(organization)).getDataset(dataset)
+      : (await app.triplyDb.getUser()).getDataset(organization + '-' + dataset)
+
+  // Update the display name
+  if (displayName) await (await _dataset).update({ displayName })
+};
+</code></pre>
+<p>The metadata object for accounts can include the following keys:</p>
+<dl>
+<dt><code>accountName</code></dt>
+<dd>The URL-friendly name of the account.</dd>
+<dt><code>name</code></dt>
+<dd>The human-readable display name of the account</dd>
+<dt><code>description</code></dt>
+<dd>The human-readable description of the account.</dd>
+<dt><code>pinnedItems</code></dt>
+<dd>An array containing the pinned items (datasets, stories and queries) for the account.</dd>
+<dt><code>Email address</code></dt>
+<dd>The email address of the account.</dd>
+</dl>
+<h1 id="asset">Asset</h1>
+<p>Not all data can be stored as RDF data. For example images and video files use a binary format. Such files can also be stored in TriplyDB as Assets and can be integrated into the Knowledge Graph. Each asset has a specific identifier that can be used in the Knowledge Graph.</p>
+<p>An asset is always uploaded per dataset, for which the function <code>uploadAsset()</code> is used. see <a href="https://triply.cc/docs/triplydb-js#datasetuploadassetassetname-string-filepath-string">Dataset.uploadAsset()</a> for uploading an asset.</p>
+<p>If the asset already has been created following functions can retrieve it from the dataset.
+- <a href="https://triply.cc/docs/triplydb-js#datasetgetassetname-string-version-number">Dataset.getAsset(assetName: string, versionNumber?: number)</a>
+- <a href="https://triply.cc/docs/triplydb-js#datasetgetassets">Dataset.getAssets()</a></p>
+<p>TriplyDB.js supports several functions to manipulate an asset on TriplyDB.</p>
+<h2 id="assetaddversionpath-file-string">Asset.addVersion(path: File | string)</h2>
+<p>Update an asset with a new version of the document using the <code>addVersion</code> function. The input of this function is a path to the file location that you want to update the asset with. The file you want to add as a new version does not in any ways have to correspond to the asset.</p>
+<h3 id="example_3">Example</h3>
+<p>The following snippet uploads the an file <code>my-file.pdf</code> and upload it as the new version of the asset:</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('my-dataset')
+const asset = await dataset.getAsset('my-asset')
+await asset.addVersion('my-file.pdf')
+</code></pre>
+<h2 id="assetdelete">Asset.delete()</h2>
+<p>To delete an asset with all of its versions execute the <code>delete()</code> function.</p>
+<h3 id="example_4">Example</h3>
+<p>The following snippet uploads the an file <code>my-file.pdf</code> and upload it as the new version of the asset:</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('my-dataset')
+const asset = await dataset.getAsset('my-asset')
+await asset.delete()
+</code></pre>
+<h2 id="assetgetinfoversion-number">Asset.getInfo(version?: number)</h2>
+<p>Returns information about this asset.</p>
+<p>Information is returned in a dictionary object. Individual keys can be accessed for specific information values.</p>
+<p>Optionally you can give the version number to retrieve the assetInfo of a particular version.</p>
+<p>The information object for assets includes the following keys:</p>
+<dl>
+<dt><code>assetName</code></dt>
+<dd>The URL-friendly name of the asset.</dd>
+<dt><code>identifier</code></dt>
+<dd>The hexadecimal identifier of the asset</dd>
+<dt><code>createdAt</code></dt>
+<dd>The date and time on which the asset was created.</dd>
+<dt><code>url</code></dt>
+<dd>The url of the asset.</dd>
+<dt><code>versions</code></dt>
+<dd>An array containing all versions of the asset.</dd>
+<dt><code>uploadedAt</code></dt>
+<dd>The date and time on which the asset was uploaded.</dd>
+<dt><code>fileSize</code></dt>
+<dd>Number with the bytesize of the asset</dd>
+</dl>
+<h3 id="examples_17">Examples</h3>
+<ul>
+<li>The following snippet prints the full information object for the asset called ‘my-asset’:</li>
+</ul>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('my-dataset')
+const asset = await dataset.getAsset('my-asset')
+console.log(await asset.getInfo())
+</code></pre>
+<h2 id="assetgetversioninfoversion-number">Asset.getVersionInfo(version: number)</h2>
+<p>Returns version specific information about this asset.</p>
+<p>Information is returned in a dictionary object. Individual keys can be accessed for specific information values.</p>
+<p>The version specific information object for assets includes the following keys:</p>
+<dl>
+<dt><code>id</code></dt>
+<dd>The hexadecimal identifier of the asset</dd>
+<dt><code>fileSize</code></dt>
+<dd>Number with the bytesize of the asset</dd>
+<dt><code>url</code></dt>
+<dd>The url of the asset.</dd>
+<dt><code>uploadedAt</code></dt>
+<dd>The date and time on which the asset was uploaded.</dd>
+</dl>
+<h3 id="examples_18">Examples</h3>
+<ul>
+<li>The following snippet prints the version information object for the asset called ‘my-asset’ at version <code>1</code>:</li>
+</ul>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('my-dataset')
+const asset = await dataset.getAsset('my-asset')
+console.log(await asset.getVersionInfo(1))
+</code></pre>
+<h2 id="assetselectversionversion-number">Asset.selectVersion(version: number)</h2>
+<p>With the <code>selectVersion()</code> function you can select a specific version of an Asset.
+Each version corresponds to a iteration of the file that is added as an asset. The
+argument of the <code>selectVersion()</code> function is a number of the version you want to retrieve.</p>
+<h3 id="example_5">Example</h3>
+<p>To select the first asset from the list of assets use the selectVersion with the argument <code>1</code>.</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('my-dataset')
+const asset = await dataset.getAsset('my-asset')
+const versionedAsset = asset.selectVersion(1)
+</code></pre>
+<h2 id="assettofilepath-string-version-number">Asset.toFile(path: string, version?: number)</h2>
+<p>The binary representation of an asset can be retrieved and written to file via the <code>asset.toFile()</code>
+function. This function takes as input a string path to the download location and optionally a
+version number.</p>
+<h3 id="example_6">Example</h3>
+<p>To download the latest version of <code>my-asset</code> asset to the file <code>my-file-location.txt</code>.</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('my-dataset')
+const asset = await dataset.getAsset('my-asset')
+asset.toFile('my-file-location.txt')
+</code></pre>
+<h2 id="assettostreamversion-number">Asset.toStream(version?: number)</h2>
+<p>If instead of downloading the asset to a file for later usage you want to directly use the asset.
+The <code>toStream()</code> functionality is available. This downloads the asset as a stream for use in a script.
+The <code>toStream()</code> has as optional argument a version number.</p>
+<h3 id="example_7">Example</h3>
+<p>To get the latest version of <code>my-asset</code> asset as a stream available.</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('my-dataset')
+const asset = await dataset.getAsset('my-asset')
+asset.toStream()
+</code></pre>
+<h1 id="dataset">Dataset</h1>
+<p>The <code>Dataset</code> class represents a TriplyDB dataset.</p>
+<h2 id="datasetaddprefixesprefixes-object">Dataset.addPrefixes(prefixes: object)</h2>
+<p>Adds IRI prefix declarations to the dataset.</p>
+<p>The <code>prefixes</code> argument is a dictionary object whose keys are aliases and whose values are IRI prefixes.</p>
+<h3 id="examples_19">Examples</h3>
+<p>The following snippet adds prefix declarations for aliases <code>id</code> and <code>def</code> to the Iris dataset:</p>
+<pre><code class="language-ts">const organization = await triply.getOrganization('Triply')
+const dataset = await organization.getDataset(iris)
+await dataset.addPrefixes({
+  def: 'https://triplydb.com/Triply/iris/def/',
+  id: 'https://triplydb.com/Triply/iris/id/',
+})
+</code></pre>
+<h2 id="datasetensureservicename-string-metadata-object">Dataset.ensureService(name: string, metadata?: object)</h2>
+<p>Ensures the existence of a service with the given <code>name</code> and with the specified <code>metadata</code> if given.</p>
+<p>Calling this method ensures that the necessary changes (if any) are made in the connected-to TriplyDB server that result in an end state in which a service with the given <code>name</code> and <code>metadata</code> exists.</p>
+<p>This method is useful in practice, because it removes the burden on the programmer to have to write custom code for checking for the existence of a service, and conditionally create a new service or make metadata changes to an existing service.</p>
+<p>The changes made as a result of calling this method depend on the current state of the connected-to TriplyDB server:</p>
+<ul>
+<li>If this dataset does not yet have a service with the given <code>name</code>, then the behavior is identical to calling <a href="#datasetaddservicename-string-metadata-object"><code>Dataset.addService(name: string, metadata?: object)</code></a> with the same arguments.</li>
+<li>If this dataset already has a service with the given <code>name</code>, but with different <code>metadata</code> specified for it, then the behavior is identical to calling <a href="#datasetgetservicename-string"><code>Account.getDataset(name: string)</code></a> and <a href="#serviceupdatemetadata-object"><code>Dataset.update(metadata: object)</code></a>.</li>
+<li>If this dataset already has a service with the given <code>name</code> and with the same <code>metadata</code>, then this method returns that service.</li>
+</ul>
+<h3 id="required_2">Required</h3>
+<dl>
+<dt><code>name</code></dt>
+<dd>Accepts a string value which is the name of the service to ensure.</dd>
+</dl>
+<h3 id="optional-metadata">Optional: metadata</h3>
+<pre><code class="language-ts">serviceMetadata = {
+  type:  'elasticsearch' | 'virtuoso' | 'jena' ;
+  config?: {
+    reasoner?: 'OWL' | 'RDFS' | 'None';
+  };
+};
+</code></pre>
+<dl>
+<dt><code>type</code></dt>
+<dd>Accepts a string value of one of the following: <code>'virtuoso'</code>, <code>'elasticsearch'</code>, <code>'jena'</code>.</dd>
+<dt><code>config</code></dt>
+<dd>
+<p>Config is an optional property. It accepts an object with a <code>reasoner</code> property.</p>
+<dl>
+<dt><code>reasoner</code></dt>
+<dd>The reasoner property accepts a string value of either <code>'OWL'</code>, <code>'RDFS'</code>, or <code>'None'</code>.</dd>
+</dl>
+</dd>
+</dl>
+<p><strong>Note:</strong></p>
+<ul>
+<li>If no options are specified the default service is of type: <code>virtuoso</code>.</li>
+<li>Note that the <code>config.reasoner</code> will only accept a value when <code>type</code> is: <code>'jena'</code></li>
+</ul>
+<p><strong>Examples</strong>
+Example 1: Ensure a <code>service</code> with no arguments. If not found it's type defaults to <code>virtuoso</code>.</p>
+<pre><code class="language-ts">await someDataset.ensureService('someServiceName')
+</code></pre>
+<p>Example 2: Ensure a <code>service</code> of type <code>jena</code>.</p>
+<pre><code class="language-ts">await someDataset.ensureService('someServiceName', { type: 'jena' })
+</code></pre>
+<h2 id="datasetaddservicename-string-metadata-object">Dataset.addService(name: string, metadata?: object)</h2>
+<p>Creates a new service for this dataset.</p>
+<h3 id="arguments_3">Arguments</h3>
+<h3 id="required_3">Required</h3>
+<dl>
+<dt><code>name</code></dt>
+<dd>The URL-friendly name of the service. The name must only contain alphanumeric characters and hyphens (`[A-Za-z0-9\-]`).</dd>
+</dl>
+<h3 id="optional_3">Optional</h3>
+<p>The service type is specified with the <code>type</code> parameter. If no type is given, a default of <code>'virtuoso'</code> is used. It supports the following values:</p>
+<dl>
+<dt><code>'virtuoso'</code></dt>
+<dd>Starts a SPARQL service. A SPARQL 1.1 compliant service is very scalable and performance, but without advanced reasoning capabilities.</dd>
+<dt><code>'jena'</code></dt>
+<dd>Starts a SPARQL JENA service. A SPARQL 1.1 compliant service that is less scalable and less performant, but allows reasoning (RDFS or OWL) to be enabled.</dd>
+<dt><code>'elasticSearch'</code></dt>
+<dd>Starts an <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html">Elasticsearch</a> service. A text search engine that can be used to power a search bar or similar textual search API.</dd>
+</dl>
+<p>The <code>name</code> argument can be used to distinguish between different endpoints over the same dataset that are used for different tasks.</p>
+<h3 id="examples_20">Examples</h3>
+<p>The following snippet starts two SPARQL endpoints over a specific dataset. One endpoint will be used in the acceptance environment while the other endpoint will be used in the production system.</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+const acceptance = await dataset.addService('acceptance')
+const production = await dataset.addService('production', {
+  type: 'elasticsearch',
+})
+const reasoning = await dataset.addService('reasoning', {
+  type: 'jena',
+  config: { reasoner: 'OWL' },
+})
+</code></pre>
+<h3 id="see-also_14">See also</h3>
+<p>See class <a href="#service">Service</a> for an overview of the methods that can be used with service objects.</p>
+<h2 id="datasetclearresourcetype-string">Dataset.clear(...resourceType: string)</h2>
+<p>Removes one or more resource types from the current dataset.</p>
+<h3 id="arguments_4">Arguments</h3>
+<p>The resources are specified by the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters">rest parameter</a> <code>resourceType</code>, which supports the following values :</p>
+<dl>
+<dt><code>'assets'</code></dt>
+<dd>Removes all assets in the dataset.</dd>
+<dt><code>'graphs'</code></dt>
+<dd>Removes all graphs in the dataset.</dd>
+<dt><code>'services'</code></dt>
+<dd>Removes all services in the dataset.</dd>
+</dl>
+<h3 id="examples_21">Examples</h3>
+<p>The following example code removes all graphs and services for a specific dataset:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+await dataset.clear('graphs', 'services')
+</code></pre>
+<h2 id="datasetcopyaccount-string-dataset-string">Dataset.copy(account: string, dataset: string)</h2>
+<p>Creates a copy of the current dataset.</p>
+<p>The owner (user or organization) of the copy is specified with parameter <code>account</code>. The name of the copy is specified with parameter <code>dataset</code>.</p>
+<p>This operation does not overwrite existing datasets: if the copied-to dataset already exists, a new dataset with suffix <code>-1</code> will be created.</p>
+<h3 id="examples_22">Examples</h3>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+console.log(await dataset.copy('account name', 'copy dataset name'))
+</code></pre>
+<h2 id="datasetdelete">Dataset.delete()</h2>
+<p>Deletes the dataset.</p>
+<p>This includes deleting the dataset metadata, all of its graphs, all of its services, and all of its assets.</p>
+<h3 id="examples_23">Examples</h3>
+<p>The following snippet deletes a specific dataset that is part of the account associated with the current API token:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+await dataset.delete()
+</code></pre>
+<h3 id="see-also_15">See also</h3>
+<p>Sometimes it is more useful to only delete the graphs that belong to a dataset, but leave the dataset metadata, services, and assets in place. The following methods can be used for this purpose:</p>
+<ul>
+<li><a href="#datasetdeletegraphname-string">Dataset.deleteGraph(graphName: string)</a></li>
+<li><a href="#datasetremoveallgraphs">Dataset.removeAllGraphs()</a></li>
+</ul>
+<h2 id="datasetdeletegraphname-string">Dataset.deleteGraph(name: string)</h2>
+<p>Deletes the graph with the given <code>name</code> from this dataset.</p>
+<p>Graph names are IRIs.</p>
+<h3 id="examples_24">Examples</h3>
+<p>The following snippet deletes a specific graph from a specified dataset:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+await dataset.deleteGraph('https://example.org/some-graph')
+</code></pre>
+<h2 id="datasetdescribeiri-stringnamednode">Dataset.describe(iri: string|NamedNode)</h2>
+<p>Each dataset is a collection of triples that describe objects in linked data. Each object is defined with an IRI, an identifier for that object. An object often has incoming and outgoing connections.
+The <code>Dataset.describe()</code> call can retrieve the incoming and outgoing triples per object. The function returns for a given <code>iri</code> a list of quads where the <code>iri</code> is either in the subject or the object position.</p>
+<h3 id="examples_25">Examples</h3>
+<p>The following snippet returns all triples that have <code>https://example.org/id/some-instance</code> in the subject or the object position:</p>
+<pre><code class="language-ts">const user = await triply.getUser()
+const dataset = await account.getDataset('my-dataset')
+console.log(await dataset.describe('https://example.org/id/some-instance'))
+</code></pre>
+<h2 id="datasetgetassetname-string-version-number">Dataset.getAsset(name: string, version?: number)</h2>
+<p>Returns the asset with the given <code>name</code> for this dataset.</p>
+<p>Optionally allows the version number (<code>version</code>) of the asset to be specified. If the version number is absent, the latest version of the assert with the given <code>name</code> is returned.</p>
+<h3 id="examples_26">Examples</h3>
+<p>The following snippet returns the original version of an image of a dog from the animals dataset:</p>
+<pre><code class="language-ts">const user = await triply.getUser()
+const dataset = user.getDataset('my-dataset')
+const asset = await dataset.getAsset('file.png', 1)
+</code></pre>
+<h2 id="datasetgetassets">Dataset.getAssets()</h2>
+<p>Returns an <a href="#async-iterator">async iterator</a> over the assets that belong to this dataset.</p>
+<p>Assets are binary files that are stored together with data graphs. Common examples include documents, images and videos.</p>
+<h3 id="examples_27">Examples</h3>
+<ul>
+<li>The following snippet prints the assets for a specific dataset:</li>
+</ul>
+<pre><code class="language-ts">const user = await triply.getUser()
+const dataset = user.getDataset('my-dataset')
+for await (const asset of dataset.getAssets()) {
+  console.log(asset)
+}
+</code></pre>
+<ul>
+<li>The following snippet prints the list of assets for a specific dataset:</li>
+</ul>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+console.log(await dataset.getAssets().toArray())
+</code></pre>
+<h2 id="datasetgetgraphname-string">Dataset.getGraph(name: string)</h2>
+<p>Each dataset with data consists out of one or more named graphs. All graphs together are thus the collection of triples of the dataset. Often the graph is used to denote a part of the dataset. For example the data model of the dataset or the metadata of the dataset. Instead of searching over the complete dataset where you want to scope it to a certain graph you can use the <code>getGraph()</code> function to specify the graph.</p>
+<p><code>Dataset.getGraph(name: string)</code> returns the graph with the given <code>name</code> that belongs to this dataset. The <code>name</code> is the string representation of the graph IRI.</p>
+<p>The <code>Dataset.getGraph</code> returns a graph object.</p>
+<h3 id="examples_28">Examples</h3>
+<p>The following snippet returns the graph about cats from the dataset about animals:</p>
+<pre><code class="language-ts">const user = await triply.getUser()
+const dataset = await user.getDataset('animals')
+const graph = dataset.getGraph('https://example.com/cats')
+</code></pre>
+<h2 id="datasetgetgraphs">Dataset.getGraphs()</h2>
+<p>Returns an <a href="#async-iterator">async iterator</a> over graphs that belong to this dataset.</p>
+<h3 id="examples_29">Examples</h3>
+<p>The following snippet retrieves the graphs for a specific dataset:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+console.log(await dataset.getGraphs().toArray())
+</code></pre>
+<h2 id="datasetgetinfo">Dataset.getInfo()</h2>
+<p>Returns information about this dataset.</p>
+<p>Information is returned in a dictionary object. Individual keys can be accessed for specific information values.</p>
+<h3 id="examples_30">Examples</h3>
+<p>The following snippet prints the information from the specified dataset of the current user:</p>
+<pre><code class="language-ts">const user = await triply.getUser()
+const dataset = await user.getDataset('my-dataset')
+console.log(await dataset.getInfo())
+</code></pre>
+<h2 id="datasetgetprefixes">Dataset.getPrefixes()</h2>
+<p>Returns the prefixes that are defined for this dataset.</p>
+<p>This contains prefix declarations that are generic and configured for this TriplyDB server, and prefix declarations that are defined for this specific dataset.</p>
+<h3 id="examples_31">Examples</h3>
+<p>The following snippet prints the prefix declarations that hold for <code>my-dataset</code>:</p>
+<pre><code class="language-ts">const user = await triply.getUser()
+const dataset = user.getDataset('my-dataset')
+for await (const prefix of dataset.getPrefixes()) {
+  console.log(prefix)
+}
+</code></pre>
+<h2 id="datasetgetservicename-string">Dataset.getService(name: string)</h2>
+<p>Returns the service with the given <code>name</code> for this dataset.</p>
+<h3 id="examples_32">Examples</h3>
+<p>The following snippet retrieves the acceptance service for the product catalog of an imaginary company:</p>
+<pre><code class="language-ts">const organization = triply.getOrganization('some-company')
+const dataset = organization.getDataset('product-catalog')
+const service = dataset.getService('acceptance')
+</code></pre>
+<h2 id="datasetgetservices">Dataset.getServices()</h2>
+<p>Returns an <a href="#async-iterator">async iterator</a> over TriplyDB services under a dataset.</p>
+<p>See class <a href="#service">Service</a> for an overview of the methods for service objects.</p>
+<h3 id="examples_33">Examples</h3>
+<ul>
+<li>The following snippet emits the services that are enabled for a specific dataset:</li>
+</ul>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+for await (const service of dataset.getServices()) {
+  console.log(service)
+}
+</code></pre>
+<p>If you do not want to iterate over the services with an async iterator, but instead want to get an array of services use the <code>.toArray()</code> call instead:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+console.log(await dataset.getServices().toArray())
+</code></pre>
+<h2 id="datasetgetstatementssubject-string-predicate-string-object-string-graph-string">Dataset.getStatements({subject?: string, predicate?: string, object?: string, graph?: string})</h2>
+<p>Returns an <a href="#async-iterator">async iterator</a> with statements (quadruples) that fit the specified pattern.</p>
+<h3 id="arguments_5">Arguments</h3>
+<ul>
+<li><code>subject</code>, if specified, is the subject term that should be matched.</li>
+<li><code>predicate</code>, if specified, is the predicate term that should be matched.</li>
+<li><code>object</code>, if specified, is the object term that should be matched.</li>
+<li><code>graph</code>, if specified, is the graph name that should be matched.</li>
+</ul>
+<h3 id="example_8">Example</h3>
+<ul>
+<li>The following prints all statements in the dataset:</li>
+</ul>
+<pre><code class="language-ts">const user = triply.getUser()
+const dataset = await user.getDataset('my-dataset')
+for await (const statement of dataset.getStatements()) {
+  console.log(statement)
+}
+</code></pre>
+<ul>
+<li>The following prints the description of the Amsterdam resource in the DBpedia dataset:</li>
+</ul>
+<pre><code class="language-ts">const association = triply.getOrganization('DBpedia-association')
+const dbpedia = association.getDataset('dbpedia')
+for await (const statement of dbpedia.getStatements({subject: 'http://dbpedia.org/resource/Amsterdam'})) {
+  console.log(statement)
+}
+</code></pre>
+<h3 id="get-the-data-locally">Get the data locally</h3>
+<p>Most of the time you do not need to download the entire dataset locally as TriplyDB supports a variety of methods to use linked data directly. But if you want to use the entire graph locally that is possible with <code>TriplyDB.js</code>. There are three methods to retrieve linked data from TriplyDB. <code>graphsToFile()</code>, <code>graphsToStore()</code> and <code>graphsToStream()</code>.</p>
+<h2 id="datasetgraphstofiledestinationpath-string-arguments-object">Dataset.graphsToFile(destinationPath: string, arguments?: object)</h2>
+<p>The first method downloads the linked data graphs directly and writes the data to the location of the <code>destinationPath</code>. The extension on the <code>destinationPath</code> defines the linked data type that is downloaded. The extensions that are supported are: <code>nt</code>, <code>nq</code>, <code>trig</code>, <code>ttl</code>, <code>jsonld</code>, <code>json</code>. If no extension is set or the extension is not recognized the function will throw an error.</p>
+<h3 id="optional_4">Optional</h3>
+<p>The optional properties accepted as arguments for <code>graphsToFile</code></p>
+<dl>
+<dt>Compressed</dt>
+<dd>Argument <code>compressed</code> optionally is a boolean defining if a graph is compressed with GNU zip (gzip) compression algorithm and will end with a `.gz` extension. </dd>
+<dt>Graph</dt>
+<dd>Argument <code>Graph</code> optionally is an specific graph that you want to write to file. These graph is an instance of a 'Graph' class</dd>
+</dl>
+<h3 id="examples_34">Examples</h3>
+<p>The following example downloads the dataset to file:</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('pokemon')
+await dataset.graphsToFile('my-filename.ttl', {compressed: true})
+</code></pre>
+<h2 id="datasetgraphstostoregraph-graph">Dataset.graphsToStore(graph?: Graph)</h2>
+<p>The second method is to download the file into a <code>N3.store</code>. The <a href="https://rdf.js.org/N3.js/docs/N3Store.html">n3 library</a> is one of the most complete libraries for handling linked data in memory. The N3.js library is an implementation of the RDF.js low-level specification that lets you handle RDF in JavaScript easily, with an asynchronous, streaming approach.</p>
+<p>To reduce the overhead of downloading your data to file and then insert it in the N3 Store. TriplyDB.js has a <code>graphsToStore()</code> where a N3 store is returned as a result of the <code>graphsToStore()</code> function.</p>
+<h3 id="optional_5">Optional</h3>
+<p>The optional argument for <code>graphsToStore</code> is <code>Graph</code>. With <code>Graph</code> you can optionally define a specific graph that you want to write to file. These graph is an instance of a 'Graph' class.</p>
+<h3 id="examples_35">Examples</h3>
+<p>The following example downloads the dataset as <code>N3.store</code>:</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('pokemon')
+const store = await dataset.graphsToStore()
+</code></pre>
+<h2 id="datasetgraphstostreamtype-compressed-rdf-js-arguments-object">Dataset.graphsToStream(type: 'compressed' | 'rdf-js', arguments?: object)</h2>
+<p>The final method to download linked data to a local source is the <code>graphsToStream</code> this function returns a stream of quads that can directly be iterated over. The Stream is either of the type <code>compressed</code> which returns a gzipped stream of linked data, or type <code>rdf-js</code> which returns a stream of quads parsed according to the <a href="https://rdf.js.org/stream-spec/#stream-interface"><code>rdf-js</code> standard</a>.</p>
+<h3 id="optional_6">Optional</h3>
+<p>The following arguments can be defined in the optional arguments object.</p>
+<dl>
+<dt>Extension</dt>
+<dd>Argument <code>Extension</code> optionally defines the linked data type that is streamed. The extensions that are supported are: `nt`, `nq`, `trig`, `ttl`, `jsonld`, `json`. </dd>
+<dt>Graph</dt>
+<dd>Argument <code>Graph</code> optionally is an specific graph that you want to write to file. This graph is an instance of a 'Graph' class</dd>
+</dl>
+<h3 id="examples_36">Examples</h3>
+<p>The following example streams through the dataset as rdf-js quad objects and prints the quad to the screen. Notice that the <code>stream</code> is an async iterator.</p>
+<p><strong>Example 1</strong></p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('pokemon')
+const stream = await dataset.graphsToStream('rdf-js', {extension: '.nq'})
+for await(const quad of stream){
+  console.log(quad)
+}
+</code></pre>
+<p>The following example streams through the dataset as chunks of ttl. and prints the buffer to the screen.</p>
+<p><strong>Example 2</strong></p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('pokemon')
+const stream = await dataset.graphsToStream('compressed', {extension: '.ttl'})
+for await(const quad of stream.pipe(zlib.createGunzip())){
+  console.log((quad as Buffer).toString())
+}
+</code></pre>
+<h2 id="datasetimportfromdatasetfromdataset-dataset-arguments-object">Dataset.importFromDataset(fromDataset: Dataset, arguments?: object)</h2>
+<p>Imports one or more named graphs from a different dataset into this dataset.</p>
+<p>Data reuse is an important principle in linked data. This functionality makes it very easy to pull in vocabularies and datasets from other places.</p>
+<p>Changes in the <code>fromDataset</code> dataset are not automatically reflected in this dataset. If you want to synchronize with changes made in the imported-from dataset, the graphs must be explicitly imported. This protects this dataset against unanticipated changes in the imported-from dataset, while still being able to stay in sync with the imported-from dataset if this is explicitly requested.</p>
+<h3 id="required_4">Required</h3>
+<ul>
+<li>Argument <code>fromDataset</code> is the dataset object from which one or more graphs are imported over to this dataset.</li>
+</ul>
+<h3 id="optional_7">Optional</h3>
+<p>The optional properties accepted as arguments for <code>importFromDataset</code></p>
+<dl>
+<dt>graphMap</dt>
+<dd>Argument `<code>graphMap</code>` optionally is an object with keys and values that implements a mapping from existing graph names (keys) to newly created graph names (values). Each key must be an existing graph name in the `from` dataset. Each value must be the corresponding graph name in this dataset. If this argument is not specified, then graph names in the `from` dataset are identical to graph names in this dataset. Note that either graphNames or graphMap can be given as optional argument and not both.</dd>
+<dt>graphNames</dt>
+<dd>Argument `<code>graphNames</code>` optionally is an array of graph names. These names can be one of three types: 'string', instances of a 'Graph' class, or instances of 'NamedNodes'. Note that either graphNames or graphMap can be given as optional argument and not both.</dd>
+<dt>overwrite</dt>
+<dd>Accepts a Boolean value. An optional property that determines whether existing graph names in this dataset are allowed to be silently overwritten. If this argument is not specified, then `false` is used as the default value.</dd>
+</dl>
+<h3 id="examples_37">Examples</h3>
+<p>The following snippet creates a new dataset (<code>newDataset</code>) and imports one graph from an existing dataset (<code>existingDataset</code>). Notice that the graph can be renamed as part of the import.</p>
+<p><strong>Example 1</strong>
+Imports the complete <code>'existingDataset'</code> dataset to the <code>'newDataset'</code>.</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const existingDataset = await account.getDataset('existingDataset')
+const newDataset = await account.addDataset('newDataset')
+await newDataset.importFromDataset(existingDataset)
+</code></pre>
+<p><strong>Example 2</strong>
+Imports <code>'anotherDataset'</code> dataset to a <code>'newDataset'</code> Where a graph from the existing dataset is renamed to the a graphname in the new dataset. Only the graphs from the graphMap are imported.</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const anotherDataset = await account.getDataset('anotherDataset')
+const newDataset = await account.addDataset('newDataset')
+await newDataset.importFromDataset(anotherDataset, { graphMap:
+  { 'https://example.org/existingDataset/graph':  'https://example.org/newDataset/graph'}
+})
+</code></pre>
+<p><strong>Example 3</strong>
+Import <code>'oneMoreDataset'</code> dataset to the <code>'newDataset'</code> Where a graph specific graph from the existing dataset is added to the new dataset. If the graph name already occurs in the <code>'newDataset'</code> it will get overwritten.</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const oneMoreDataset = await account.getDataset('oneMoreDataset')
+const newDataset = await account.addDataset('newDataset')
+await newDataset.importFromDataset(oneMoreDataset, {
+  graphNames: ['https://example.org/existingDataset/graph'],
+  overwrite: true,
+})
+</code></pre>
+<h2 id="datasetimportfromfilesfiles-liststring-file-defaultsconfig-object">Dataset.importFromFiles(files: list(string || File), defaultsConfig?: object)</h2>
+<h3 id="required_5">Required</h3>
+<p>Imports one or more files into this dataset.</p>
+<p>The files must contain RDF data.</p>
+<p><strong>Optional: defaultsConfig: object</strong></p>
+<dl>
+<dt><code>defaultGraphName</code></dt>
+<dd>Accepts a <code>string</code> value that is set as the default graph name for each imported file</dd>
+<dt><code>baseIRI</code></dt>
+<dd>Accepts a <code>string</code> value that is set as the default baseIRI for each imported file</dd>
+<dt><code>overwriteAll</code></dt>
+<dd>Accepts a <code>boolean</code> value that overwrites previously added graph names or baseIRIs (regardless of whether they came from a URL or a file)</dd>
+</dl>
+<h3 id="supported-files">Supported files</h3>
+<p>The files must contain RDF data and must be encoded in one of the following standardized RDF serialization formats: N-Quads, N-Triples, TriG, Turtle.</p>
+<h3 id="examples_38">Examples</h3>
+<p>Example 1</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+const dataset = await account.getDataset(iris)
+await dataset.importFromFiles('test.nt')
+await dataset.importFromFiles(['file.nq', 'file.tar.gz'])
+</code></pre>
+<p>Example 2</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+const dataset = await account.getDataset(iris)
+await dataset.importFromFiles('test.nt')
+await dataset.importFromFiles(['file.nq', 'file.tar.gz'], {
+  defaultGraphName: 'https://triplydb.com/Triply/example/graph/default',
+  overwriteAll: true,
+})
+</code></pre>
+<h2 id="datasetimportfromstorestore-n3store-defaultsconfig-object">Dataset.importFromStore(store: n3.Store, defaultsConfig?: object)</h2>
+<p>One of the most complete libraries for handling linked data in memory is the <a href="https://rdf.js.org/N3.js/docs/N3Store.html">n3 library</a>. The N3.js library is an implementation of the RDF.js low-level specification that lets you handle RDF in JavaScript easily, with an asynchronous, streaming approach.</p>
+<p>To reduce the overhead of converting your data from the N3 Store to a file and uploading to TriplyDB. TriplyDB.js has a <code>importFromStore()</code> where a N3 store is given as first argument and uploaded directly to triplyDB.</p>
+<h3 id="examples_39">Examples</h3>
+<pre><code class="language-ts">const store = new Store()
+store.addQuad(DataFactory.namedNode('https://triplydb.com/id/me'),DataFactory.namedNode('http://www.w3.org/2000/01/rdf-schema#label'),DataFactory.literal('me'),DataFactory.namedNode('https://triplydb.com/Triply/example/graph/default'))
+
+const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getUser()
+const dataset = (await user.getDatasets().toArray())[0]
+dataset.importFromStore(store)
+</code></pre>
+<h2 id="datasetimportfromurlsurls-liststring-defaultsconfig-object">Dataset.importFromUrls(urls: list(string), defaultsConfig?: object)</h2>
+<h3 id="required_6">Required</h3>
+<p>Imports one or more URLs into this dataset.</p>
+<p>The URLs must provide access to RDF data.</p>
+<p><strong>Optional: defaultsConfig: object</strong></p>
+<dl>
+<dt><code>defaultGraphName</code></dt>
+<dd>Accepts a <code>string</code> value that is set as the default graph name for each imported URL</dd>
+<dt><code>baseIRI</code></dt>
+<dd>Accepts a <code>string</code> value that is set as the default baseIRI for each imported URL</dd>
+<dt><code>overwriteAll</code></dt>
+<dd>Accepts a <code>boolean</code> value that overwrites previously added graph names or baseIRIs (regardless of whether they came from a URL or a file)</dd>
+</dl>
+<h3 id="examples_40">Examples</h3>
+<pre><code class="language-ts">dataset1.importFromUrls(['url1', 'url2', 'url3'])
+</code></pre>
+<h2 id="datasetremoveallgraphs">Dataset.removeAllGraphs()</h2>
+<p>Removes all graphs from this dataset.</p>
+<h3 id="examples_41">Examples</h3>
+<p>The following snippet removed all graphs from a specific dataset:</p>
+<pre><code class="language-ts">const user = await triply.getUser()
+const dataset = await user.getDataset('my-dataset')
+await dataset.removeAllGraphs()
+</code></pre>
+<h2 id="datasetremoveprefixesprefixes-string">Dataset.removePrefixes(prefixes: string[])</h2>
+<p>Removes IRI prefixes from this dataset.</p>
+<p>The <code>prefixes</code> argument is a string array, containing the prefix labels to be removed.</p>
+<h3 id="examples_42">Examples</h3>
+<p>The following snippet removes the <code>def</code> and <code>id</code> prefixes from the specified dataset.</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+await dataset.removePrefixes(['def', 'id'])
+</code></pre>
+<h2 id="datasetrenamegraphfrom-string-to-string">Dataset.renameGraph(from: string, to: string)</h2>
+<p>Renames a graph of this dataset, where <code>from</code> is the current graph name and <code>to</code> is the new graph name. The string arguments for <code>from</code> and <code>to</code> must be valid IRIs.</p>
+<h3 id="examples_43">Examples</h3>
+<p>The following snippet renames a specific graph of a specific dataset:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+await dataset.renameGraph(
+  'https://example.org/old-graph',
+  'https://example.org/new-graph'
+)
+</code></pre>
+<h2 id="datasetupdatemetadata-object">Dataset.update(metadata: object)</h2>
+<p>Updates the metadata for this dataset.</p>
+<h3 id="arguments_6">Arguments</h3>
+<p>The <code>metadata</code> argument takes a dictionary object with the following optional keys:</p>
+<p><strong>Required:</strong></p>
+<dl>
+<dt><code>accessLevel</code> </dt>
+<dd>
+<p>The access level of the dataset. The following values are supported:</p>
+<dl>
+<dt><code>'private'</code></dt>
+<dd>The dataset can only be accessed by the <a href="#account"><code>Account</code></a> object for which it is created.</dd>
+<dt><code>'internal'</code></dt>
+<dd>The dataset can only be accessed by people who are logged into the TriplyDB server.
+      <dt><code>'public'</code></dt>
+<dd>The dataset can be accessed by everybody.</dd>
+</dd></dl>
+</dd>
+</dl>
+<p><strong>Optional:</strong></p>
+<dl>
+<dt><code>description</code> </dt>
+<dd>The description of the dataset. This description can make use of Markdown.</dd>
+<dt><code>displayName</code> </dt>
+<dd>The human-readable name of the dataset. This name may contain spaces and other characters that are not allowed in the URL-friendly name.</dd>
+<dt><code>license</code> </dt>
+<dd>
+    The license of the dataset. The following license strings are currently supported:
+    <ul>
+<li><code>'CC-BY-SA'</code></li>
+<li><code>'CC0 1.0'</code></li>
+<li><code>'GFDL'</code></li>
+<li><code>'ODC-By'</code></li>
+<li><code>'ODC-ODbL'</code></li>
+<li><code>'PDDL'</code></li>
+</ul>
+</dd>
+</dl>
+<h3 id="example_9">Example</h3>
+<p>The following snippet updates the dataset's access level, description, display name and license:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+dataset.update({
+  accessLevel: 'private',
+  description: 'desc',
+  displayName: 'disp',
+  license: 'PDDL',
+})
+</code></pre>
+<h2 id="datasetuploadassetassetname-string-filepath-string">Dataset.uploadAsset(assetName: string, filePath: string)</h2>
+<p>Uploads a file that does not contain RDF data as an asset.</p>
+<h3 id="user-cases">User cases</h3>
+<p>There are several use cases for assets:</p>
+<ul>
+<li>
+<p>Source data that will be used as input files to an ETL process.</p>
+</li>
+<li>
+<p>Documentation files that describe the dataset.</p>
+</li>
+<li>
+<p>Media files (audio/image/video) that are described in the RDF graph.</p>
+</li>
+</ul>
+<h3 id="examples_44">Examples</h3>
+<p>The following snippet uploads a source CSV data file and a PDF documentation file:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+await dataset.uploadAsset('my-source-data', 'source.csv.gz')
+await dataset.uploadAsset('my-documentation', 'documentation.pdf')
+</code></pre>
+<h1 id="graph">Graph</h1>
+<p>Each dataset with data consists out of one or more named graphs. All graphs together is thus the collection of triples of the dataset. Often the graph is used to denote a part of the dataset. For example the data model of the dataset or the metadata of the dataset. A graph has as advantage that is can partition data while at the same time keep the data in the same dataset. Reducing the overhead of having to move between datasets to traverse a graph.</p>
+<p>You can retrieve either retrieve all graphs from a dataset in the form of an async iterator. Or retrieve a specific graph from a dataset.</p>
+<h3 id="examples_45">Examples</h3>
+<p>The following snippet retrieves the graph <code>'https://example.com/my-graph'</code> for a specific dataset:</p>
+<pre><code class="language-ts">const user = await triply.getUser()
+const dataset = await user.getDataset('my-dataset')
+const graph = await dataset.getGraph('https://example.com/my-graph')
+</code></pre>
+<p>The following snippet retrieves all the graphs for a specific dataset:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+const graphs = dataset.getGraphs()
+</code></pre>
+<p>The <code>Graph</code> is the smallest object that can be individually deleted or modified.</p>
+<h2 id="graphdelete">Graph.delete()</h2>
+<p>Deletes the graph of this dataset. Any copies of the graph will not be deleted. All services containing this graph will still contain the graph until the service is synced again.</p>
+<h3 id="examples_46">Examples</h3>
+<p>The following snippet deletes a specific graph that is part of the account associated with the current API token:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+const graph = await dataset.getGraph('https://example.com/my-graph')
+await graph.delete()
+</code></pre>
+<h2 id="graphgetinfo">Graph.getInfo()</h2>
+<p>Returns information about this graph.</p>
+<p>Information is returned in a dictionary object. Individual keys can be accessed for specific information values.</p>
+<p>The following keys and values are returned for <code>graph.getInfo()</code></p>
+<dl>
+<dt><code>id</code></dt>
+<dd>A hexadecimal hash of the graph to identify the graph for internal identification.</dd>
+<dt><code>graphName</code></dt>
+<dd>The URL-friendly name of the graphName that is used as identifier and name.</dd>
+<dt><code>numberOfStatements</code></dt>
+<dd>The number of statements in the graph.</dd>
+<dt><code>uploadedAt (Optional)</code></dt>
+<dd>The date/time at which the graph was uploaded to TriplyDB.</dd>
+<dt><code>importedAt (Optional)</code></dt>
+<dd>The date/time at which the query was imported from another dataset.</dd>
+<dt><code>importedFrom (Optional)</code></dt>
+<dd>
+<dl>
+<dt><code>graphName</code></dt>
+<dd>The graphname of the graph from the dataset from which the graph was imported.</dd>
+<dt><code>dataset</code></dt>
+<dd>The dataset from which the graph was imported.</dd>
+</dl>
+</dd>
+</dl>
+<h3 id="examples_47">Examples</h3>
+<p>The following snippet prints the information from the specified graph of the specified dataset of the current user:</p>
+<pre><code class="language-ts">const user = await triply.getUser()
+const dataset = await user.getDataset('my-dataset')
+const graph = await dataset.getGraph('https://example.com/my-graph')
+console.log(await graph.getInfo())
+</code></pre>
+<h2 id="graphrenamename-string">Graph.rename(name: string)</h2>
+<p>Renames the graph, the argument <code>name</code> is the new graph name. The string argument for <code>name</code> must be a valid IRI.</p>
+<h3 id="examples_48">Examples</h3>
+<p>The following snippet renames a specific graph of a specific dataset:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+const graph = await dataset.getGraph('https://example.com/my-graph')
+await dataset.rename('https://example.org/new-graph')
+</code></pre>
+<h2 id="get-the-data-locally_1">Get the data locally</h2>
+<p>Most of the time you do not need to download a graph locally as TriplyDB supports a variety of methods to use linked data directly. But if you want to use a graph locally that is possible with <code>TriplyDB.js</code>. There are three methods to retrieve linked data from a graph. <code>toFile()</code>, <code>toStore()</code> and <code>toStream()</code>.</p>
+<h2 id="graphtofiledestinationpath-string-arguments-object">Graph.toFile(destinationPath: string, arguments?: object)</h2>
+<p>The first method downloads the linked data graphs directly and writes the data to the location of the <code>destinationPath</code>. The extension on the <code>destinationPath</code> defines the linked data type that is downloaded. The extensions that are supported are: <code>nt</code>, <code>nq</code>, <code>trig</code>, <code>ttl</code>, <code>jsonld</code>, <code>json</code>. If no extension is set or the extension is not recognized the function will throw an error.</p>
+<h3 id="optional_8">Optional</h3>
+<p>The optional properties accepted as arguments for <code>toFile</code></p>
+<dl>
+<dt>Compressed</dt>
+<dd>Argument <code>compressed</code> optionally is an boolean defining if a graph is compresssed with GNU zip (gzip) compression algorithm and will end with a `.gz` extension. </dd>
+</dl>
+<h3 id="examples_49">Examples</h3>
+<p>The following example downloads the graph to file:</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('pokemon')
+const graph = await dataset.getGraph('https://example.com/my-graph')
+await graph.toFile('my-filename.ttl', {compressed: true})
+</code></pre>
+<h2 id="graphtostoregraph-graph">Graph.toStore(graph?: Graph)</h2>
+<p>The second method is to download the file into a <code>N3.store</code>. The <a href="https://rdf.js.org/N3.js/docs/N3Store.html">n3 library</a> is one of the most complete libraries for handling linked data in memory. The N3.js library is an implementation of the RDF.js low-level specification that lets you handle RDF in JavaScript easily, with an asynchronous, streaming approach.</p>
+<p>To reduce the overhead of downloading your data to file and then insert it in the N3 Store. TriplyDB.js has a <code>toStore()</code> where a N3 store is returned as a result of the the <code>toStore()</code> function.</p>
+<h3 id="examples_50">Examples</h3>
+<p>The following example downloads the graph as <code>N3.store</code>:</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('pokemon')
+const graph = await dataset.getGraph('https://example.com/my-graph')
+const store = await graph.toStore()
+</code></pre>
+<h2 id="graphtostreamtype-compressed-rdf-js-arguments-object">Graph.toStream(type: 'compressed' | 'rdf-js', arguments?: object)</h2>
+<p>The final method to download linked data to a local source is the <code>toStream</code> this function returns a stream of quads that can directly be iterated over. The Stream is either of the type <code>compressed</code> which returns a gzipped stream of linked data, or type <code>rdf-js</code> which returns a stream of quads parsed according to the <a href="https://rdf.js.org/stream-spec/#stream-interface"><code>rdf-js</code> standard</a>.</p>
+<h3 id="optional_9">Optional</h3>
+<p>The following arguments can be defined in the optional arguments object.</p>
+<dl>
+<dt>Extension</dt>
+<dd>Argument <code>Extension</code> optionally defines the linked data type that is streamed. The extensions that are supported are: `nt`, `nq`, `trig`, `ttl`, `jsonld`, `json`. </dd>
+</dl>
+<h3 id="examples_51">Examples</h3>
+<p>The following example streams through the graph as rdf-js quad objects. and prints the quad to the screen. notice that the <code>stream</code> is an async iterator.</p>
+<p><strong>Example 1</strong></p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('pokemon')
+const graph = await dataset.getGraph('https://example.com/my-graph')
+const stream = await graph.toStream('rdf-js', {extension: '.nq'})
+for await(const quad of stream){
+  console.log(quad)
+}
+</code></pre>
+<p>The following example streams through the graph as chunks of ttl. and prints the buffer to the screen.</p>
+<p><strong>Example 2</strong></p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('pokemon')
+const graph = await dataset.getGraph('https://example.com/my-graph')
+const stream = await graph.toStream('compressed', {extension: '.ttl'})
+for await(const quad of stream.pipe(zlib.createGunzip())){
+  console.log((quad as Buffer).toString())
+}
+</code></pre>
+<h1 id="organization">Organization</h1>
+<p>Instances of class <code>Organization</code> denote organizations in TriplyDB.</p>
+<h3 id="obtaining-instances">Obtaining instances</h3>
+<p>Organizations are obtained with method <a href="#appgetorganizationname-string"><code>App.getOrganization(name: string)</code></a>:</p>
+<pre><code class="language-ts">const organization = await triply.getOrganization('Triply')
+</code></pre>
+<p>Alternatively, organizations are obtained by first obtaining an account (<a href="#appgetaccountname-string"><code>App.getAccount(name?: string)</code></a>) and then casting it to an organization (<a href="#accountasorganization"><code>Account.asOrganization()</code></a>):</p>
+<pre><code class="language-ts">const account = await triply.getAccount('Triply')
+const organization = account.asOrganization()
+</code></pre>
+<h3 id="inheritance">Inheritance</h3>
+<p><code>Organization</code> is a subclass of <a href="#account"><code>Account</code></a>, from which it inherits most of its methods.</p>
+<h2 id="organizationadddatasetname-string-metadata-object">Organization.addDataset(name: string, metadata?: object)</h2>
+<p>Adds a new TriplyDB dataset with the given <code>name</code> to the current organization.</p>
+<p>Inherited from <a href="#accountadddatasetname-string-metadata-object"><code>Account.addDataset(name: string, metadata?: object)</code></a>.</p>
+<h2 id="organizationaddmemberuser-user-role-role">Organization.addMember(user: User, role?: Role)</h2>
+<p>Adds a member to the given <code>Organization</code>, with the given <code>role</code> of either member or owner.</p>
+<h3 id="arguments_7">Arguments</h3>
+<ul>
+<li>
+<p>The <code>user</code> argument has to be a user object of the user which should be added to the organization.</p>
+</li>
+<li>
+<p>The <code>role</code> argument can be either <code>'member'</code> or <code>'owner'</code>. If this argument is not specified, then <code>'member'</code> is used as the default.</p>
+</li>
+</ul>
+<dl>
+<dt><code>'member'</code></dt>
+<dd>A regular member that is allowed to read and write the datasets that are published under the organization.</dd>
+<dt><code>'owner'</code></dt>
+<dd>An owner of the organization. Owners have all the rights of regular users, plus the ability to add/remove users to/from the organization, the ability to change the roles of existing users, and the ability to delete the organization.</dd>
+</dl>
+<h3 id="examples_52">Examples</h3>
+<p>The following snippet adds user John Doe to the Triply organization as a regular member.</p>
+<pre><code class="language-ts">const organization = await triply.getOrganization('Triply')
+const johnDoe = await app.getUser('john-doe')
+await organization.addMember(johnDoe)
+</code></pre>
+<h2 id="organizationremovememberuser-user">Organization.removeMember(user: User)</h2>
+<p>Removes a member from the given <code>Organization</code>.</p>
+<h2 id="organizationaddqueryname-string-metadata-object">Organization.addQuery(name: string, metadata: object)</h2>
+<p>Adds a new TriplyDB query to the current organization.</p>
+<p>Inherited from <a href="#accountaddquerymetadata-object"><code>Account.addQuery(name: string, metadata: object)</code></a>.</p>
+<h2 id="organizationensurestoryname-string-metadata-object">Organization.ensureStory(name: string, metadata: object)</h2>
+<p>Ensures the existence of a story with the given <code>name</code> and with the specified <code>metadata</code>.</p>
+<p>Inherited from <a href="#accountensurestoryname-string-metadata-object"><code>Account.ensureStory(name: string, metadata: object)</code></a>.</p>
+<h2 id="organizationaddstoryname-string-metadata-object">Organization.addStory(name: string, metadata?: object)</h2>
+<p>Adds a new TriplyDB story with the given <code>name</code> to the current organization.</p>
+<p>Inherited from <a href="#accountaddstoryname-string-metadata-object"><code>Account.addStory(name: string, metadata?: object)</code></a>.</p>
+<h2 id="organizationdelete">Organization.delete()</h2>
+<p>Deletes this account. This also deletes all datasets, stories and queries that belong to this organization.</p>
+<h3 id="examples_53">Examples</h3>
+<p>The following code example deletes the specified organization:</p>
+<pre><code class="language-ts">const organization = await triply.getOrganization('Neo4j')
+await organization.delete()
+</code></pre>
+<h2 id="organizationensuredatasetname-string-metadata-object">Organization.ensureDataset(name: string, metadata?: object)</h2>
+<p>Ensures the existence of a dataset with the given <code>name</code> and with the specified <code>metadata</code>.</p>
+<p>Inherited from <a href="#accountensuredatasetname-string-metadata-object"><code>Account.ensureDataset(name: string, metadata?: object)</code></a>.</p>
+<h2 id="organizationgetdatasetname-string">Organization.getDataset(name: string)</h2>
+<p>Returns the dataset with the given <code>name</code> that is published by this organization.</p>
+<p>Inherited from <a href="#accountgetdatasetname-string"><code>Account.getDataset(name: string)</code></a>.</p>
+<h2 id="organizationgetdatasets">Organization.getDatasets()</h2>
+<p>Returns an <a href="#async-iterator">async iterator</a> over the accessible datasets that belong to this organization.</p>
+<p>Inherited from <a href="#accountgetdatasets"><code>Account.getDatasets()</code></a>.</p>
+<h2 id="organizationgetmembers">Organization.getMembers()</h2>
+<p>Returns the list of memberships for the given organization.</p>
+<h3 id="return-type">Return type</h3>
+<p>A membership contains the following components:</p>
+<dl>
+<dt><code>role</code></dt>
+<dd>The role of the membership (<code>OrgRole</code>): either <code>'owner'</code> for owners of the organization, or <code>'member'</code> for regular members. The difference between owners and regular members is that owners can perform user management for the organization (add/remove/change memberships).</dd>
+<dt><code>user</code></dt>
+<dd>An instance of class <a href="#user"><code>User</code></a>.</dd>
+<dt><code>createdAt</code></dt>
+<dd>A date/time string.</dd>
+<dt>updatedAt</dt>
+<dd>A date/time string.</dd>
+</dl>
+<h3 id="examples_54">Examples</h3>
+<pre><code class="language-ts">const org = await triply.getOrganization('acme')
+for (const membership of await org.getMembers()) {
+  console.log(user)
+}
+</code></pre>
+<h3 id="see-also_16">See also</h3>
+<p>Memberships of organization are TriplyDB <a href="#user">users</a>.</p>
+<h2 id="organizationgetpinneditems">Organization.getPinnedItems()</h2>
+<p>Returns the list of datasets, stories and queries that are pinned for the current organization.</p>
+<p>Inherited from <a href="#accountgetpinneditems"><code>Account.getPinnedItems()</code></a>.</p>
+<h2 id="organizationremovememberuser-user_1">Organization.removeMember(user: User)</h2>
+<p>Removes the specified <code>user</code> from this organization.</p>
+<h3 id="arguments_8">Arguments</h3>
+<p>The <code>user</code> argument has to be a <a href="#user"><code>User</code></a> object of a user.</p>
+<h3 id="existence-considerations">Existence considerations</h3>
+<p>The user must be a current member of the organization for this method to succeed. If the user is not a current member of the organization, an error is thrown.</p>
+<h3 id="examples_55">Examples</h3>
+<ul>
+<li>The following snippet removes John Doe from the Triply organization, using a string argument:</li>
+</ul>
+<pre><code class="language-ts">const organization = await triply.getOrganization('Triply')
+const johnDoe = await app.getUser('john-doe')
+await organization.removeMember(johnDoe)
+</code></pre>
+<ul>
+<li>The following snippet removes John Doe from the Triply organization, using a <a href="#user"><code>User</code></a> object:</li>
+</ul>
+<pre><code class="language-ts">const organization = await triply.getOrganization('Triply')
+const user = await triply.getUser('john-doe')
+await organization.removeMember(user)
+</code></pre>
+<h2 id="organizationsetavatarfile-string">Organization.setAvatar(file: string)</h2>
+<p>Sets a new image that characterized this organization.</p>
+<p>Inherited from <a href="#accountsetavatarfile-string"><code>Account.setAvatar(file: string)</code></a>.</p>
+<h2 id="organizationupdatemetadata-object">Organization.update(metadata: object)</h2>
+<p>Updates the metadata for this account.</p>
+<p>Inherited from <a href="#accountupdatemetadata-object"><code>Account.update(metadata: object)</code></a>.</p>
+<h1 id="query">Query</h1>
+<p>A Saved Query is a versioned SPARQL query with its own URL. Using this URL,
+users are able to view any version of the query and its results. It can also be
+used to run the query and retrieve the results from a browser or a program,
+removing the hassle of figuring out how to run a SPARQL query.</p>
+<p>Saved queries come with a REST API that can be configured with the use a SPARQL API variables.</p>
+<h2 id="querydelete">Query.delete()</h2>
+<p>Permanently deletes this query and all of its versions.</p>
+<h2 id="querygetinfo">Query.getInfo()</h2>
+<p>The returned dictionary object includes the following keys:</p>
+<dl>
+<dt><code>accessLevel</code></dt>
+<dd>
+<p>The access level of the query. The following values are possible:</p>
+<dl>
+<dt><code>'private'</code> (default)</dt>
+<dd>The dataset can only be accessed by organization members.</dd>
+<dt><code>'internal'</code></dt>
+<dd>The dataset can only be accessed by users that are logged into the TriplyDB server.
+      <dt><code>'public'</code></dt>
+<dd>The dataset can be accessed by everybody.</dd>
+</dd></dl>
+</dd>
+<dt><code>autoselectService</code></dt>
+<dd>Whether the SPARQL service is automatically chosen (<code>true</code>), or whether a specific SPARQL service is configured (<code>false</code>).</dd>
+<dt><code>createdAt</code></dt>
+<dd>The date/time at which the query was created.</dd>
+<dt><code>dataset</code></dt>
+<dd>A dictionary object representing the dataset against which the query is evaluated.</dd>
+<dt><code>description</code></dt>
+<dd>The human-readable description of the query. This typically explains what the query does in natural language.</dd>
+<dt><code>displayName</code></dt>
+<dd>The human-readable name of the query. This name may include spaces and other characters that are not allowed in the URL-friendly name.</dd>
+<dt><code>name</code></dt>
+<dd>The URL-friendly name of the query that is used in URL paths. This name can only include ASCII letters and hyphens.</dd>
+<dt><code>numberOfVersions</code></dt>
+<dd>The number of currently stored versions of this query.</dd>
+<dt><code>owner</code></dt>
+<dd>A dictionary object representing the account (organization or user) to which the query belongs.</dd>
+<dt>🚧<code>link</code></dt>
+<dd>Stores part of the URL to run the query. Please use <code>Query.getRunLink()</code> to obtain the full URL to run the query.</dd>
+<dt><code>service</code></dt>
+<dd>The location of the SPARQL endpoint that is used to run the query.</dd>
+<dt><code>updatedAt</code></dt>
+<dd>The date/time at which the query was last modified.</dd>
+</dl>
+<h2 id="querygetstringapivariables-object">Query.getString(apiVariables?: object)</h2>
+<p>Returns the query string of the current version of this query.</p>
+<p>Optionally, arguments can be specified for the API variables to this query.</p>
+<h3 id="examples_56">Examples</h3>
+<p>The following code stores the SPARQL query string for the <code>query</code> object:</p>
+<pre><code class="language-ts">const queryString = await query.getString()
+</code></pre>
+<h2 id="queryaddversionmetadata-object">Query.addVersion(metadata: object)</h2>
+<p>Adds a new version to the query used. It requires similar options to that of <code><code>Query.addQuery</code></code>.</p>
+<h3 id="arguments_9">Arguments</h3>
+<p>At least one of the following arguments is required to create a new version. Any argument not given will be copied from the previous version of that query.</p>
+<dl>
+<dt><code>queryString: string</code> </dt>
+<dd>the SPARQL compliant query as a string value</dd>
+<dt><code>output: string</code></dt>
+<dd>The visualization plugin that is used to display the result set. If none is set it defaults to <code>'table'</code>. Other options may include: <code>'response'</code>, <code>'geo'</code>, <code>'gallery'</code>, <code>'markup'</code>, etc</dd>
+<dt><code>variables: Variable[]</code></dt>
+<dd>
+<p>A list of objects with the following keys:</p>
+<dl>
+<dt>IRI variable</dt>
+<dd>An object of the form `Variable`
+      (see [`Account.addQuery()`](#accountaddqueryname-string-metadata-object)
+      </dd>
+</dl></dd>
+</dl>
+<ul>
+<li>You can see how many versions exist on a query accessing <code>Query.getInfo().numOfVersions</code></li>
+<li>You can use a specified version of a query accessing <code>Query.useVersion(x: number)</code></li>
+</ul>
+<h2 id="querygetrunlink">Query.getRunLink()</h2>
+<p>Returns the URL link to run the query.
+It currently does not support the use of variables.</p>
+<h2 id="queryresultsapivariables-object-options-object">Query.results(apiVariables?: object, options?: object)</h2>
+<p><code>Query.results()</code> function will automatically return all the results from a saved query. You can retrieve both results from a <code>select</code> or <code>ask</code> query and a <code>construct</code> or <code>describe</code> query. The results are returned as an <code>async iterator</code>.</p>
+<p>If there are more than 10 000 query results, they could be retrieved using <a href="https://triply.cc/docs/triply-db-getting-started/#pagination-with-triplydbjs">pagination with TriplyDB.js</a>.</p>
+<h3 id="examples_57">Examples</h3>
+<p>Get the results of a query by setting a <code>results</code> variable. More specifically, for construct queries you use the <code>statements()</code> call:</p>
+<pre><code class="language-ts">const triply = App.get({token: process.env.TOKEN})
+const account = await triply.getAccount('account-name')
+const query = await account.getQuery('name-of-some-query')
+
+// For select queries you use the `statements()` call:
+const results = query.results().statements()
+// For select queries you use the `bindings()` call:
+const results = query.results().bindings()
+</code></pre>
+<p>Additionally, saved queries can have 'API variables' that allow you to specify variables that are used in the query. Thus, if you have query parameters, pass their values as the first argument to <code>results</code> as follows:</p>
+<pre><code class="language-ts">const triply = App.get({token: process.env.TOKEN})
+const account = await triply.getAccount('account-name')
+const query = await account.getQuery('name-of-some-query')
+// For SPARQL construct queries.
+const results = query.results({
+ someVariable: 'value of someVariable',
+ anotherVariable: 'value of anotherVariable'
+}).statements()
+// For SPARQL select queries.
+const results = query.results({
+ someVariable: 'value of someVariable',
+ anotherVariable: 'value of anotherVariable'
+}).bindings()
+</code></pre>
+<h2 id="queryupdatemetadata-object">Query.update(metadata: object)</h2>
+<p>Updates the metadata for the saved query. This does not result in a new query version. It requires similar options to that of <code><code>Query.addQuery</code></code>.</p>
+<h3 id="arguments_10">Arguments</h3>
+<p>At least one of the following arguments is required to update the metadata. Any argument given will be copied from the previous version of that query.</p>
+<dl>
+<dt><code>accessLevel</code></dt>
+<dd>
+<p>The access level of the query. The following values are possible:</p>
+<dl>
+<dt><code>'private'</code> (default)</dt>
+<dd>The dataset can only be accessed by organization members.</dd>
+<dt><code>'internal'</code></dt>
+<dd>The dataset can only be accessed by users that are logged into the TriplyDB server.
+      <dt><code>'public'</code></dt>
+<dd>The dataset can be accessed by everybody.</dd>
+</dd></dl>
+</dd>
+<dt><code>autoselectService</code><dt>
+<dd>Whether the SPARQL service is automatically chosen (<code>true</code>), or whether a specific SPARQL service is configured (<code>false</code>).</dd>
+<dt><code>dataset</code></dt>
+<dd>A dictionary object representing the dataset against which the query is evaluated.</dd>
+<dt><code>description</code></dt>
+<dd>The human-readable description of the query. This typically explains what the query does in natural language.</dd>
+<dt><code>displayName</code></dt>
+<dd>The human-readable name of the query. This name may include spaces and other characters that are not allowed in the URL-friendly name.</dd>
+<dt><code>name</code></dt>
+<dd>The URL-friendly name of the query that is used in URL paths. This name can only include ASCII letters and hyphens.</dd>
+<dt><code>preferredService</code></dt>
+<dd>If the <code>autoselectService</code> is not selected the user can set the preferred service.</dd>
+</dt></dt></dl>
+<h2 id="queryuseversionversion-numberlatest">Query.useVersion(version: number|'latest')</h2>
+<p>A saved query is saved with a version number. Each time the query or the visualization changes the version number is incremented with one. When you want to retrieve a saved query with a particular version you need the <code>useVersion</code> function. The function returns the query object corresponding to that version of the query. If you want to use the latest version of the query you need to set the version argument to <code>'latest'</code>.</p>
+<h3 id="example_10">Example</h3>
+<pre><code class="language-ts">const user = await triply.getAccount('my-account')
+const query = await user.getQuery('my-query')
+const query_1 = await query.useVersion(1)
+</code></pre>
+<h1 id="service">Service</h1>
+<p>Service objects describe specific functionalities that can be created over datasets in TriplyDB.</p>
+<p>Service objects are obtained through the the following methods:</p>
+<ul>
+<li><a href="#datasetaddserviceservicetype-string-name-string"><code>Dataset.addService</code></a></li>
+<li><a href="#datasetgetservices"><code>Dataset.getServices</code></a></li>
+</ul>
+<p>A service always has one of the following statuses:</p>
+<dl>
+<dt>Removing</dt>
+<dd>The service is being removed.</dd>
+<dt>Running</dt>
+<dd>The service is running normally.</dd>
+<dt>Starting</dt>
+<dd>The service is starting up.</dd>
+<dt>Stopped</dt>
+<dd>The services was stopped in the past. It cannot be used at the moment, but it can be enable again if needed.</dd>
+<dt>Stopping</dt>
+<dd>The service is currently being stopped.</dd>
+</dl>
+<h2 id="servicedelete">Service.delete()</h2>
+<p>Permanently deletes this service.</p>
+<h3 id="examples_58">Examples</h3>
+<pre><code class="language-ts">const user = await triply.getAccount('my-account')
+const dataset = await user.getDataset('my-dataset')
+const service = await dataset.addService('my-service')
+await service.delete()
+</code></pre>
+<h2 id="servicegetinfo">Service.getInfo()</h2>
+<p>Returns information about this service.</p>
+<p>Information is returned in a dictionary object. Individual keys can be accessed for specific information values.</p>
+<h3 id="examples_59">Examples</h3>
+<ul>
+<li>The following snippet prints information about the newly created service (named <code>my-service</code>):</li>
+</ul>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+const service = await dataset.addService('my-service')
+console.log(await service.getInfo())
+</code></pre>
+<h2 id="serviceisuptodate">Service.isUpToDate()</h2>
+<p>Returns whether this service is synchronized with the dataset contents.</p>
+<h3 id="synchronization">Synchronization</h3>
+<p>Because services must be explicitly synchronized in TriplyDB, it is possible to have services that expose an older version of the dataset and services that expose a newer version of the dataset running next to one another. There are two very common use cases for this:</p>
+<ul>
+<li>
+<p>The production version of an application or website runs on an older service. The data does not change, so the application keeps working. The acceptance version of the same application or website runs on a newer service. Once the acceptance version is finished, it becomes the production version and a new service for the new acceptance version is created, etc.</p>
+</li>
+<li>
+<p>An old service is used by legacy software. New users are using the newer endpoint over the current version of the data, but a limited number of older users want to use the legacy version.</p>
+</li>
+</ul>
+<h3 id="examples_60">Examples</h3>
+<p>The following code checks whether a specific service is synchronized:</p>
+<pre><code class="language-ts">const account = await triply.getAccount()
+const dataset = await account.getDataset('my-dataset')
+const service = await dataset.ensureService('my-service', {type: 'sparql'})
+console.log(await service.isUpToDate())
+</code></pre>
+<h2 id="serviceupdate">Service.update()</h2>
+<p>Synchronizes the service. Synchronization means that the data that is used in the service is made consistent with the data that is present in the graphs of the dataset.</p>
+<p>When one or more graphs are added or deleted, existing services keep exposing the old state of the data. The changes in the data are only exposed in the services after synchronization is performed.</p>
+<h3 id="examples_61">Examples</h3>
+<p>When there are multiple services, it is common to synchronize them all <em>in sequence</em>. This ensures that there are always one or more services available. This allows applications to use such services as their backend without any downtime during data changes.</p>
+<p>The following code synchronizes all services of a dataset in sequence:</p>
+<pre><code class="language-ts">for (const service of await dataset.getServices()) {
+  service.update()
+}
+</code></pre>
+<p>Although less common, it is also possible to synchronize all services of a dataset <em>in parallel</em>. This is typically not used in production systems, where data changes must not result in any downtime. Still, parallel synchronization can be useful in development and/or acceptance environments.</p>
+<p>The following code synchronizes all services of a dataset in parallel:</p>
+<pre><code class="language-ts">await Promise.all(dataset.getServices().map(service =&gt; service.update()))
+</code></pre>
+<h2 id="servicewaituntilrunning">Service.waitUntilRunning()</h2>
+<p>A service can be stopped or updated. The use of asynchronous code means that when a start command is given it takes a while before the service is ready for use. To make sure a service is available for querying you can uesr the function <code>waitUntilRunning()</code> to make sure that the script will wait until the service is ready for use.</p>
+<h3 id="example_11">Example</h3>
+<p>An example of a service being updated and afterwards a query needs to be executed:</p>
+<pre><code class="language-ts">const triply = App.get({ token: process.env.TOKEN })
+const user = await triply.getAccount()
+const dataset = await user.getDataset('some-dataset')
+const service = await dataset.getService('some-service')
+// starting a service but does not wait until it is started
+await service.start()
+// Function that checks if a service is available
+await service.waitUntilRunning()
+</code></pre>
+<h1 id="story">Story</h1>
+<p>A TriplyDB data story is a way of communicating information about your linked data along with explanatory text while also being able to integrate query results. To create Data stories with <code>TriplyDB.js</code> You can use the
+<code>User.ensureStory</code> or <code>User.addStory</code> functions to create. If you want to retrieve an already created data story you can use the functions <code>User.getStories</code> to iterate over all stories, or retrieve a particular one with <code>User.getStory</code>.</p>
+<p>Story objects are obtained through the the following methods:</p>
+<ul>
+<li><a href="#UseraddStoryname-string-metadata-object"><code>User.addStory</code></a></li>
+<li><a href="#UserensureStoryname-string-metadata-object"><code>User.ensureStory</code></a></li>
+<li><a href="#UsergetStories"><code>User.getStories</code></a></li>
+<li><a href="#UsergetStoryname-string"><code>User.getStory</code></a></li>
+</ul>
+<h2 id="storydelete">Story.delete()</h2>
+<p>Deletes this story. This deletes all paragraphs that belong to this story.</p>
+<p>This <em>does not</em> delete the queries that are linked into this story. If you also want to delete the queries, then this must be done with distinct calls of <a href="#querydelete"><code>Query.delete()</code></a>.</p>
+<h3 id="examples_62">Examples</h3>
+<p>The following code example deletes a story called <code>'example-story'</code> under the current user's account:</p>
+<pre><code class="language-ts">const user = await triply.getUser()
+const story = await user.getStory('example-story')
+await story.delete()
+</code></pre>
+<h2 id="storygetinfo">Story.getInfo()</h2>
+<p>Returns information about this data story.</p>
+<p>Information is returned in a dictionary object. Individual keys can be accessed for specific information values.</p>
+<h3 id="examples_63">Examples</h3>
+<p>The following snippet prints the paragraphs that appear in a data story:</p>
+<pre><code class="language-ts">for (const element of (await story.getInfo()).content) {
+  if ((element.type = 'paragraph')) {
+    console.log(element.paragraph)
+  }
+}
+</code></pre>
+<h1 id="user">User</h1>
+<p>Instances of class <code>User</code> denote users in TriplyDB.</p>
+<h3 id="obtaining-instances_1">Obtaining instances</h3>
+<p>Users are obtained with method <a href="#appgetusername-string"><code>App.getUser(name?: string)</code></a>:</p>
+<pre><code class="language-ts">const user = triply.getUser('john-doe')
+const user = triply.getUser()
+</code></pre>
+<p>Alternatively, users are obtained by first obtaining an account (<a href="#appgetaccountname-string"><code>App.getAccount(name?: string)</code></a>) and then casting it to a use (<a href="#accountasuser"><code>Account.asUser()</code></a>):</p>
+<pre><code class="language-ts">const account = await triply.getAccount('john-doe')
+const user = account.asUser()
+</code></pre>
+<h3 id="inheritance_1">Inheritance</h3>
+<p><code>User</code> is a subclass of <a href="#account">Account</a>, from which it inherits most of its methods.</p>
+<h3 id="limitations">Limitations</h3>
+<p>Users cannot be created or deleted through the TriplyDB.js library. See the <a href="/docs/triply-db-getting-started">Triply Console documentation</a> for how to create and delete users through the web-based GUI.</p>
+<h2 id="useradddatasetname-string-metadata-object">User.addDataset(name: string, metadata?: object)</h2>
+<p>Adds a new TriplyDB dataset with the given <code>name</code> to the current account.</p>
+<p>Inherited from <a href="#accountadddatasetname-string-metadata-object"><code>Account.addDataset(name: string, metadata?: object)</code></a>.</p>
+<h2 id="useraddquerymetadata-object">User.addQuery(metadata: object)</h2>
+<p>Adds a new TriplyDB query to the current user.</p>
+<p>Inherited from <a href="#accountaddquerymetadata-object"><code>Account.addQuery(metadata: object)</code></a>.</p>
+<h2 id="userensurestoryname-string-metadata-object">User.ensureStory(name: string, metadata: object)</h2>
+<p>Ensures the existence of a story with the given <code>name</code> and with the specified <code>metadata</code>.</p>
+<p>Inherited from <a href="#accountensurestoryname-string-metadata-object"><code>Account.ensureStory(name: string, metadata: object)</code></a>.</p>
+<h2 id="useraddstoryname-string-metadata-object">User.addStory(name: string, metadata?: object)</h2>
+<p>Adds a new TriplyDB story with the given <code>name</code> to the current user.</p>
+<p>Inherited from <a href="#accountaddstoryname-string-metadata-object"><code>Account.addStory(name: string, metadata?: object)</code></a>.</p>
+<h2 id="usercreateorganizationname-string-metadata-object">User.createOrganization(name: string, metadata?: object)</h2>
+<p>Creates a new organization for which this user will be the owner.</p>
+<h3 id="access-restrictions_3">Access restrictions</h3>
+<p>This method requires an API token with write access for this user.</p>
+<h3 id="arguments_11">Arguments</h3>
+<ul>
+<li>
+<p>Argument <code>name</code> is the URL-friendly name of the new organization. This name can only contain alphanumeric characters and hyphens (<code>[A-Za-z0-9\-]</code>).</p>
+</li>
+<li>
+<p>The optional <code>metadata</code> argument can be used to specify additional metadata. This is a dictionary object with the following optional keys:</p>
+</li>
+</ul>
+<dl>
+<dt><code>description</code></dt>
+<dd>The description of the organization. This description can make use of Markdown.</dd>
+<dt><code>email</code></dt>
+<dd>The email address at which the organization can be reached.</dd>
+<dt><code>name</code></dt>
+<dd>The human-readable name of the organization. This name may contain spaces and other non-alphanumeric characters.</dd>
+</dl>
+<h3 id="examples_64">Examples</h3>
+<p>The following snippet creates a new organization for which John Doe will be the owner. Notice that both a required URL-friendly name (<code>'my-organization'</code>) and an optional display name (<code>'My Organization'</code>) are specified.</p>
+<pre><code class="language-ts">const user = await triply.getUser('john-doe')
+await user.createOrganization(my-organization, {name: 'My Organization'}))
+</code></pre>
+<h2 id="userensuredatasetname-string-metadata-object">User.ensureDataset(name: string, metadata?: object)</h2>
+<p>Ensures the existence of a dataset with the given <code>name</code> and with the specified <code>metadata</code>.</p>
+<p>Inherited from <a href="#accountensuredatasetname-string-metadata-object"><code>Account.ensureDataset(name: string, metadata?: object)</code></a>.</p>
+<h2 id="usergetdatasetname-string">User.getDataset(name: string)</h2>
+<p>Returns the TriplyDB dataset with the given <code>name</code> that is published by this user.</p>
+<p>Inherited from <a href="#accountgetdatasetname-string"><code>Account.getDataset(name: string)</code></a>.</p>
+<h2 id="usergetdatasets">User.getDatasets()</h2>
+<p>Returns an <a href="#async-iterator">async iterator</a> over the accessible datasets for the current user.</p>
+<p>Inherited from <a href="#accountgetdatasets"><code>Account.getDatasets()</code></a>.</p>
+<h2 id="usergetinfo">User.getInfo()</h2>
+<p>Returns information about this user.</p>
+<p>Information is returned in a dictionary object. Individual keys can be accessed for specific information values.</p>
+<p>The information object for users includes the following keys:</p>
+<dl>
+<dt><code>avatarUrl</code></dt>
+<dd>A URL to the user image.</dd>
+<dt><code>accountName</code></dt>
+<dd>The URL-friendly name of the user.</dd>
+<dt><code>name</code></dt>
+<dd>The human-readable display name of the user</dd>
+<dt><code>description</code></dt>
+<dd>The human-readable description of the user.</dd>
+<dt><code>createdAt</code></dt>
+<dd>The date and time on which the user was created.</dd>
+<dt><code>datasetCount</code></dt>
+<dd>The number of datasets for the user.</dd>
+<dt><code>queryCount</code></dt>
+<dd>The number of queries for the user.</dd>
+<dt><code>storyCount</code></dt>
+<dd>The number of stories for the user</dd>
+<dt><code>pinnedItems</code></dt>
+<dd>An array containing the pinned items (datasets, stories and queries) for the user.</dd>
+<dt><code>role</code></dt>
+<dd>The role of the user. Either 'light', 'regular' or 'siteAdmin'.</dd>
+<dt><code>orgs</code></dt>
+<dd>An array of organizations of which the user is a member.</dd>
+<dt><code>Email address</code></dt>
+<dd>The email address of the user.</dd>
+<dt><code>updatedAt</code></dt>
+<dd>The date and time on which the user was last updated.</dd>
+<dt><code>lastActivity</code></dt>
+<dd>The date and time on which the user was last online on TriplyDB.</dd>
+</dl>
+<h3 id="examples_65">Examples</h3>
+<p>The following snippet prints an overview of account that is associated with the used API token:</p>
+<pre><code class="language-ts">const user = await triply.getUser()
+console.log(await user.getInfo())
+</code></pre>
+<h2 id="usergetorganizations">User.getOrganizations()</h2>
+<p>Returns an <a href="#async-iterator">async iterator</a> over the organizations that this user is a member of.</p>
+<h3 id="order-considerations_1">Order considerations</h3>
+<p>The order in the list reflects the order in which the organizations appear on the user page in the Triply GUI.</p>
+<h3 id="examples_66">Examples</h3>
+<p>The following snippet prints the list of organizations that John Doe is a member of:</p>
+<pre><code class="language-ts">const user = await triply.getUser('john-doe')
+for await (const organization of await user.getOrganizations()) {
+  console.log((await organization.getInfo()).name)
+}
+</code></pre>
+<h3 id="see-also_17">See also</h3>
+<p>The <a href="#async-iterator">async iterator</a> contains organization objects. See the section about the <a href="#organization"><code>Organization</code></a> class for methods that can be used on such objects.</p>
+<h2 id="usergetpinneditems">User.getPinnedItems()</h2>
+<p>Returns the list of datasets, stories and queries that are pinned for the current user.</p>
+<p>Inherited from <a href="#accountgetpinneditems"><code>Account.getPinnedItems()</code></a>.</p>
+<h2 id="usersetavatarfile-string">User.setAvatar(file: string)</h2>
+<p>Sets a new image that characterized this user.</p>
+<p>Inherited from <a href="#accountsetavatarfile-string"><code>Account.setAvatar(file: string)</code></a>.</p>
+<h2 id="userupdatemetadata-object">User.update(metadata: object)</h2>
+<p>Updates the metadata for this user.</p>
+<p>Inherited from <a href="#accountupdatemetadata-object"><code>Account.update(metadata: object)</code></a>.</p>
+<h1 id="faq">FAQ</h1>
+<p>This section includes answers to frequently asked questions. Please contact <a href="mailto:info@triply.cc">info@triply.cc</a> if you have a question that does not appear in this list.</p>
+<h2 id="how-to-perform-a-sparql-query">How to perform a SPARQL query?</h2>
+<p>The SPARQL 1.1 Protocol standard specifies a native HTTP API for performing SPARQL requests. Such requests can be performed with regular HTTP libraries.</p>
+<p>Here we give an example indicating how such an HTTP library can be used:</p>
+<pre><code class="language-ts">import SuperAgent from 'superagent';
+const reply = await SuperAgent.post('SPARQL_ENDPOINT')
+  .set('Accept', 'application/sparql-results+json')
+  .set('Authorization', 'Bearer ' + process.env.TOKEN)
+  .buffer(true)
+  .send({ query: 'select * { WHERE_CLAUSE } offset 0 limit 10000' })
+// break condition when the result set is empty.
+
+// downsides: caching, string manipulation
+</code></pre>
+<h2 id="what-is-the-latest-version-of-triplydbjs">What is the latest version of TriplyDB.js?</h2>
+<p>The latest version of TriplyDB.js can be found in <a href="https://www.npmjs.com/package/@triply/triplydb">the NPM repository</a>.</p>
+<h2 id="what-to-do-when-the-error-unauthorized-appears">What to do when the “Error: Unauthorized” appears?</h2>
+<p>This error appears whenever an operation is performed for which the user denoted by the current API token is not authorized.</p>
+<p>One common appearance of this error is when the environment variable <code>TOKEN</code> is not set to an API token.</p>
+<p>The current value of the environment variable can be tested by running the following command in the terminal:</p>
+<pre><code class="language-sh">echo $TOKEN
+</code></pre>
+<h2 id="how-do-i-get-the-results-of-a-saved-query-using-triplydbjs">How do I get the results of a saved query using TriplyDB.js?</h2>
+<p>To reliably retrieve a large number of results as the output of a <code>construct</code> or <code>select</code> query, follow these steps:</p>
+<ol>
+<li>Import the triplydb library.</li>
+</ol>
+<p><code>ts
+   import App from '@triply/triplydb';</code></p>
+<ol>
+<li>Set your parameters, regarding the TriplyDB server and the account in which you have saved the query as well as the name of the query.</li>
+</ol>
+<p><code>ts
+   const triply = App.get({ url: 'https://api.triplydb.com' })
+   const account = await triply.getAccount('account-name')
+   const query = await account.getQuery('name-of-some-query')</code></p>
+<p>If the query is not public, you should set your API token rather than the URL.</p>
+<p><code>ts
+   const triply = App.get({ token: process.env.TOKEN })</code></p>
+<ol>
+<li>Do not forget that we perform TriplyDB.js requests within an <a href="#create-your-first-script">async context</a>. That is:</li>
+</ol>
+<p><code>ts
+   async function run() {
+     // Your code goes here.
+   }
+   run()</code></p>
+<ol>
+<li>Get the results of a query by setting a <code>results</code> variable. More specifically, for construct queries:</li>
+</ol>
+<p><code>ts
+   const results = query.results().statements()</code></p>
+<p>For select queries:</p>
+<p><code>ts
+   const results = query.results().bindings()</code></p>
+<p>Note that for SPARQL <code>construct</code> queries, we use method <code>.statements()</code>, while for SPARQL <code>select</code> queries, we use method <code>.bindings()</code>.</p>
+<p>Additionally, saved queries can have API variables that allow you to specify variables that are used in the query. Thus, if you have query parameters, pass their values as the first argument to <code>results</code> as follows:</p>
+<p><code>ts
+   // For SPARQL construct queries.
+   const results = query
+     .results({
+       someVariable: 'value of someVariable',
+       anotherVariable: 'value of anotherVariable',
+     })
+     .statements()
+   // For SPARQL select queries.
+   const results = query
+     .results({
+       someVariable: 'value of someVariable',
+       anotherVariable: 'value of anotherVariable',
+     })
+     .bindings()</code></p>
+<ol>
+<li>To read the results you have three options:</li>
+</ol>
+<p>5a. Iterate through the results per row in a <code>for</code>-loop:</p>
+<p><code>ts
+   // Iterating over the results per row
+   for await (const row of results) {
+     // execute something
+   }</code></p>
+<p>5b. Save the results to a file.</p>
+<p>For saving SPARQL <code>construct</code> queries:</p>
+<p><code>ts
+   // Saving the results of a SPARQL construct query to a file.
+   await results.toFile('my-file.nt')</code></p>
+<p>For saving SPARQL <code>select</code> queries. Currently we only support saving the file to a .tsv format:</p>
+<p><code>ts
+   // Saving the results of a SPARQL select query to a file.
+   await results.toFile('my-file.tsv')</code></p>
+<p>5c. Load all results into memory. Note that this is almost never used. If you want to process results, then option 5a is better; if you want to persist results, then option 5b is better.</p>
+<p><code>ts
+   // Loading results for a SPARQL construct or SPARQL select query into memory.
+   const array = await results.toArray()</code></p>
+<h2 id="what-is-an-async-iterator-async-iterator">What is an async iterator? {#async-iterator}</h2>
+<p>TriplyDB.js makes use of async iterators for retrieving lists of objects. Async iterators are a method of fetching and iterating through large lists, without having to first fetch the whole set.</p>
+<p>An example of an async iterator in TriplyDB.js is <a href="#appgetaccounts"><code>App.getAccounts()</code></a>. The following code illustrates how it can be used.</p>
+<pre><code class="language-ts">for await (const account of triply.getAccounts()) {
+  console.log(account)
+}
+</code></pre>
+<p>For cases where you want the complete list, you can use the <code>toArray</code> function of the iterator.</p>
+<pre><code class="language-ts">const accounts = await triply.getAccounts().toArray()
+</code></pre>
+<p>TriplyDB.js returns async iterators from the following methods:</p>
+<ul>
+<li><a href="#appgetaccounts"><code>App.getAccounts()</code></a></li>
+<li><a href="#accountgetdatasets"><code>Account.getDatasets()</code></a></li>
+<li><a href="#accountgetqueries"><code>Account.getQueries()</code></a></li>
+<li><a href="#accountgetstories"><code>Account.getStories()</code></a></li>
+<li><a href="#datasetgetservices"><code>Dataset.getServices()</code></a></li>
+<li><a href="#datasetgetassets"><code>Dataset.getAssets()</code></a></li>
+<li><a href="#datasetgetgraphs"><code>Dataset.getGraphs()</code></a></li>
+<li><a href="#datasetgetstatements"><code>Dataset.getStatements()</code></a></li>
+<li><a href="#queryresultsstatements"><code>Query.results().statements()</code></a> for SPARQL <code>construct</code> and <code>describe</code> queries</li>
+<li><a href="#queryresultsbindings"><code>Query.results().bindings()</code></a> for SPARQL <code>select</code> queries</li>
+</ul>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+</span>
+</div>
+<script>var base_url = '..';</script>
+<script defer="" src="../js/theme_extra.js"></script>
+<script defer="" src="../js/theme.js"></script>
+<script defer="" src="../search/main.js"></script>
+<script defer="">
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"></script><script>mermaid.initialize({});</script></body>
+</html>

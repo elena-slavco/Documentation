@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>6. TriplyETL: Publish - Triply Documentation</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "6. TriplyETL: Publish";
+        var mkdocs_page_input_path = "triply-etl/publish/index.md";
+        var mkdocs_page_url = null;
+      </script>
+<script defer="" src="../../js/jquery-3.6.0.min.js"></script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> Triply Documentation
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../triply-db-getting-started/">Getting started</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyETL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../">Overview</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/">Command Line Interface (CLI)</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/">Maintenance</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Yasgui</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../yasgui/">Introduction</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">Triply Documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a> »</li>
+<li>6. TriplyETL: Publish</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<p>The <strong>Publish</strong> step makes the linked data that is produced by the TriplyETL pipeline available in a Triple Store for use by others.</p>
+<div class="mermaid">graph LR
+  source -- 1. Extract --&gt; record
+  record -- 2. Transform --&gt; record
+  record -- 3. Assert --&gt; ld
+  ld -- 4. Enrich --&gt; ld
+  ld -- 5. Validate --&gt; ld
+  ld -- 6. Publish --&gt; tdb
+
+  linkStyle 5 stroke:red,stroke-width:3px;
+  ld[Internal Store]
+  record[Record]
+  source[Data Sources]
+  tdb[(Triple Store)]
+</div>
+<h1 id="remote-data-destinations">Remote data destinations</h1>
+<p>Destinations are usually online locations in TriplyDB where the output of your pipeline will be published.</p>
+<p>If no account name is given, pipeline output is uploaded under the user account tied to the currently used API Token.</p>
+<pre><code class="language-ts">Destination.TriplyDb.rdf('my-dataset')
+Destination.TriplyDb.rdf('my-account', 'my-dataset')
+Destination.TriplyDb.rdf('my-account', 'my-dataset', { overwrite: true })
+</code></pre>
+<p>The following options can be specified to configure the destination behavior:</p>
+<dl>
+<dt><code>overwrite</code></dt>
+<dd>Whether the graphs that are being uploaded by TriplyETL should replace any existing graphs with the same name in the dataset. Graphs appearing in the dataset with a different name than those uploaded by TriplyETL are kept. The default value is <code>false</code>.</dd>
+<dt><code>synchronizeServices</code></dt>
+<dd>Whether active services should be automatically synchronized once new data is uploaded.  The default value is <code>false</code>.</dd>
+<dt><code>triplyDb</code></dt>
+<dd>A configuration object describing a TriplyDB instance that is different from the one associated with the current API Token.  (See the section on <a href="#configuring-multiple-triplydb-instances">configuring multiple TriplyDB instance</a> for more information.)</dd>
+<dt><code>truncateGraphs</code></dt>
+<dd>Whether to delete all graphs in the dataset before uploading any graphs from TriplyETL.  Notice that this will also remove graphs that will not be re-uploaded by TriplyETL.  The default value is <code>false</code>.</dd>
+</dl>
+<h1 id="local-data-destinations">Local data destinations</h1>
+<p>TriplyETL supports publishing RDF output into a local file.  This is not often used, because files lack many of the features that TriplyDB destinations support, such as:</p>
+<ul>
+<li>The ability to browse the data.</li>
+<li>The ability to query the data.</li>
+<li>The ability to configure metadata.</li>
+<li>The ability to configure prefix declarations.</li>
+</ul>
+<p>Still, there may be cases in which a local file destination is useful, for example when you do not have an active Internet connection:</p>
+<pre><code class="language-ts">Destination.file('my-file.trig'),
+</code></pre>
+<h1 id="static-and-dynamic-destinations">Static and Dynamic destinations</h1>
+<p>Destinations can be defined as static objects meaning that you can define destination beforehand. But it might be the case that you want to have multiple destinations for different records. In this case, you would need a dynamic destination, which should change based on certain information inside your source data.</p>
+<p>You can set static and dynamic destinations:</p>
+<pre><code class="language-ts">const etl = new Etl({
+  sources: {
+    someSource: Source.file('source.trig'),
+  },
+  destinations: {
+    someStaticDestination: Destination.file('static.ttl'),
+    someDynamicDestination: context =&gt; Destination.file(context.getString('destination')),
+  },
+})
+</code></pre>
+<h1 id="configuring-multiple-triplydb-instances">Configuring multiple TriplyDB instances</h1>
+<p>It is possible to use multiple TriplyDB instances in one TriplyETL pipeline.</p>
+<p>The following example illustrates how the data model is used from the production instance of TriplyDB.</p>
+<pre><code class="language-ts">const etl = new Etl({
+  sources: {
+    data_model:
+      Source.TriplyDb.rdf(
+        'my-account',
+        'my-dataset',
+        {
+          triplyDb: {
+            token: process.env['PRODUCTION_INSTANCE_TOKEN'],
+            url: 'https://api.production.example.com'
+          }
+        }
+      ),
+    instance_data:
+      Source.TriplyDb.rdf(
+        'my-account',
+        'my-dataset',
+        {
+          triplyDb: {
+            token: process.env['ACCEPTANCE_INSTANCE_TOKEN'],
+            url: 'https://api.acceptance.example.com'
+          }
+        }
+      ),
+  },
+})
+</code></pre>
+<h1 id="direct-copying-of-source-data-to-destination">Direct copying of source data to destination</h1>
+<p>TriplyETL supports copying sources directly to destination locations. This function is useful when you already have linked data that is used as a source, but is also needed at the destination. An example would be the information model. This would be available as a source, and with the copy function it can be uploaded to TriplyDB via TriplyETL.</p>
+<p>The following example shows the <code>copy</code> function:</p>
+<pre><code class="language-ts">etl.copySource(
+  Source.file(`${source_location}`),
+  Destination.TriplyDb.rdf(`${destination_name}`)
+),
+</code></pre>
+<p>The function destination expects that source data is linked data. Copying a source that is not linked data can result in errors.</p>
+<h1 id="using-triplydbjs-in-triplyetl">Using TriplyDB.js in TriplyETL</h1>
+<p>All operations that can be performed in a TriplyDB instance can be automated with classes and methods in the <a href="triplydb-js">TriplyDB.js</a> library.  This library is also used by TriplyETL in the background to implement many of the TriplyETL functionalities.</p>
+<p>Sometimes it is useful to use classes and methods in TriplyDB.js directly.  This is done in the following way:</p>
+<pre><code class="language-ts">// Create the ETL context.
+const etl = new Etl()
+
+// Use the context to access the TriplyDB.js connection.
+console.log((await etl.triplyDb.getInfo()).name)
+</code></pre>
+<p>The above example prints the name of the TriplyDB instance.  But any other <a href="triplydb-js">TriplyDB.js</a> operations can be performed.  For example, the user of the current API Token can change their avatar image in TriplyDB:</p>
+<pre><code class="language-ts">const user = await etl.triplyDb.getUser()
+await user.setAvatar('my-avatar.png')
+</code></pre>
+<h1 id="setting-up-acceptanceproduction-runs-dtap">Setting up Acceptance/Production runs (DTAP)</h1>
+<p>When working on a pipeline it is best to at least run it in the following two modes:</p>
+<dl>
+<dt>Acceptance mode</dt>
+<dd>Upload the result of the pipeline to the user account for which the API Token was created.</dd>
+<dt>Production mode</dt>
+<dd>Upload the result of the pipeline to the organization where the production version of the data is published.</dd>
+</dl>
+<p>Having multiple modes ensures that the production version of a dataset is not accidentally overwritten during development.</p>
+<pre><code class="language-ts">export function account(): any {
+  switch (Etl.environment) {
+    case 'Development':
+      return undefined
+    case 'Testing':
+      return 'my-org-testing'
+    case 'Acceptance':
+      return 'my-org-acceptance'
+    case 'Production':
+      return 'my-org'
+  }
+}
+
+const etl = new Etl()
+etl.use(
+  // Your ETL pipeline is configured here.
+  toRdf(Destination.triplyDb.rdf(account(), 'my-dataset')),
+)
+</code></pre>
+<p>By default, you run the pipeline in Development mode. If you want to run in another mode, you must set the <code>ENV</code> environment variable. You can do this in the <code>.env</code> file of your TriplyETL repository.</p>
+<p>For example, the following runs the pipeline in Testing mode:</p>
+<pre><code>ENV=Testing
+</code></pre>
+<p>You can also set the <code>ENV</code> variable in the GitLab CI/CD environment. This allows you to automatically run different pipelines, according to the DTAP approach for production systems.</p>
+<h1 id="upload-prefix-declarations">Upload prefix declarations</h1>
+<p>At the end of a TriplyETL script, it is common to upload the <a href="/docs/triply-etl/declare#declarePrefix">prefix declarations</a> that are configured for that pipeline. </p>
+<p>This is often done directly before or after graphs are uploaded (function <a href="#toRdf">toRdf()</a>):</p>
+<pre><code class="language-ts">import { declarePrefix, toRdf, uploadPrefixes } from '@triplyetl/etl/generic'
+
+const prefix = {
+  // Your prefix declarations.
+}
+
+export default async function(): Promise&lt;Etl&gt; {
+  const etl = new Etl({ prefixes: prefix })
+  etl.run(
+    // You ETL pipeline
+    toRdf({ account: 'my-account', dataset: 'my-dataset' }),
+    uploadPrefixes({ account: 'my-account', dataset: 'my-dataset' }),
+  )
+  return etl
+}
+</code></pre>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+</span>
+</div>
+<script>var base_url = '../..';</script>
+<script defer="" src="../../js/theme_extra.js"></script>
+<script defer="" src="../../js/theme.js"></script>
+<script defer="" src="../../search/main.js"></script>
+<script defer="">
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"></script><script>mermaid.initialize({});</script></body>
+</html>

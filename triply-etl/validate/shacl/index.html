@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>5. Validate: SHACL - Triply Documentation</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "5. Validate: SHACL";
+        var mkdocs_page_input_path = "triply-etl/validate/shacl/index.md";
+        var mkdocs_page_url = null;
+      </script>
+<script defer="" src="../../../js/jquery-3.6.0.min.js"></script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> Triply Documentation
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../triply-db-getting-started/">Getting started</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyETL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../">Overview</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/">Command Line Interface (CLI)</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/">Changelog</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintenance/">Maintenance</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Yasgui</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../yasgui/">Introduction</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">Triply Documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a> »</li>
+<li>5. Validate: SHACL</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<p>This page documents how SHACL is used to validate linked data in the internal store of your ETL pipeline.</p>
+<h1 id="prerequisites">Prerequisites</h1>
+<p>SHACL Validation can be used when the following preconditions are met:</p>
+<ol>
+<li>A data model that uses SHACL constraints.</li>
+<li>Some data must be asserted in the internal store. If your internal store is still empty, you can read <a href="/docs/triply-etl/assert">the Assert documentation</a> on how to add assertions to that store.</li>
+</ol>
+<p>The function for running SHACL Validation is imported as follows:</p>
+<pre><code class="language-ts">import { validate } from '@triplyetl/etl/shacl'
+</code></pre>
+<h1 id="a-complete-example">A complete example</h1>
+<p>We use the following full TriplyETL script to explain the validation feature. Do not worry about the length of the script; we will go through each part step-by-step.</p>
+<pre><code class="language-ts">import { Etl, Source, declarePrefix, fromJson, toTriplyDb } from '@triplyetl/etl/generic'
+import { iri, pairs } from '@triplyetl/etl/ratt'
+import { validate } from '@triplyetl/etl/shacl'
+import { a, foaf } from '@triplyetl/etl/vocab'
+
+const prefix = {
+  id: declarePrefix('https://triplydb.com/Triply/example/id/'),
+}
+
+export default async function (): Promise&lt;Etl&gt; {
+  const etl = new Etl()
+  etl.use(
+    fromJson([{ age: 'twelve', id: '1' }]),
+    pairs(iri(prefix.id, 'id'),
+      [a, foaf.Person],
+      [foaf.age, 'age'],
+    ),
+    validate(Source.string(`
+      prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+      prefix rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+      prefix sh:   &lt;http://www.w3.org/ns/shacl#&gt;
+      prefix shp:  &lt;https://triplydb.com/Triply/example/model/shp/&gt;
+      prefix xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
+
+      shp:Person
+        a sh:NodeShape;
+        sh:closed true;
+        sh:ignoredProperties ( rdf:type );
+        sh:property shp:Person_age;
+        sh:targetClass foaf:Person.
+
+      shp:Person_age
+        a sh:PropertyShape;
+        sh:datatype xsd:nonNegativeInteger;
+        sh:maxCount 1;
+        sh:minCount 1;
+        sh:path foaf:age.`
+    )),
+    toTriplyDb({ dataset: 'test' }),
+  )
+  return etl
+}
+</code></pre>
+<h2 id="step-1-source-data">Step 1: Source data</h2>
+<p>In our example we are using the following source data that records the age of a person:</p>
+<pre><code class="language-json">{
+  "age": "twelve",
+  "id":  "id"
+}
+</code></pre>
+<p>In our example the data source is <a href="/docs/triply-etl/extract/types#inline-json">inline JSON</a>, but notice that any source format could have been used:</p>
+<pre><code class="language-ts">fromJson([{ age: 'twelve', id: '1' }]),
+</code></pre>
+<h2 id="step-2-target-data-informal">Step 2: Target data (informal)</h2>
+<p>Based on the source data in Step 1, we want to publish the following linked data in TriplyDB:</p>
+<pre><code class="language-turtle">id:123
+  a foaf:Person;
+  foaf:age 'twelve'.
+</code></pre>
+<h2 id="step-3-information-model-informal">Step 3: Information Model (informal)</h2>
+<p>Our intended target data in Step 2 looks ok at first glance.  But we want to specify the requirements for our data in generic terms.  Such a specification is called an <em>Information Model</em>.</p>
+<blockquote>
+<p>An <em>Information Model</em> is a generic specification of the requirements for our data.</p>
+</blockquote>
+<p>It is common to illustrate an Information Model with a picture:</p>
+<div class="mermaid">classDiagram
+  class foaf_Person {
+    foaf_age: xsd_nonNegativeInteger [1..1]
+  }
+</div>
+<p>This Information Model specifies that instances of class <code>foaf:Person</code> must have exactly one value for the <code>foaf:age</code> property.  Values for this property must have datatype <code>xsd:nonNegativeInteger</code>.</p>
+<h2 id="step-4-transformation">Step 4: Transformation</h2>
+<p>We now have source data (Step 1), and a fair intuition about our target data (Step 2), and an Information Model (Step 3).  We can automate the mapping from source to target data with an <a href="/docs/triply-etl/assert">Assertion</a>:</p>
+<pre><code class="language-ts">etl.use(
+  fromJson([{ age: 'twelve', id: '1' }]),
+  pairs(iri(prefix.id, 'id'),
+    [a, foaf.Person],
+    [foaf.age, 'age'],
+  ),
+)
+</code></pre>
+<p>That looks about right: we create instances of class <code>foaf:Person</code> and triples that assert a <code>foaf:age</code> property for each such person.</p>
+<p>However, a linked data expert may notice that the value <code>'twelve'</code> from the source data will not be transformed into a non-negative integer (<code>xsd:nonNegativeInteger</code>).  Indeed, our <code>'age'</code> assertion will create a literal with datatype <code>xsd:string</code>.  Oops, that violates the Information Model!</p>
+<p>How can we automate such checks?  The above example is relatively simple, so a linked data expert may notice the error and fix it.  But what happens when the ETL configuration is hundreds of lines long and is spread across multiple files?  What happens when there is a large number of classes, and each class has a large number of properties?  What if some of the properties are required, while others are optional?  Etc.  Obviously, any real-world ETL will quickly become too complex to validate by hand.  For this reason, TriplyETL provides automated validation.</p>
+<p>Triply considers having an automated validation step best practice for <em>any</em> ETL.  This is the case even for small and simple ETLs, since they tend to grow into complex ones some day.</p>
+<h2 id="step-5-information-model-formal">Step 5: Information Model (formal)</h2>
+<p>The linked data ecosystem includes the SHACL standard for encoding Information Models.  SHACL allows us to formally express the picture from Step 3.  The model is itself expressed in linked data:</p>
+<pre><code class="language-turtle">prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+prefix rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+prefix sh:   &lt;http://www.w3.org/ns/shacl#&gt;
+prefix shp:  &lt;https://triplydb.com/Triply/example/model/shp/&gt;
+prefix xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
+
+shp:Person
+  a sh:NodeShape;
+  sh:closed true;
+  sh:ignoredProperties ( rdf:type );
+  sh:property shp:Person_age;
+  sh:targetClass foaf:Person.
+
+shp:Person_age
+  a sh:PropertyShape;
+  sh:datatype xsd:nonNegativeInteger;
+  sh:maxCount 1;
+  sh:minCount 1;
+  sh:path foaf:age.
+</code></pre>
+<p>Notice the following details:
+- We enforce a Closed World Semantics (CWA) in our Information Models with the <code>sh:closed</code> property.  If a property is not explicitly specified in our Information Model, it is not allowed to be used with instance data.
+- We create IRIs in the dedicated <code>shp:</code> namespace for nodes in the Information Model.
+- Elements in our Information Model are always in a one-to-one correspondence with elements in our Knowledge Model:
+  - Node shapes such as <code>shp:Person</code> relate to a specific class such as <code>foaf:Person</code>.
+  - Property shapes such as <code>shp:Person_age</code> relate to a specific property such as <code>foaf:age</code>.</p>
+<h2 id="step-6-use-the-validate-function">Step 6: Use the <code>validate()</code> function</h2>
+<p>TriplyETL has a dedicated function that can be used to automatically enforce Information Models such as the one expressed in Step 5.</p>
+<p>Since the Information Model is relatively small, it can be specified in-line using the <a href="/docs/triply-etl/extract/types/#strings">string source type</a>.  Larger models will probably be stored in a separate file or in a TriplyDB graph or asset.</p>
+<pre><code class="language-ts">validate(Source.string(`
+  prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+  prefix rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+  prefix sh:   &lt;http://www.w3.org/ns/shacl#&gt;
+  prefix shp:  &lt;https://triplydb.com/Triply/example/model/shp/&gt;
+  prefix xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
+
+  shp:Person
+    a sh:NodeShape;
+    sh:closed true;
+    sh:ignoredProperties ( rdf:type );
+    sh:property shp:Person_age;
+    sh:targetClass foaf:Person.
+
+  shp:Person_age
+    a sh:PropertyShape;
+    sh:datatype xsd:nonNegativeInteger;
+    sh:maxCount 1;
+    sh:minCount 1;
+    sh:path foaf:age.`
+)),
+</code></pre>
+<p>When we run the <code>validate()</code> function at the end of our ETL script, we will receive the following error:</p>
+<pre><code>ERROR (Record #1) SHACL Violation on node id:1 for path
+                  foaf:age, source shape shp:Person_age:
+                    1. Value does not have datatype xsd:nonNegativeInteger
+</code></pre>
+<p>Oops!  The value for the <code>foaf:age</code> property has an incorrect datatype.  This is indeed the automated check and feedback that we want.</p>
+<p>Notice that the requirement that was violated (<code>shp:Person_age</code>) is mentioned in the notification.  If we want to learn more, we can look up this node in our Information Model.</p>
+<p>If we want to take a look at a concrete example in our instance data, we can also take look at node <code>id:1</code> which is also mentioned in the notfication.</p>
+<h2 id="step-7-fix-the-validation-error">Step 7: Fix the validation error</h2>
+<p>Now that we receive the automated validation error in Step 6, we can look for ways to fix our ETL.  Let us take one more look at our current assertions:</p>
+<pre><code class="language-ts">etl.run(
+  fromJson([{ age: 'twelve', id: '1' }]),
+  pairs(iri(prefix.id, 'id'),
+    [a, foaf.Person],
+    [foaf.age, 'age'],
+  ),
+)
+</code></pre>
+<p>We could change the term assertion for the value of <code>foaf:age</code> to explicitly make use of the <code>xsd:nonNegativeInteger</code> datatype:</p>
+<pre><code class="language-ts">literal('age', xsd.nonNegativeInteger)
+</code></pre>
+<p>But that would not work in TriplyETL: the Triply software (luckily!) does not allow us to create incorrect linked data.  Since the following literal would be incorrect, TriplyETL does not even allow us to assert it:</p>
+<pre><code class="language-turtle">'twelve'^^xsd:nonNegativeInteger
+</code></pre>
+<p>Well, it is nice that TriplyETL does not allow us to create incorrect data.  But how can we fix the issue at hand?  How can we create linked data that follows our Information Model?</p>
+<p>As in any ETL error, there are 3 possible solutions:</p>
+<ol>
+<li>Change the data in the source system.</li>
+<li>Change the ETL transformations and/or assertions.</li>
+<li>Change the Information Model.</li>
+</ol>
+<h2 id="option-1-change-the-source-data">Option 1: Change the source data</h2>
+<p>In this case, changing the data in the source system seem the most logical.  After all, there may be multiple ways in which the age of a person can be described using one or more English words.  Expressing ages numerically is a good idea in general, since it will make the source data easier to interpret.</p>
+<h2 id="option-2-change-the-transformation-andor-assertions">Option 2: Change the transformation and/or assertions</h2>
+<p>Alternatively, it is possible to transform English words that denote numbers to their corresponding numeric values.  Since people can get up to one hundred years old, or even older, there are many words that we must consider and transform.  This can be done with the <a href="/docs/triply-etl/transform/ratt#translateall"><code>translateAll()</code> transformation</a>:</p>
+<pre><code class="language-ts">translateAll({
+  content: 'age',
+  table: {
+    'one': 1,
+    ...
+    'twelve': 12,
+    ...,
+    'one hundred': 100,
+    ...,
+  },
+  key: '_age',
+}),
+pairs(iri(prefix.id, 'id'),
+  [a, foaf.Person],
+  [foaf.age, literal('_age', xsd.nonNegativeInteger)],
+),
+</code></pre>
+<p>But even the above transformation may not suffice.  The same number can be expressed in multiple ways in natural language, so the mapping will never be truly complete and reliable.  This seems to be the worst of the three options in this case.</p>
+<h2 id="option-3-change-the-information-model">Option 3: Change the Information Model</h2>
+<p>Finally, we could loosen the Information Model.  For example, we could change the datatype to check for strings:</p>
+<pre><code class="language-turtle">shp:Person_age sh:datatype xsd:string.
+</code></pre>
+<p>But that would invalidate ETLs that generate numeric ages for persons, even though that seems perfectly fine, if not better than generating strings.  Also, this would allow literals like <code>'abc'</code> to pass validation as a legal value for <code>foaf:age</code>.</p>
+<p>Alternatively, we can remove the <code>sh:datatype</code> requirement from our Information Model entirely.  That would allow either string-based ages or numeric ages to be specified.  But now even weirder values for age, e.g. <code>'2023-01-01'^^xsd:date</code>, would be considered valid values for age.</p>
+<h2 id="reflections-on-which-option-to-choose">Reflections on which option to choose</h2>
+<p>Notice that TriplyETL does not tell you which of the 3 options you should follow in order to fix issues in your ETL.  After all, creating an ETL requires domain knowledge based on which you weight the pros and const of different options.  However, TriplyETL does give you the tools to discover issues that prompt you to come up with such solutions.  And once you have decided on a specific solution, TriplyETL provides you with the tools to implement it.</p>
+<!-- TODO
+## Validating RDF output
+
+TriplyETL is able to automatically validate the RDF that is generated in the pipeline against a SHACL information model.
+
+
+<pre><code class="language-ts">etl.use(
+  // Create all linked data statements.
+  // …
+  // Now that all the data is created, validate it using a model.
+  validate(etl.sources.model),
+)
+</code></pre>
+
+
+
+# Validation report {#report}
+
+Validation creates a report that is asserted in linked data.  This report can be stored as a named graph in the created linked dataset.
+
+The following example code stores the validation report in a dedicated named graph:
+
+
+<pre><code class="language-ts">const prefix = {
+  graph: 'https://triplydb.com/Triply/example/graph/',
+}
+
+const graph = {
+  report: prefix.graph('report'),
+}
+
+etl.use(
+  // Create all linked data statements.
+  // …
+  // Now that all the data is created, validate it using a model.
+  validate(
+    etl.sources.model,
+    { report: { destination: app.sources.dataset, graph: graph.report } }
+  ),
+)
+</code></pre>
+
+
+
+
+# Termination conditions
+
+The `validate()` function can optionally be given the `terminateOn` option.  This option determines when validation halts.  It can take the following values:
+
+- `'Never'` Do not halt; run the validation for the full dataset.
+- `'Violation'` Halt validation when the first SHACL Violation is encountered.
+- `'Warning'` Halt validation when the first SHACL Violation or SHACL Warning is encountered.
+- `'Info'` Halt validation when the first SHACL Violation or SHACL Warning or SHACL Informational message is encountered.
+- `undefined` Halt validation when the first SHACL message is encountered.
+
+The following example code lets validation run for the full dataset, regardless of how many violations, warnings, and/or information messages are encountered:
+
+
+<pre><code class="language-ts">etl.use(
+  // Create all linked data statements.
+  // …
+  // Now that all the data is created, validate it using a model.
+  validate(etl.sources.model, { terminateOn: 'Never' }),
+)
+</code></pre>
+
+
+### Log conditions
+
+The `validate()` function can optionally be given the `log` option.  This option determines when and which violations should be printed. The values are the same as in 'terminateOn' option. Note that `log` is about printing on your terminal and not about the violation report.
+
+ ```ts
+etl.use(
+  // Create all linked data statements.
+  // …
+  // Now that all the data is created, validate it using a model.
+  validate(etl.sources.model, { log: 'Never' }),
+)
+```
+-->
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+</span>
+</div>
+<script>var base_url = '../../..';</script>
+<script defer="" src="../../../js/theme_extra.js"></script>
+<script defer="" src="../../../js/theme.js"></script>
+<script defer="" src="../../../search/main.js"></script>
+<script defer="">
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"></script><script>mermaid.initialize({});</script></body>
+</html>

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>1. Extract: Data Formats - Triply Documentation</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "1. Extract: Data Formats";
+        var mkdocs_page_input_path = "triply-etl/extract/formats/index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Triply Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyDB</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../triply-db-getting-started/">Getting started</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyETL</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/">Command Line Interface (CLI)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../changelog/">Changelog</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../maintenance/">Maintenance</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Yasgui</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../yasgui/">Introduction</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Triply Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li>1. Extract: Data Formats</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="overview">Overview</h1>
+<p>TriplyETL supports the following data formats:</p>
+<table>
+<thead>
+<tr>
+<th>Extractor</th>
+<th>Format</th>
+<th>Full name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#fromCsv">fromCsv()</a></td>
+<td><a href="#fromCsv">CSV</a></td>
+<td><a href="#fromCsv">Comma-Separated Values</a></td>
+</tr>
+<tr>
+<td><a href="#fromJson">fromJson()</a></td>
+<td><a href="#fromJson">JSON</a></td>
+<td><a href="#fromJson">JavaScript Object Notation</a></td>
+</tr>
+<tr>
+<td><a href="#fromOai">fromOai()</a></td>
+<td><a href="#fromOai">OAI-PMH</a></td>
+<td><a href="#fromOai">Open Archives Initiative Protocol for Metadata Harvesting</a></td>
+</tr>
+<tr>
+<td><a href="#fromPostgres">fromPostgres()</a></td>
+<td><a href="#fromPostgres">PostgreSQL Query &amp; Postgres API Options</a></td>
+<td><a href="#fromPostgres">PostgreSQL Query &amp; Postgres API Options</a></td>
+</tr>
+<tr>
+<td><a href="#fromShapefile">fromShapefile()</a></td>
+<td><a href="#fromShapefile">ESRI</a></td>
+<td><a href="#fromShapefile">ESRI Shapefiles</a></td>
+</tr>
+<tr>
+<td><a href="#fromTsv">fromTsv()</a></td>
+<td><a href="#fromTsv">TSV</a></td>
+<td><a href="#fromTsv">Tab-Separated Values</a></td>
+</tr>
+<tr>
+<td><a href="#fromXlsx">fromXlsx()</a></td>
+<td><a href="#fromXlsx">XLSX</a></td>
+<td><a href="#fromXlsx">Microsoft Excel</a></td>
+</tr>
+<tr>
+<td><a href="#fromXml">fromXml()</a></td>
+<td><a href="#fromXml">XML</a></td>
+<td><a href="#fromXml">XML Markup Language</a></td>
+</tr>
+<tr>
+<td><a href="#loadRdf">loadRdf()</a></td>
+<td><a href="#loadRdf">RDF</a></td>
+<td><a href="#loadRdf">Resource Description Format</a></td>
+</tr>
+</tbody>
+</table>
+<p>All extractors can be imported from the generic library in TriplyETL:</p>
+<pre><code class="language-ts">import { fromCsv, fromJson, fromOai,
+         fromPostgres, fromShapefile, fromTsv, fromXlsx,
+         fromXml, loadRdf, Source } from '@triplyetl/etl/generic'
+</code></pre>
+<p>Notice that you also need to import <code>Source</code>, since every extractor requires a source.</p>
+<h1 id="extractor-fromcsv-fromcsv">Extractor <code>fromCsv()</code> {#fromCsv}</h1>
+<p>CSV or Comma Separated Values (file name extension <code>.csv</code>) is a popular format for storing tabular source data. TriplyETL has a dedicated <code>fromCsv()</code> extractor for this data format.</p>
+<p>The following code snippet extracts records from a local CSV file:</p>
+<pre><code class="language-ts">fromCsv(Source.file('data.csv')),
+</code></pre>
+<p>The following code snippet extracts records from an online CSV file, that is hosted at the specified URL:</p>
+<pre><code class="language-ts">fromCsv(Source.url('https://somewhere.com/data.csv')),
+</code></pre>
+<p>The following code snippet extracts records from a <a href="#triplydb-asset">TriplyDB Asset</a>. The asset is store in the data with name <code>'some-data'</code>, under an account with name <code>'some-account'</code>. The name of the asset is <code>'example.csv'</code>:</p>
+<pre><code class="language-ts">fromCsv(
+  Source.TriplyDb.asset(
+    'some-account', 'some-dataset', { name: 'example.csv' }
+  )
+),
+</code></pre>
+<h2 id="standards-compliance">Standards-compliance</h2>
+<p>The <code>fromCsv()</code> extractor implements the official CSV standard: <a href="https://www.ietf.org/rfc/rfc4180.html">IETF RFC 4180</a>.</p>
+<p>Some CSV files do not follow the standard precisely. In order to process such CSV files, the default behavior of the extractor can be changed through an optional options parameter. See the <a href="https://csv.js.org/parse/options/">CSV Parse for Node.js</a> documentation for all the available options.</p>
+<h2 id="configure-the-encoding">Configure the encoding</h2>
+<p>According to the official CSV standard, CSV sources are allowed to use any encoding. Since the CSV format does not allow the used encoding to be specified in the format itself, a non-standard encoding must always be configured manually. By default, TriplyETL assumes that CSV sources use the UTF-8 encoding. If another encoding is used, this must be explicitly specified by using the optional options parameter.</p>
+<p>The following snippet configures that the CSV source uses the ISO Latin-1 encoding:</p>
+<pre><code class="language-ts">fromCsv(
+  Source.TriplyDb.asset('my-dataset', { name: 'example.csv' }),
+  { encoding: 'latin1' }
+),
+</code></pre>
+<p>The following encodings are currently supported:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Encoding</th>
+<th>Standard</th>
+<th>Alternative values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>'ascii'</code></td>
+<td>US-ASCII</td>
+<td>ANSI</td>
+<td></td>
+</tr>
+<tr>
+<td><code>'latin1'</code></td>
+<td>Latin-1</td>
+<td>ISO-8859-1</td>
+<td><code>binary</code></td>
+</tr>
+<tr>
+<td><code>'utf8'</code></td>
+<td>UTF-8</td>
+<td>Unicode</td>
+<td></td>
+</tr>
+<tr>
+<td><code>'utf16le'</code></td>
+<td>UTF-16 Little Endian</td>
+<td>Unicode</td>
+<td><code>'ucs2'</code>, <code>'ucs-2'</code>, <code>'utf16-le'</code></td>
+</tr>
+</tbody>
+</table>
+<p>Read the <a href="https://csv.js.org/parse/options/encoding/">CSV Parse for Node.js</a> documentation for more information.</p>
+<h2 id="use-a-different-separator">Use a different separator</h2>
+<p>Some CSV files only deviate in their use of a different separator character. For example, some CSV files use the semi-colon (<code>;</code>) or the at-sign (<code>@</code>) for this.</p>
+<p>The following snippet extracts records for a CSV file that uses the semi-colon (<code>;</code>) as the separator character:</p>
+<pre><code class="language-ts">fromCsv(Source.file('example.csv'), { separator: ';' }),
+</code></pre>
+<h2 id="csv-with-tab-separators-is-not-tsv">CSV with tab separators is not TSV</h2>
+<p>Notice that the popular Tab-Separate Values (TSV) format is not the same as the standardized CSV format with a tab separator character. If you want to process standards-conforming TSV source data, use the <a href="#fromTsv"><code>fromTsv()</code> extractor</a> instead.</p>
+<h2 id="record-representation">Record representation</h2>
+<p>TriplyETL treats every row in a CSV source as one record. The columns are emitted as keys and the cells are emitted as values. All values are of type <code>string</code>. Empty cells (i.e. those containing the empty string) are treated as denoting a null value and are therefore excluded from the record. Any trailing whitespace that appears in headers or cells is removed from the keys and values in the record.</p>
+<p>For example, the following table:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Age</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Doe, John</td>
+<td>32</td>
+</tr>
+<tr>
+<td>2</td>
+<td>D., Jane</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>can be expressed by the following CSV snippet:</p>
+<pre><code class="language-txt">ID,Name,Age
+1,&quot;Doe, John&quot;,32
+2,&quot;D., Jane &quot;,
+</code></pre>
+<p>which is emitted as the following two TriplyETL records:</p>
+<pre><code class="language-json">{
+  &quot;ID&quot;: &quot;1&quot;,
+  &quot;Name&quot;: &quot;Doe, John&quot;,
+  &quot;Age&quot;: &quot;32&quot;
+}
+{
+  &quot;ID&quot;: &quot;2&quot;,
+  &quot;Name&quot;: &quot;D., Jane&quot;
+}
+</code></pre>
+<p>Notice that:
+- All values have type <code>string</code>, including <code>"ID"</code> and <code>"Age"</code>. The value for field <code>"Age"</code> should probably be considered numeric, but the CSV format cannot express this. A TriplyETL <a href="/docs/triply-etl/transform">transformation</a> can be used to cast string values to numeric values.
+- The trailing space in <code>"D., Jane "</code> is omitted from the second record, since training whitespace is removed from all keys and values.
+- The <code>"Age"</code> key is missing from the second record, since the corresponding CSV cell contains the empty string, which is considered to denote an empty value.</p>
+<h1 id="extractor-fromjson-fromjson">Extractor <code>fromJson()</code> {#fromJson}</h1>
+<p>JSON (JavaScript Object Notation) is a popular open standard for interchanging tree-shaped data. TriplyETL has a dedicated <code>fromJson()</code> extractor for this format.</p>
+<p>The following code snippet connects to a JSON source that is stored as a <a href="/docs/triply-etl/extract/types#triplydb-assets">TriplyDB asset</a>:</p>
+<pre><code class="language-ts">fromJson(
+  Source.TriplyDb.asset(
+    'some-account',
+    'some-dataset',
+    { name: 'example.json.gz' }
+  )
+),
+</code></pre>
+<p>The following example uses an in-line specified JSON source:</p>
+<pre><code class="language-ts">fromJson([{ a: 'a', b: 'b', c: 'c' }]),
+</code></pre>
+<p>TriplyETL supports the <a href="https://www.rfc-editor.org/rfc/rfc8259">IETF RFC 8259</a> standard for JSON.</p>
+<h2 id="nested-keys">Nested keys</h2>
+<p>Since JSON is a tree-shaped format, it is able to store values in a nested structure. This requires a sequence or 'path' of keys to be specified.</p>
+<p>We use the following example data:</p>
+<pre><code class="language-json">{
+  &quot;metadata&quot;: {
+    &quot;title&quot;: {
+      &quot;name&quot;: &quot;Data about countries.&quot;
+    }
+  },
+  &quot;data&quot;: {
+    &quot;countries&quot;: [
+      {
+        &quot;country.id&quot;: &quot;nl&quot;,
+        &quot;name&quot;: &quot;The Netherlands&quot;
+      },
+      {
+        &quot;country.id&quot;: &quot;de&quot;,
+        &quot;name&quot;: &quot;Germany&quot;
+      }
+    ]
+  }
+}
+</code></pre>
+<p>Paths are specified as dot-separated sequences of keys, starting at the top-level and ending at the required value. For the JSON example in the previous section, TriplyETL can access the <code>"name"</code> key inside the <code>"title"</code> key, which itself is nested inside the <code>"metadata"</code> key. This path is expressed in [1]. Notice that the path expressed in [1] is different from the path expressed in [2], which also accesses the <code>"name"</code> key, but nested inside the <code>"countries"</code> and then <code>"data"</code> keys. (The use of the <code>[0]</code> index is explained in the next section.)</p>
+<pre><code>[1] metadata.title.name
+[2] data.countries[0].name
+</code></pre>
+<p>Path expressions can be used as string keys in many places in TriplyETL. For example, we can assert the title of a dataset in the following way:</p>
+<pre><code class="language-ts">triple('_dataset', dct.title, 'metadata.title.name'),
+</code></pre>
+<p>This asserts the following linked data:</p>
+<pre><code class="language-turtle">dataset:my-dataset dct:title 'Data about countries.'.
+</code></pre>
+<h2 id="dealing-with-dots-in-keys">Dealing with dots in keys</h2>
+<p>In the previous section we saw that dots are used to separate keys in paths. However, sometimes a dot can occur as a regular character inside a key. In such cases, we need to apply additional escaping of the key name to avoid naming conflicts.</p>
+<p>The example data from the previous section contains the following key:</p>
+<pre><code class="language-ts">&quot;country.id&quot;
+</code></pre>
+<p>Notice that the dot is here part of the key name. We can refer to these keys as follows:</p>
+<pre><code class="language-ts">triple('_country', dct.id, 'data.countries[0].[&quot;country.id&quot;]'),
+</code></pre>
+<p>Notice the use of additional escaping: <code>["..."]</code></p>
+<h2 id="accessing-lists-by-index">Accessing lists by index</h2>
+<p>Tree-shaped data formats often allow multiple values to be specified in an ordered list. Examples of this are arrays in JSON and XML elements with the same tag that are directly nested under the same parent element.</p>
+<p>TriplyETL is able to access specific elements from lists based on theirindex* or position. Following the standard practice in Computer Science, TriplyETL refers to the first element in the list as having index 0. The second element has index 1, etc.</p>
+<p>For the above example record, we can assert the name of thefirst* country as follows:</p>
+<pre><code class="language-ts">triple(
+  iri(prefix.id, 'data.countries[0].[&quot;country.id&quot;]'),
+  rdfs.label,
+  'data.countries[0].name'
+),
+</code></pre>
+<p>This results in the following linked data:</p>
+<pre><code class="language-turtle">id:nl rdfs:label 'The Netherlands'.
+</code></pre>
+<p>We can also assert the name of the second country. Notice that only the index is different (<code>1</code> instead of <code>0</code>):</p>
+<pre><code class="language-ts">triple(
+  iri(prefix.id, 'data.countries[1].[&quot;country.id&quot;]'),
+  rdfs.label,
+  'data.countries[1].name'
+),
+</code></pre>
+<p>This results in the following linked data:</p>
+<pre><code class="language-turtle">id:de rdfs:label 'Germany'.
+</code></pre>
+<h1 id="extractor-fromoai-fromoai">Extractor <code>fromOai()</code> {#fromOai}</h1>
+<p>In GLAM domains (Galleries, Libraries, Archives, Museums), the Open Archives Initiative (OAI), Protocol for Metadata Harvesting (PMH) is a popular protocol and format for publishing data collections. TriplyETL includes the <code>fromOai()</code> extractor to tap into these data collections.</p>
+<p>The <code>fromOai()</code> extractor ensures a continuous stream of data records. Under the hood, the extractor uses resumption tokens to iterate over large collections.</p>
+<p>An OAI-PMH endpoint can be configured by specifying its URL (parameter <code>url</code>). Since one OAI-PMH endpoint typically publishes multiple datasets, it is also common to specify the <code>set</code> parameter.</p>
+<p>The following code snippet connects to an example dataset that is published in an example OAI-PMH endpoint:</p>
+<pre><code class="language-ts">fromOai({
+  set: 'some-dataset',
+  url: 'https://somewhere.com/webapioai/oai.ashx'
+}),
+</code></pre>
+<p>TriplyETL supports the official OAI-PMH standard.</p>
+<p>The OAI-PMH standard defines 6 'verbs'. These different sub-APIs that together component the OAI-PMH API.</p>
+<p>Extractor <code>fromOai()</code> currently supports the following two verbs: <a href="#ListIdentifiers">ListIdentifiers</a> and <a href="#ListRecords">ListRecords</a>.</p>
+<h2 id="verb-listidentifiers-listidentifiers">Verb <code>ListIdentifiers</code> {#ListIdentifiers}</h2>
+<p>This 'verb' or sub-API streams through the headers of all records. It does not returns the actual (body) content of each record (see <a href="#ListRecords">ListRecords</a>). This verb can be used to look for header properties like set membership, datestamp, and deletion status.</p>
+<p>The following code snippet streams through the headers of a public OAI-PMH endpoint:</p>
+<pre><code class="language-ts">fromOai({
+  metadataPrefix: 'marcxml',
+  set: 'iish.evergreen.biblio',
+  url: 'https://api.socialhistoryservices.org/solr/all/oai',
+  verb: 'ListIdentifiers'
+}),
+logRecord(),
+</code></pre>
+<h2 id="verb-listrecords-listrecords">Verb <code>ListRecords</code> {#ListRecords}</h2>
+<p>This 'verb' or sub-API streams through all records and retrieves them in full. This API is used to harvest records.</p>
+<p>The following code snippet streams through the records of a public OAI-PMH endpoint:</p>
+<pre><code class="language-ts">fromOai({
+  metadataPrefix: 'marcxml',
+  set: 'iish.evergreen.biblio',
+  url: 'https://api.socialhistoryservices.org/solr/all/oai',
+  verb: 'ListRecords'
+}),
+logRecord(),
+</code></pre>
+<h1 id="extractor-fromtsv-fromtsv">Extractor <code>fromTsv()</code> {#fromTsv}</h1>
+<p>TSV or Tab-Separated Values (file name extension <code>.tsv</code>) is a popular format for tabular source data. TriplyETL has a <code>fromTsv()</code> extractor to support this format.</p>
+<p>The following code snippet extracts records for TSV file that is stored as a <a href="/docs/triply-etl/extract/types#triplydb-assets">TriplyDB Asset</a>:</p>
+<pre><code class="language-ts">fromTsv(
+  Source.TriplyDb.asset(
+    'some-account',
+    'some-dataset',
+    { name: 'example.tsv.gz' }
+  )
+),
+</code></pre>
+<p>TriplyETL supports the <a href="https://www.iana.org/assignments/media-types/text/tab-separated-values">IANA</a> standard definition of the TSV format.</p>
+<h2 id="record-representation_1">Record representation</h2>
+<p>TriplyETL treats every row in a TSV source as one record. The columns are emitted as keys and the cells are emitted as values. All values are of type <code>string</code>. Cells that contain the empty string are treated as denoting an empty value and are excluded from the record. Any trailing whitespace that appears in headers or cells is removed from the keys or values in the record.</p>
+<p>For example, the following table:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Age</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Doe, John</td>
+<td>32</td>
+</tr>
+<tr>
+<td>2</td>
+<td>D., Jane</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>can be expressed by the following TSV snippet:</p>
+<pre><code class="language-txt">ID  Name    Age
+1   Doe, John   32
+2   D., Jane    
+</code></pre>
+<p>which is emitted as the following two TriplyETL records:</p>
+<pre><code class="language-json">{
+  &quot;ID&quot;: &quot;1&quot;,
+  &quot;Name&quot;: &quot;Doe, John&quot;,
+  &quot;Age&quot;: &quot;32&quot;
+}
+{
+  &quot;ID&quot;: &quot;2&quot;,
+  &quot;Name&quot;: &quot;D., Jane&quot;
+}
+</code></pre>
+<p>Notice that:
+- All values have type <code>string</code>, including <code>"ID"</code> and <code>"Age"</code>. The value for field <code>"Age"</code> should probably be considered numeric, but the TSV format cannot express this. A TriplyETL <a href="/docs/triply-etl/transform">transformation</a> can be used to cast string values to numeric values.
+- The trailing space in <code>"D., Jane "</code> is omitted from the second record, since training whitespace is removed from all keys and values.
+- The <code>"Age"</code> key is missing from the second record, since the corresponding TSV cell contains the empty string, which is considered to denote an empty value.</p>
+<h1 id="extractor-fromxlsx-fromxlsx">Extractor <code>fromXlsx()</code> {#fromXlsx}</h1>
+<p>XLSX or Office Open XML Workbook (file name extension <code>.xlsx</code>) is a popular format for storing tabular source data. This is the standard file format for Microsoft Excel. TriplyETL has a dedicated <code>fromXlsx()</code> extractor for such sources.</p>
+<p>The following code snippet shows how a <a href="/docs/triply-etl/extract/types#triplydb-assets">TriplyDB assets</a> is used to process records from an XLSX source:</p>
+<pre><code class="language-ts">fromXlsx(
+  Source.TriplyDb.asset(
+    'some-account',
+    'some-dataset',
+    { name: 'example.xlsx' }
+  )
+),
+</code></pre>
+<p>The <code>fromXlsx()</code> extractor emits one record per row in the source file.</p>
+<h2 id="sheets">Sheets</h2>
+<p>It is common for XLSX files to have multiple sheets. By default the <code>fromXlsx()</code> extractor enumerates all rows from all sheets as records. If only some sheets should be used, this can be specified as a configuration option.</p>
+<p>The following code snippet only emits records/rows from the <code>'people'</code> and <code>'projects'</code> sheets in the XLSX source file <code>'example.xlsx'</code>. Rows from other sheets in the same XLSX file are not emitted:</p>
+<pre><code class="language-ts">fromXlsx(Source.file('example.xlsx'), { sheetNames: ['people', 'projects'] }),
+</code></pre>
+<h2 id="record-representation_2">Record representation</h2>
+<p>TriplyETL treats every row in XLSX sheet as one record. The columns are emitted as keys and the cells are emitted as values. Unlike other tabular formats like <a href="#fromCsv">CSV</a> and <a href="#fromTsv">TSV</a>, values in XLSX can have different types.</p>
+<p>For example, the following table:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Age</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Doe, John</td>
+<td>32</td>
+</tr>
+<tr>
+<td>2</td>
+<td>D., Jane</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>can be emitted as the following two TriplyETL records:</p>
+<pre><code class="language-json">{
+  &quot;$recordId&quot;: 1,
+  &quot;$environment&quot;: &quot;Development&quot;,
+  &quot;$sheetName&quot;: &quot;Sheet1&quot;,
+  &quot;$fileName&quot;: &quot;static/Untitled 1.xlsx&quot;,
+  &quot;ID&quot;: &quot;1&quot;,
+  &quot;Name&quot;: &quot;Doe, John&quot;,
+  &quot;Age&quot;: 32
+}
+{
+  &quot;$recordId&quot;: 2,
+  &quot;$environment&quot;: &quot;Development&quot;,
+  &quot;$sheetName&quot;: &quot;Sheet1&quot;,
+  &quot;$fileName&quot;: &quot;static/Untitled 1.xlsx&quot;,
+  &quot;ID&quot;: &quot;2&quot;,
+  &quot;Name&quot;: &quot;D., Jane&quot;,
+}
+</code></pre>
+<p>Notice the following:
+- The value for the <code>"Age"</code> key is a number.
+- The special keys <code>$recordId</code>, <code>$environment</code>, and <code>$fileName</code> are documented in the section on <a href="#special key">Special Keys</a>.
+- The special key <code>$sheetName</code> is unique to the <code>fromXslx()</code> extractor and is documented in the next subsection.</p>
+<h2 id="special-key-sheetname-sheetname">Special key <code>$sheetName</code> {#sheetName}</h2>
+<p>For every record emitted by the <code>fromXlsx()</code> extractor. the <code>$sheetName</code> special key contains the name of the Excel sheet from which that record originates. The presence of the sheet name allows the TriplyETL configuration to be adjusted for different sheet.</p>
+<p>For example, an Excel spreadsheet may contain a 'companies' sheet and a 'persons' sheet. The name of the sheet may be used to determine which class should be asserted. The following snippet uses transformation <a href="#translateAll">translateAll()</a> to map sheet names to class IRIs:</p>
+<pre><code class="language-ts">fromXlsx(Source.file('example.xlsx')),
+translateAll({
+  content: '$sheetName',
+  table: {
+    'companies': sdo.Organization,
+    'persons': sdo.Person,
+  },
+  key: '_class',
+}),
+triple(iri(prefix.id, '$recordId'), a, '_class'),
+</code></pre>
+<h1 id="extractor-frompostgres-frompostgres">Extractor <code>fromPostgres()</code> {#fromPostgres}</h1>
+<p>PostgreSQL or Postgres is an open-source relational database system. Postgres supports both SQL (relational) and JSON (non-relational) querying.</p>
+<p>TriplyETL has a <code>fromPostgres()</code> extractor to retrieve data from a Postgres database. This can be done via Postgres connectors or via URL using the following code snippet:</p>
+<pre><code class="language-ts">fromPostgres(Query, Options),
+</code></pre>
+<h2 id="retrieving-data-via-postgres-connectors">Retrieving data via Postgres connectors</h2>
+<p>The first option for retrieving Postgres data is by using Postgres connectors.</p>
+<p>Below is an example using a publicly available database from <a href="https://rnacentral.org/help/public-database">RNA central</a>.</p>
+<pre><code class="language-ts">fromPostgres(
+  'SELECT * FROM rnc_database',
+  {
+    host: 'hh-pgsql-public.ebi.ac.uk',
+    port: 5432,
+    database: 'pfmegrnargs',
+    user: 'reader',
+    password: 'NWDMCE5xdipIjRrp',
+  }
+),
+</code></pre>
+<h2 id="retrieving-data-via-url">Retrieving data via URL</h2>
+<p>The second option is by simply using a database URL. Below we are using the same example database as above, but this time instead of adding Postgres connectors, we are accessing it via URL.</p>
+<pre><code class="language-sh">fromPostgres(
+  'select * from rnc_database',
+  { url: 'postgres://reader:NWDMCE5xdipIjRrp@hh-pgsql-public.ebi.ac.uk:5432/pfmegrnargs' }
+),
+</code></pre>
+<h1 id="extractor-fromxml-fromxml">Extractor <code>fromXml()</code> {#fromXml}</h1>
+<p>XML or Extensible Markup Language is a popular open format for tree-shaped source data.</p>
+<p>The following snippets connects to an XML file that is made available as a <a href="/docs/triply-etl/extract/types#triplydb-assets">TriplyDB asset</a>:</p>
+<pre><code class="language-ts">fromXml(
+  Source.TriplyDb.asset('my-dataset', {name: 'my-data.xml'}),
+  { selectors: 'first-element' }
+),
+</code></pre>
+<p>Notice that the <code>fromXml()</code> extractor requires a <code>selectors</code> option. This specifies the subtrees in the XML that should be treated as individual records. In the above snippet the records are the subtrees that occur between the <code>&lt;first-element&gt;</code> opening tag and the <code>&lt;/first-element&gt;</code> closing tag.</p>
+<p>If a deeper path must be specified, sequential tags in the path must be separated by a dot:</p>
+<pre><code class="language-ts">fromXml(
+  Source.TriplyDb.asset('my-dataset', {name: 'my-data.xml'}),
+  { selectors: 'first-element.second-element.third-element' }
+),
+</code></pre>
+<p>It is common for large XML sources to contain different kinds of records. Different kinds of records often occur under different paths. It is therefore possible to specify multiple paths, all of which will be used for extract records from the XML source.</p>
+<p>The following code snippet extracts records for three different paths in the same XML source:</p>
+<pre><code class="language-ts">fromXml(
+  Source.TriplyDb.asset('my-dataset', { name: 'my-data.xml' }),
+  {
+    selectors: [
+      'first-element.second-element.third-element',
+      'first-element.second-element.alt-element',
+      'first-element.second-element.other-element',
+    ]
+  }
+),
+</code></pre>
+<p>TriplyETL supports the W3C XML standard.</p>
+<h2 id="nested-keys_1">Nested keys</h2>
+<p>Since XML can store tree-shaped data, it can have nested keys and indexed array. See the following subsections of the JSON documentation for how to extract data from such tree structures:</p>
+<ul>
+<li><a href="#nested-keys">Nested keys</a></li>
+<li><a href="#dealing-with-dots-in-keys">Dealing with dots in keys</a></li>
+<li><a href="#accessing-lists-by-index">Accessing lists by index</a></li>
+</ul>
+<h1 id="function-loadrdf-loadrdf">Function <code>loadRdf()</code> {#loadRdf}</h1>
+<p>Resource Description Framework (RDF) is the standardized and open format for linked data.</p>
+<p>Data in the RDF format is treated in a different way than other formats. RDF data does not appear in clearly structured records, it no longer needs to be asserted (since it already is linked data), and transformations can be performed with linked data standards such as SHACL Rules.</p>
+<p>For this reason, RDF sources are directly loaded into the Internal Store, and the Record step is completely skipped.</p>
+<p>The following code snippet loads RDF from the specified TriplyDB dataset into the Internal Store:</p>
+<pre><code class="language-ts">loadRdf(Source.TriplyDb.rdf('my-account', 'my-dataset')),
+</code></pre>
+<p>The following code snippet loads RDF from a SPARQL Construct that is stored in TriplyDB:</p>
+<pre><code class="language-ts">loadRdf(Source.TriplyDb.query('Triply', 'network-query')),
+</code></pre>
+<p>The following code snippet loads RDF from a SPARQL Construct query that is stored in TriplyDB:</p>
+<pre><code class="language-ts">loadRdf(Source.TriplyDb.query('Triply', 'network-query')),
+</code></pre>
+<h2 id="loading-rdf-from-an-html-page">Loading RDF from an HTML page</h2>
+<p>With <code>loadRdf()</code> extractor, it is also possible to extract data from web pages / HTML, which contain Schema in JSON-LD. 
+This is possible because most websites contain linked data annotations that use Schema.org.</p>
+<p>Such LD is enclosed in tag <script type='application/ld+json'>...</script>
+It is possible to load such linked data with TriplyETL.</p>
+<p>Schema markup is how Google can serve up rich results (also called rich snippets and rich cards).</p>
+<p>The schema is included in HTML in the following way:</p>
+<p><img alt="basic JSON-LD markup " src="JSON-LD-Google-example-1.png" /></p>
+<ol>
+<li>The Script Type: What format your structured data will take (JSON-LD)</li>
+<li>The Context: Where the language you’re using comes from (schema.org)</li>
+<li>The Type: What kind of thing is the search engine looking at (an image)</li>
+<li>The Property: What kind of quality will you be describing when it comes to this type (the license document)</li>
+<li>The Value: What you’re actually telling the search engines about this property (the URL where the license can be found)</li>
+</ol>
+<p>Example taken from Wikipedia:</p>
+<p>The Wikipedia page of the first programmer in history (https://en.wikipedia.org/wiki/Ada_Lovelace) contains the following linked data:</p>
+<pre><code class="language-json">{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;Article&quot;,
+  &quot;name&quot;: &quot;Ada Lovelace&quot;,
+  &quot;url&quot;: &quot;https://en.wikipedia.org/wiki/Ada_Lovelace&quot;,
+  &quot;sameAs&quot;: &quot;http://www.wikidata.org/entity/Q7259&quot;,
+  &quot;mainEntity&quot;: &quot;http://www.wikidata.org/entity/Q7259&quot;,
+  &quot;author&quot;: {
+    &quot;@type&quot;: &quot;Organization&quot;,
+    &quot;name&quot;: &quot;Contributors to Wikimedia projects&quot;
+  },
+  &quot;publisher&quot;: {
+    &quot;@type&quot;: &quot;Organization&quot;,
+    &quot;name&quot;: &quot;Wikimedia Foundation, Inc.&quot;,
+    &quot;logo&quot;: {
+      &quot;@type&quot;: &quot;ImageObject&quot;,
+      &quot;url&quot;: &quot;https://www.wikimedia.org/static/images/wmf-hor-googpub.png&quot;
+    }
+  },
+  &quot;datePublished&quot;: &quot;2001-05-20T14:57:05Z&quot;,
+  &quot;dateModified&quot;: &quot;2023-03-17T21:28:23Z&quot;,
+  &quot;image&quot;: &quot;https://upload.wikimedia.org/wikipedia/commons/0/0b/Ada_Byron_daguerreotype_by_Antoine_Claudet_1843_or_1850.jpg&quot;,
+  &quot;headline&quot;: &quot;1815-1852 British mathematician, considered the first computer programmer&quot;
+}
+</code></pre>
+<p>This data can be loaded with TriplyETL in the following way:</p>
+<pre><code class="language-ts">import { Etl, loadRdf, Source } from '@triplyetl/etl/generic'
+
+export default () =&gt; {
+  const etl = new Etl()
+  etl.use(
+    loadRdf(Source.url('https://en.wikipedia.org/wiki/Ada_Lovelace', { contentType: 'text/html' })),
+  )
+  return etl
+}
+</code></pre>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>TriplyETL: Control Structures - Triply Documentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "TriplyETL: Control Structures";
+        var mkdocs_page_input_path = "triply-etl/control/index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Triply Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyDB</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../triply-db-getting-started/">Getting started</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyETL</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../cli/">Command Line Interface (CLI)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../maintenance/">Maintenance</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Yasgui</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../yasgui/">Introduction</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Triply Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li>TriplyETL: Control Structures</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>This page documents how you can use control structures in your ETL configuration.</p>
+<h1 id="process-data-conditionally-when">Process data conditionally (<code>when()</code>)</h1>
+<p>Source data often contains optional values.  These are values that appear in some, but not all records.</p>
+<p>Source data often contains 'special' values that denote the absence of a value.  Common examples are values such as <code>'NULL'</code> or the empty string (<code>''</code>) or 'clear' outliers such as <code>9999</code> for a missing year.  We call such values ‘null values’.</p>
+<p>The <code>when()</code> function allows part of a TriplyETL configuration to run when certain conditions are met.  The first parameter is used to determine whether or not the remaining parameters should be called:</p>
+<pre><code class="language-ts">when('{condition}',
+  '{statement-1}',
+  '{statement-2}',
+  '{statement-3}',
+  // etc
+),
+</code></pre>
+<p>Notice that it is often useful to specify multiple statements under the same condition:</p>
+<ol>
+<li>The first statement transforms an optional value, and the second statement uses the transformed optional value to make a triple assertion.</li>
+<li>The first statement asserts one triple based on the optional value, and the second statement asserts a second triple based on the same optional value.</li>
+</ol>
+<h2 id="missing-values">Missing values</h2>
+<p>If a value is sometimes completely missing from a source data record, the <code>when()</code> conditional function can be used.</p>
+<p>The following code snippet assets a triple if and only if a value for the <code>'zipcode'</code> key is present in the Record:</p>
+<pre><code class="language-ts">when(context =&gt; context.isNotEmpty('zipcode'),
+  triple(iri(prefix.id, 'id'), def.zipcode, 'zipcode'),
+),
+</code></pre>
+<p>Since checking for the presence or absence of a single record is very common, the above can also be written as follows:</p>
+<pre><code class="language-ts">when('zipcode',
+  triple(iri(prefix.id, 'id'), def.zipcode, 'zipcode'),
+),
+</code></pre>
+<h2 id="the-empty-string">The empty string</h2>
+<p>In many source data formats, the empty string is used to signify a missing value, this particular string is treated in a special way by <code>when()</code>.  A key whose value is the empty string is treated in the same way as a key that is altogether absent.</p>
+<p>The following code snippet will <em>not</em> print the record to standard output, because the <code>'zipcode'</code> key is considered empty:</p>
+<pre><code class="language-ts">fromJson([{ zipcode: '' }]),
+when('zipcode',
+  logRecord(),
+),
+</code></pre>
+<p>Notice that it is almost never useful to store the empty string in linked data.  So the treatment of empty strings as NULL values is the correct default behavior.</p>
+<h2 id="null-values-when-and-whennotequal">NULL values (<code>when()</code> and <code>whenNotEqual()</code>)</h2>
+<p>If a key contains specific values that are indended to represent NULL values, then these must be specifically identified the first <code>when()</code> parameter.</p>
+<p>The following code snippet identifies the value 9999 for the <code>'created'</code> key as denoting a NULL values.  This means that the year 9999 is used in the source system whenever the actual year of creation was unknown.</p>
+<pre><code class="language-ts">when(context =&gt; context.getNumber('created') != 9999,
+  triple(iri(prefix.id, 'id'), dct.created, literal('created', xsd.gYear)),
+),
+</code></pre>
+<p>Since checking the value of one specific key is very common, the above can be written as follows, using the more specific <code>whenNotEqual</code> function:</p>
+<pre><code class="language-ts">whenNotEqual('created', 9999,
+  triple(iri(prefix.id, 'id'), dct.created, literal('created', xsd.gYear)),
+),
+</code></pre>
+<p>Notice that the use of <code>whenNotEqual()</code> makes the configuration easier to read.  The same shorthand notation works when there are multiple NULL values in the source data.</p>
+<p>The following code snippet only asserts a triple if the year of creation is neither 9999 nor -1.  Notice that the array can contain any number of potential NULL values:</p>
+<pre><code class="language-ts">whenNotEqual('created', [-1, 9999],
+  triple(iri(prefix.id, 'id'), dct.created, literal('created', xsd.gYear)),
+),
+</code></pre>
+<h1 id="iterating-over-lists-of-objects-foreach">Iterating over lists of objects (<code>forEach()</code>)</h1>
+<p>In the previous section, we saw that we were able to assert the name of the first country and the name of the second country.  But what do we do if we want to assert the name for every country in the world?  And what do we do if some countries have a name in 2 languages, but other countries have a name in 1 or 3 languages?  What we need is a simple way to express that we want to make an assertion for every element in a list.</p>
+<p>TriplyETL provides the <code>forEach()</code> function for this purpose.  The following code snippet asserts the name for each country in the example data:</p>
+<pre><code class="language-ts">forEach('data.countries',
+  triple(iri(prefix.id, 'id'), rdfs.label, 'name'),
+),
+</code></pre>
+<p>Notice the following details:
+- <code>forEach()</code> uses the path expression <code>'data.countries'</code> to identify the list.
+- Inside the <code>forEach()</code> function, each element in the list is made available separately.
+- This allows the <code>'id'</code> and <code>'name'</code> keys to be identified directly.</p>
+<p>The above code snippet makes one assertion for every element in the <code>"countries"</code> list:</p>
+<pre><code class="language-turtle">country:nl rdfs:label 'The Netherlands'.
+country:de rdfs:label 'Germany'.
+</code></pre>
+<p>Notice that <code>forEach()</code> only works for lists whose elements areobjects*.  See <a href="#list-primitive">Iterating over lists of primitives</a> for dealing with lists that do not contain objects.</p>
+<p>The elements that <code>forEach()</code> iterates over are themselves (sub)records.  This implies that all functions that work for full records also work for the (sub)records inside <code>forEach()</code>.  The (sub)records inside an <code>forEach()</code> function are smaller.  This allows the regular keys of the iterated-over elements to be accessed directly.</p>
+<p>In addition to these regular keys, (sub)records inside <code>forEach()</code> also contain additional keys that simplify common operations.  The following subsections explain the following special keys:</p>
+<ul>
+<li><a href="#index-key">Index key (<code>$index</code>)</a></li>
+<li><a href="#parent-key">Parent key (<code>$parent</code>)</a></li>
+<li><a href="#root-key">Root key (<code>$root</code>)</a></li>
+</ul>
+<h2 id="index-key-index-index-key">Index key (<code>$index</code>) {#index-key}</h2>
+<p>Each (sub)record that is made available in <code>forEach()</code> contains the <code>$index</code> key.  The value of this key is the index of the element in the list.  This is the same index that is used to access specific elements in an list, as explained in <a href="#accessing-lists-by-index">the section on accessing lists by index</a>.</p>
+<p>The index key is often useful for assigning a unique subject IRI to every element.</p>
+<p>Suppose we have the following source data.  We do not want to use the values of the <code>"name"</code> key for our subject IRI, because these names contain spaces and possibly other problematic characters that make the IRI more difficult to read and use.</p>
+<pre><code class="language-json">{
+  &quot;countries&quot;: [
+    {
+      &quot;name&quot;: &quot;The Netherlands&quot;
+    },
+    {
+      &quot;name&quot;: &quot;Germany&quot;
+    },
+    {
+      &quot;name&quot;: &quot;Italy&quot;
+    }
+  ]
+}
+</code></pre>
+<p>The following code snippet uses the <code>$index</code> key that is made available inside <code>forEach</code> in order to create a unique subject IRI for each country:</p>
+<pre><code class="language-ts">forEach('countries',
+  triple(iri(prefix.id, '$index'), rdfs.label, 'name'),
+),
+</code></pre>
+<p>This results in the following assertions:</p>
+<pre><code class="language-turtle">country:0 rdfs:label 'The Netherlands'.
+country:1 rdfs:label 'Germany'.
+country:2 rdfs:label 'Italy'.
+</code></pre>
+<h2 id="parent-key-parent-parent-key">Parent key (<code>$parent</code>) {#parent-key}</h2>
+<p>When <code>forEach()</code> iterates through a list of elements, it makes the enclosingparent* record available under key <code>$parent</code>.</p>
+<p>The parent record is the record that directly contains the first key that appears in the path that was specified in <code>forEach()</code>.</p>
+<p>For example, the parent record in the following call is the record that directly contains the <code>"data"</code> key:</p>
+<pre><code class="language-ts">forEach('data.countries',
+  // etc
+),
+</code></pre>
+<p>The <code>$parent</code> key can be observed when logRecord` is used to print the iterated-over elements to the terminal:</p>
+<pre><code class="language-ts">forEach('data.countries',
+  logRecord(),
+),
+</code></pre>
+<p>For our example source data, this emits the following 2 records:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;en&quot;,
+  &quot;name&quot;: &quot;The Netherlands&quot;,
+  &quot;$index&quot;: 0,
+  &quot;$parent&quot;: {
+    &quot;data&quot;: {
+      &quot;labels&quot;: [
+        {
+          &quot;id&quot;: &quot;en&quot;,
+          &quot;name&quot;: &quot;The Netherlands&quot;,
+        },
+        {
+          &quot;id&quot;: &quot;de&quot;
+          &quot;name&quot;: &quot;Germany&quot;,
+        }
+      ]
+    }
+  },
+  &quot;$root&quot;: &quot;__circular__&quot;
+}
+</code></pre>
+<p>and:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;de&quot;,
+  &quot;name&quot;: &quot;Germany&quot;,
+  &quot;$index&quot;: 1,
+  &quot;$parent&quot;: {
+    &quot;data&quot;: {
+      &quot;labels&quot;: [
+        {
+          &quot;id&quot;: &quot;en&quot;,
+          &quot;name&quot;: &quot;The Netherlands&quot;,
+        },
+        {
+          &quot;id&quot;: &quot;de&quot;
+          &quot;name&quot;: &quot;Germany&quot;,
+        }
+      ]
+    }
+  },
+  &quot;$root&quot;: &quot;__circular__&quot;
+}
+</code></pre>
+<p>The <code>$root</code> key is explained in <a href="#root-key">the next section</a>.</p>
+<h2 id="root-key-root-root-key">Root key (<code>$root</code>) {#root-key}</h2>
+<p>Sometimes it may be necessary to access a part of the original record that is outside of the scope of the <code>forEach()</code> call.</p>
+<p>Every (sub)record inside a <code>forEach()</code> call contains the <code>"$root"</code> key.  The value of the root key provides a link to the full record.  Because the <code>$root</code> key is part of the linked-to record, it is not possible to print the value of the root key.  (This would result in infinite output.)  For this reason, the value of the <code>$root</code> key is printed as the special value <code>"__circular__"</code>.</p>
+<p>For the above examples, the parent record and root record are the same, but this is not always the case.  Specifically, the parent record and root record are different when <code>forEach()</code> calls are nested.</p>
+<p>The following data contains an inner list (key <code>"labels"</code>) inside an outer list (<code>"countries"</code>):</p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;countries&quot;: [
+      {
+        &quot;id&quot;: &quot;NL&quot;,
+        &quot;labels&quot;: [
+          {
+            &quot;name&quot;: &quot;The Netherlands&quot;,
+            &quot;locale&quot;: &quot;en-us&quot;
+          },
+          {
+            &quot;name&quot;: &quot;Nederland&quot;,
+            &quot;locale&quot;: &quot;nl-nl&quot;
+          }
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;EN&quot;,
+        &quot;labels&quot;: [
+          {
+            &quot;name&quot;: &quot;England&quot;,
+            &quot;locale&quot;: &quot;en-gb&quot;
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<p>The following nested <code>forEach()</code> call shows the difference between the <code>"$parent"</code> key and the <code>$root</code> key.  The <code>$parent</code> key allows the individual country objects to be accessed, while the <code>"$root"</code> key allows the entire tree to be accessed:</p>
+<pre><code class="language-ts">forEach('data.countries',
+  forEach('labels',
+    logRecord(),
+  ),
+),
+</code></pre>
+<p>The following record is printed first (3 records are printed in total).  Notice that the value of the outer <code>$parent</code> and <code>"$root"</code> keys are now different:
+- The <code>$parent</code> key allows access to the first country.
+- The <code>$root</code> key allows access to the full record (describing multiple countries).</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;The Netherlands&quot;,
+  &quot;locale&quot;: &quot;en-us&quot;,
+  &quot;$index&quot;: 0,
+  &quot;$parent&quot;: {
+    &quot;id&quot;: &quot;NL&quot;,
+    &quot;labels&quot;: [
+      {
+        &quot;name&quot;: &quot;The Netherlands&quot;,
+        &quot;locale&quot;: &quot;en-us&quot;
+      },
+      {
+        &quot;name&quot;: &quot;Nederland&quot;,
+        &quot;locale&quot;: &quot;nl-nl&quot;
+      }
+    ],
+    &quot;$index&quot;: 0,
+    &quot;$parent&quot;: {
+      &quot;data&quot;: {
+        &quot;countries&quot;: [
+          {
+            &quot;id&quot;: &quot;NL&quot;,
+            &quot;labels&quot;: &quot;__circular__&quot;
+          },
+          {
+            &quot;id&quot;: &quot;EN&quot;,
+            &quot;labels&quot;: [
+              {
+                &quot;name&quot;: &quot;England&quot;,
+                &quot;locale&quot;: &quot;en-gb&quot;
+              }
+            ]
+          }
+        ]
+      }
+    },
+    &quot;$root&quot;: &quot;__circular__&quot;
+  },
+  &quot;$root&quot;: &quot;__circular__&quot;
+}
+</code></pre>
+<h1 id="specify-multiple-conditions-ifelse">Specify multiple conditions (<code>ifElse()</code>)</h1>
+<p>The <code>ifElse()</code> function in TriplyETL allows us to specify multiple conditions based on which other functions are run.
+Every condition is specified with an <code>if</code> key. In case the condition is true, the functions specified in the <code>then</code> key are run.
+If none of the <code>if</code> conditions are true, the functions specified in an <code>else</code> key, if present, are run.</p>
+<h2 id="parameters">Parameters</h2>
+<p>The first parameter must be an <code>{ if: ..., then: ... }</code> object. 
+The non-first parameters are either additional <code>{ if: ..., then: ... }</code> objects or a final <code>{ else: ... }</code> object.</p>
+<p>Each <code>if</code> key specifies a condition that is either true or false.
+Conditions are either a key name or a function that takes the Etl Context and returns a Boolean value.
+Specifying a key name is identical to specifying the following function:</p>
+<p><code>ctx =&gt; ctx.getString('KEY')</code></p>
+<p>The <code>then</code> and <code>else</code> keys take either one function, or an array of zero or more functions.</p>
+<h2 id="example-1">Example 1</h2>
+<p>The following code snippet uses different conditions to determine the age category that a person belongs to:</p>
+<pre><code class="language-ts">fromJson([
+  { id: 'johndoe', age: 12 },
+  { id: 'janedoe', age: 32 },
+  // ...
+]),
+addIri({
+  prefix: prefix.person,
+  content: 'id',
+  key: '_person',
+}),
+ifElse({
+  if: ctx =&gt; ctx.getNumber('age') &lt; 12,
+  then: triple('_person', a, def.Child),
+}, {
+  if: ctx =&gt; {
+    const age = ctx.getNumber('age')
+    return age &gt;= 12 &amp;&amp; age &lt; 20
+  },
+  then: triple('_person', a, def.Teenager),
+}, {
+  if: ctx =&gt; {
+    const age = ctx.getNumber('age')
+    return age &gt;= 20 &amp;&amp; age &lt; 65
+  },
+  then: triple('_person', a, def.Adult),
+}, {
+  else: triple('_person', a, def.Senior),
+}),
+</code></pre>
+<h2 id="example-2">Example 2</h2>
+<p>The following snippet either asserts data about persons or data about organizations, and uses an <code>ifElse</code> to make the conditional determination on which assertion to make:</p>
+<pre><code class="language-ts">fromJson([
+  { first: 'John', last: 'Doe' },
+  { name: 'Triply' },
+]),
+ifElse({
+  if: 'name',
+  then:
+    pairs(iri(prefix.id, 'name'),
+      [a, sdo.Organization],
+      [sdo.name, 'name'],
+    ),
+}, {
+  else: [
+    concat({
+      content: ['first', 'last'],
+      separator: '-',
+      key: 'name',
+    }),
+    pairs(iri(prefix.id, 'name'),
+      [a, sdo.Person],
+      [sdo.givenName, 'first'],
+      [sdo.familyName, 'last'],
+    ),
+  ],
+}),
+</code></pre>
+<h1 id="switch-between-different-cases-_switch">Switch between different cases (<code>_switch()</code>)</h1>
+<p>The function <code>_switch()</code> allows us to switch between different cases, based on the value of a specified key.</p>
+<h2 id="parameters_1">Parameters</h2>
+<ul>
+<li><code>key</code> The key parameter whose value is compared against the specified values.</li>
+<li><code>cases</code> One or more cases. Each case is represented by a pair. </li>
+</ul>
+<p>The first element of the pair is the value that is checked for equivalence with the value in <code>key</code>.  The second element is either one function or a list of functions.
+Whenever the value in <code>key</code> is equal to the value in one of the cases, the corresponding function(s) are run.</p>
+<p>Notice that we must write <code>_switch()</code> because <code>switch</code> is a reserved keyword.</p>
+<p>An error is emitted if the value for <code>key</code> does not match any of the cases.</p>
+<h2 id="example-1_1">Example 1</h2>
+<p>When an ETL uses multiple data sources, we can use a <code>_switch()</code> to run a dedicated sub-ETL for each data source.</p>
+<p>Suppose we have two tabular data sources: <code>file.episodes</code> and <code>file.people</code>.
+We can use the following <code>_switch()</code> statement to run different sub-ETLs:</p>
+<pre><code class="language-ts">_switch(key.fileName,
+  [file.episodes, etl_episodes],
+  [file.people, etl_people],
+),
+</code></pre>
+<h2 id="example-2_1">Example 2</h2>
+<p>When ETLs transform different kinds of entities, it can be useful to run a sub-ETL based on the type of entity.</p>
+<p>For example, if the current Etl Record represents a person, we want to assert their age. But if the current Etl Record represents a location, we want to assert its latitude and longitude:</p>
+<pre><code class="language-ts">const etl_location = [
+  triple('iri', sdo.latitude, literal('lat', xsd.double)),
+  triple('iri', sdo.longitude, literal('long', xsd.double)),
+]
+
+const etl_person = [
+  triple('iri', sdo.age, literal('age', xsd.nonNegativeInteger)),
+]
+
+etl.run(
+  _switch('type',
+    ['location', etl_location],
+    ['person', etl_person],
+ ),
+)
+</code></pre>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

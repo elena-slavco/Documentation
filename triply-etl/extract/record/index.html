@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>1. Extract: Record - Triply Documentation</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "1. Extract: Record";
+        var mkdocs_page_input_path = "triply-etl/extract/record/index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Triply Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyDB</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../triply-db-getting-started/">Getting started</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyETL</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/">Command Line Interface (CLI)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../changelog/">Changelog</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../maintenance/">Maintenance</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Yasgui</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../yasgui/">Introduction</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Triply Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li>1. Extract: Record</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>When a TriplyETL is connected to one of more data sources, a stream of <strong>Records</strong> will be generated. Records use a generic representation that is independent of the format used in the data sources.</p>
+<h1 id="the-generic-record">The generic Record</h1>
+<p>We illustrate the representation of the generic Record with the following code snippet. This snippet uses extractor <a href="/docs/triply-etl/extract/formats#fromJson">fromJson()</a> to extract data from <a href="/docs/triply-etl/extract/types#inline-json">inline JSON</a> source data:</p>
+<pre><code class="language-ts">import { Etl, fromJson, logRecord } from '@triplyetl/etl/generic'
+export default async function (): Promise&lt;Etl&gt; {
+  const etl = new Etl()
+  etl.use(
+    fromJson([
+      { id: '123', name: 'John' },
+      { id: '456', name: 'Jane' },
+    ]),
+    logRecord(),
+  )
+  return etl
+}
+</code></pre>
+<p>Debug function <a href="/docs/triply-etl/debug#logRecord">logRecord()</a> prints the current record to standard output. When this pipeline is run, the two inline records are printed as follows:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;123&quot;,
+  &quot;name&quot;: &quot;John&quot;,
+  &quot;$recordId&quot;: 1,
+  &quot;$environment&quot;: &quot;Development&quot;
+}
+{
+  &quot;id&quot;: &quot;456&quot;,
+  &quot;name&quot;: &quot;Jane&quot;,
+  &quot;$recordId&quot;: 2,
+  &quot;$environment&quot;: &quot;Development&quot;
+}
+</code></pre>
+<p>Notice that TriplyETL adds two keys to both records: <code>$recordId</code> and <code>$environment</code> (see <a href="#special-keys">Special Key</a> for more information).</p>
+<p>Now suppose that we change the source system. We no longer use inline JSON, but a local XML file. The contents of the XML file are as follows:</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;persons&gt;
+  &lt;person&gt;
+    &lt;id&gt;123&lt;/id&gt;
+    &lt;name&gt;John&lt;/name&gt;
+  &lt;/person&gt;
+  &lt;person&gt;
+    &lt;id&gt;456&lt;/id&gt;
+    &lt;name&gt;Jane&lt;/name&gt;
+  &lt;/person&gt;
+&lt;/persons&gt;
+</code></pre>
+<p>Let us change the TriplyETL script to use extractor <a href="/docs/triply-etl/extract/formats#fromXml">fromXml()</a> and the <a href="/docs/triply-etl/extract/types#local-files">local file</a> source type:</p>
+<pre><code class="language-ts">import { Etl, fromXml, logRecord } from '@triplyetl/etl/generic'
+export default async function (): Promise&lt;Etl&gt; {
+  const etl = new Etl()
+  etl.use(
+    fromXml(Source.file('example.xml')),
+    logRecord(),
+  )
+  return etl
+}
+</code></pre>
+<p>This new script logs the following two records:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;123&quot;,
+  &quot;name&quot;: &quot;John&quot;,
+  &quot;$recordId&quot;: 1,
+  &quot;$environment&quot;: &quot;Development&quot;
+}
+{
+  &quot;id&quot;: &quot;456&quot;,
+  &quot;name&quot;: &quot;Jane&quot;,
+  &quot;$recordId&quot;: 2,
+  &quot;$environment&quot;: &quot;Development&quot;
+}
+</code></pre>
+<p>Notice that the two records that are logged from an XML source are completely identical to the two records that were previously logged from a JSON source. This is an essential property of TriplyETL: it treats data from any source system in the same way, using the same intermediary Record format.</p>
+<p>This makes it easy to write pipelines that process data from a large number of different data sources. This also makes replacing a data source in one format with a data source in another format a relatively cheap operation. More often than not, only the source extractor needs to be changed, and all transformations and assertions remain as they were.</p>
+<h1 id="special-keys">Special keys</h1>
+<p>Records in TriplyETL contain several special keys. These special keys start with a dollar sign character (<code>$</code>). The special keys contain values that are inserted during the Extract step. These special keys can be used in the same way as regular keys in your TriplyETL configuration. We now discuss these special keys in detail.</p>
+<h2 id="special-key-recordid">Special key <code>$recordId</code></h2>
+<p>The special key <code>$recordId</code> assigns a unique number to every record that is processed in one single run of a TriplyETL pipeline.</p>
+<p>If the source data does not change, multiple runs of the TriplyETL pipeline will always generate the same record IDs. However, if source data changes, multiple runs of the TriplyETL pipeline may generate different record IDs for the same record.</p>
+<h3 id="use-case-unique-identifiers">Use case: Unique identifiers</h3>
+<p>The first main use case of the <code>$recordId</code> key is to create IRIs that are unique within one single run of a TriplyETL pipeline.</p>
+<p>Suppose the following table is our source data:</p>
+<table>
+<thead>
+<tr>
+<th>First name</th>
+<th>Last name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>John</td>
+<td>Doe</td>
+</tr>
+<tr>
+<td>Jane</td>
+<td>Doe</td>
+</tr>
+<tr>
+<td>John</td>
+<td>Doe</td>
+</tr>
+</tbody>
+</table>
+<p>We need to create an IRI for every person in this table. Notice that the table contains no unique properties: there are two different persons with the same first and last name. This means that we cannot use the keys "First name" and "Last name" in our record in order to create our IRIs. Luckily, the source connector adds the <code>$recordId</code> for us:</p>
+<pre><code class="language-json">{
+  &quot;First name&quot;: &quot;John&quot;,
+  &quot;Last name&quot;: &quot;Doe&quot;,
+  &quot;$recordId&quot;: 1
+}
+{
+  &quot;First name&quot;: &quot;Jane&quot;,
+  &quot;Last name&quot;: &quot;Doe&quot;,
+  &quot;$recordId&quot;: 2
+}
+{
+  &quot;First name&quot;: &quot;John&quot;,
+  &quot;Last name&quot;: &quot;Doe&quot;,
+  &quot;$recordId&quot;: 3
+}
+</code></pre>
+<p>This allows us to make the following assertion:</p>
+<pre><code class="language-ts">pairs(iri(prefix.id, '$recordId'),
+  [a, sdo.Person],
+  [sdo.givenName, 'First name'],
+  [sdo.familyName, 'Last name'],
+),
+</code></pre>
+<p>Which results in the following linked data:</p>
+<pre><code class="language-turtle">id:1
+  a sdo:Person;
+  sdo:givenName 'John';
+  sdo:familyName 'Doe'.
+
+id:2
+  a sdo:Person;
+  sdo:givenName 'Jane';
+  sdo:familyName 'Doe'.
+
+id:3
+  a sdo:Person;
+  sdo:givenName 'John';
+  sdo:familyName 'Doe'.
+</code></pre>
+<p>Notice that the use of the <code>$recordId</code> results in a correct single run of the TriplyETL pipeline. But if the source data changes, the IRIs may change as well. For example, if the first and second row in the source table are swapped, the IRI that denotes "Jane Doe" will change from <code>id:2</code> to <code>id:1</code>.</p>
+<h3 id="use-case-debugging">Use case: Debugging</h3>
+<p>When you are debugging the configuration of a TriplyETL pipeline, it is sometimes useful to perform a specific actions for a specific record. Assuming the stream of records is stable during the debugging effort, the <code>$recordId</code> key can be used to perform such a debugging action; for example:</p>
+<pre><code class="language-ts">whenEqual('$recordId', 908, logRecord()),
+</code></pre>
+<p>Do note that it is generally better to run the TriplyETL for a specific record using the <code>--from-record-id 908 --head 1</code> command line flags (see <a href="/docs/triply-etl/cli">CLI</a>).</p>
+<h1 id="special-key-environment">Special key <code>$environment</code></h1>
+<p>The TriplyETL record contains special key <code>$environment</code>. Its value denotes the DTAP environment that the pipeline is currently running in. This is one of the followin values: "Development", "Test", "Acceptance", or "Production".</p>
+<p>See <a href="/docs/triply-etl/tutorials/automation">the Automation tutorial</a> for more information.</p>
+<h1 id="special-key-sheetname">Special key <code>$sheetName</code></h1>
+<p>The special key <code>$sheetName</code> only occurs in records that original from data source that use the Microsoft Excel format. In such records, this special key contains the name of the sheet from which the record originats.</p>
+<p>See <a href="/docs/triply-etl/connect/formats/#sheetName">the documentation for the Microsoft Excel format</a> for more information about this special key.</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

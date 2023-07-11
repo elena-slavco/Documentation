@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>Changelog - Triply Documentation</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "Changelog";
+        var mkdocs_page_input_path = "triply-etl/changelog/index.md";
+        var mkdocs_page_url = null;
+      </script>
+<script defer="" src="../../js/jquery-3.6.0.min.js"></script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> Triply Documentation
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../triply-db-getting-started/">Getting started</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyETL</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../">Overview</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/">Command Line Interface (CLI)</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="./">Changelog</a>
+<ul class="current">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/">Maintenance</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Yasgui</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../yasgui/">Introduction</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">Triply Documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a> »</li>
+<li>TriplyETL »</li>
+<li>Changelog</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<p>The current version of TriplyETL is <strong>2.0.10</strong></p>
+<p>You can use this changelog to perform a safe update from an older version of TriplyETL to a newer one. See the documentation for <a href="/docs/triply-etl/cli#update">Upgrading TriplyETL repositories</a> for the advised approach, and how the changelog factors into that.</p>
+<h1 id="changelog-for-triplyetl-207-through-2010">Changelog for TriplyETL 2.0.7 through 2.0.10</h1>
+<p>Release dates: 2023-06-17 through 2023-06-28</p>
+<p>Bugfixes:
+- Installation on Windows.
+- Fixed warnings for a dependency (async-saxophone for XML processing), which did not yet officially support Node.js 18.</p>
+<h1 id="changelog-for-triplyetl-206">Changelog for TriplyETL 2.0.6</h1>
+<p>Release date: 2023-06-07</p>
+<h2 id="added-support-for-the-premis-vocabulary">[Added] Support for the PREMIS vocabulary</h2>
+<p>Support was added for the PREMIS 3.0.0 vocabulary. This vocabulary is published by the Library of Congress and can be used to publish metadata about the preservation of digital objects. See the <a href="https://id.loc.gov/ontologies/premis-3-0-0.html">PREMIS documentation</a> for more information.</p>
+<p>The vocabulary can be imported from the 'vocab' module:</p>
+<pre><code class="language-ts">import { premis } from '@triplyetl/etl/vocab'
+</code></pre>
+<p>The following code snippet uses the vocabulary to assert that a PREMIS file is stored in a PREMIS storage location:</p>
+<pre><code class="language-ts">pairs(iri(id, 'some-file'),
+  [a, premis.File],
+  [premis.storedAt, iri(id, 'some-location')],
+),
+triple(iri(id, 'some-location'), a, premis.StorageLocation),
+</code></pre>
+<p>See the documentation about <a href="/docs/triply-etl/declare#external-vocabularies">external vocabulary declarations</a> for more information.</p>
+<h2 id="added-new-debug-function-logmemory">[Added] New debug function logMemory()</h2>
+<p>A new debug function <a href="/docs/triply-etl/debug#logMemory">logMemory()</a> is added. This function prints an overview of the current memory usage of TriplyETL. This allows users to detect fluctuations in memory consumption inside their pipelines.</p>
+<p>See the <a href="/docs/triply-etl/debug#logMemory">debug functions documentation page</a> for more information.</p>
+<h2 id="added-support-for-the-listidentifiers-verb-in-the-oai-pmh-extractor">[Added] Support for the <code>ListIdentifiers</code> verb in the OAI-PMH extractor</h2>
+<p>The <code>fromOai()</code> extractor already supported the <code>ListRecords</code> verb. This release adds support for the <code>ListIdentifiers</code> verb. The latter allows used to stream through the headers of all records in an OAI-PMG collection, without requiring the full record (i.e. body) to be retrieved as well.</p>
+<p>See the <a href="/docs/triply-etl/extract/formats#fromOai">fromOai()</a> documentation for more information.</p>
+<h1 id="changelog-for-triplyetl-205">Changelog for TriplyETL 2.0.5</h1>
+<p>Release date: 2023-05-25</p>
+<h2 id="changed-new-default-engine-for-sparql-construct">[Changed] New default engine for SPARQL Construct</h2>
+<p>The default engine for evaluating SPARQL Construct queries (function <a href="/docs/triply-etl/enrich/sparql">construct()</a>) has changed from Comunica to Speedy. Speedy is a new SPARQL implementation that is developed by Triply; Comunica is an open source engine that is developed by the open source community. Since SPARQL is a standardized query language, this change should not cause a difference in behavior for your ETL pipelines.</p>
+<p>In the unexpected case where an ETL pipeline <em>is</em> negatively affected by this change, the old situation can be restored by explicitly configuring the Comunica engine:</p>
+<pre><code class="language-ts">import { construct } from '@triplyetl/etl/sparql'
+
+construct(Source.TriplyDb.query('my-query'), { sparqlEngine: 'comunica' }),
+</code></pre>
+<p>The benefit of switching to the Speedy engine is that this engine is expected to be faster for most queries. Overall, this change will therefore result in speed improvements for your TriplyETL pipelines.</p>
+<h2 id="added-new-cli-tool-for-comparing-graphs">[Added] New CLI tool for comparing graphs</h2>
+<p>The new CLI tool <a href="/docs/triply-etl/cli#tools-compare">compare</a> allows graph comparison to be performed from the command-line. This uses the same algorithm that is used by the <a href="/docs/triply-etl/validate/graph-comparison">compareGraphs()</a> validator function.</p>
+<h2 id="bug-fixes">Bug fixes</h2>
+<p>This release includes the following bug fixes:</p>
+<ul>
+<li><code>fromXlsx()</code> did not remove trailing whitespace in cell values.</li>
+<li>When a SHACL result was printed, an incorrect message about a faulty SHACL model would be shown.</li>
+<li>Some RDF processors did not handle empty RDF inputs correctly.</li>
+</ul>
+<h1 id="changelog-for-triplyetl-204">Changelog for TriplyETL 2.0.4</h1>
+<p>Release date: 2023-05-11</p>
+<h2 id="enhanced-better-output-for-checking-graph-isomorphism">[Enhanced] Better output for checking graph isomorphism</h2>
+<p>Before this release, when two graphs were not isomorph and their difference consisted of a mapping from blank nodes onto blank nodes exclusively, an empty difference message was communicated.</p>
+<p>From this release onwards, the difference message is non-empty, and specifically indicates the difference between the non-isomorphic graphs.</p>
+<p>The following snippet should emit a non-empty difference:</p>
+<pre><code class="language-ts">import { Etl, Source, compareGraphs, loadRdf } from "@triplyetl/etl/generic"
+
+export default async function (): Promise&lt;Etl&gt; {
+  const etl = new Etl()
+  etl.use(
+    loadRdf(
+      Source.string('base &lt;https://triply.cc/&gt; &lt;g&gt; { []&lt;p&gt;&lt;o&gt; }'),
+      { contentType: 'application/trig' }
+    ),
+    compareGraphs(
+      Source.string('base &lt;https://triply.cc/&gt; &lt;g&gt; { [] &lt;p&gt;&lt;o&gt;. []&lt;p&gt;&lt;o&gt;. }'),
+      { contentType: 'application/trig' }
+    ),
+  )
+  return etl
+}
+</code></pre>
+<p>Notice that the two TriG snippets are not isomorphic:</p>
+<div class="mermaid">graph LR
+  _:1 -- p --&gt; o.
+</div>
+<p>and</p>
+<div class="mermaid">graph LR
+  _:2a -- p --&gt; o.
+  _:2b -- p --&gt; o.
+</div>
+<p>It is possible to map <code>_:2a</code> and <code>_:2b</code> onto <code>_:1</code>, but there is no mapping that works the other way round.</p>
+<h1 id="changelog-for-triplyetl-203">Changelog for TriplyETL 2.0.3</h1>
+<p>Release date: 2023-05-10</p>
+<h2 id="bug-fixes_1">Bug fixes</h2>
+<p>This release includes the following bug fixes:</p>
+<ul>
+<li>Error location information is not shown in TriplyETL Runner.</li>
+<li>Issue when a URL data source (<code>Source.url()</code>) includes an HTTP body.</li>
+</ul>
+<h1 id="changelog-for-triplyetl-202">Changelog for TriplyETL 2.0.2</h1>
+<p>Release date: 2023-05-09</p>
+<h2 id="bug-fixes_2">Bug fixes</h2>
+<p>This release fixes bugs related to the recent switch from CommonJS to ESM:</p>
+<ul>
+<li>Dynamic import bug on Windows.</li>
+<li>Error reporting issues due to ESM imports.</li>
+</ul>
+<h1 id="changelog-for-triplyetl-201">Changelog for TriplyETL 2.0.1</h1>
+<p>Release date: 2023-05-03</p>
+<h2 id="added-timeout-flag-for-triplyetl-runner">[Added] Timeout flag for TriplyETL Runner</h2>
+<p>The TriplyETL Runner is the CLI tool that is used to run ETL pipelines. Starting with this version, you can specify a <code>--timeout</code> flag when using the TriplyETL Runner.</p>
+<p>When the indicated timeout is reached before the pipeline finishes, the TriplyETL Runner will gracefully terminate the ETL by acting as if there are no more incoming records.</p>
+<p>See the <a href="/docs/triply-etl/cli#timeout">TriplyETL Runner documentation page</a> for more information.</p>
+<h1 id="changelog-for-triplyetl-200">Changelog for TriplyETL 2.0.0</h1>
+<p>Release date: 2023-05-01</p>
+<h2 id="changed-modules-infrastructure-moves-from-commonjs-to-esm">[Changed] Modules infrastructure moves from CommonJS to ESM</h2>
+<p>Before this release, TriplyETL used CommonJS modules to modularize its functionality into different components. Starting in this release, ECMAScript Modules (ESM) are used to modularize TriplyETL functionality into different modules.</p>
+<p>ESM is a more modern approach for modularizing ECMAScript (JavaScript, TypeScript, and Node.js) code. While CommonJS imports are evaluated at runtime, ESM imports are evaluated at compile time. TriplyETL users benefit from this change, since error messages related to module imports will be detected much earlier in the development process.</p>
+<p>All documentation examples were update to use ESM syntax for module imports, for example:</p>
+<pre><code class="language-ts">import { logRecord } from '@triplyetl/etl/debug'
+</code></pre>
+<h2 id="changed-debug-functions-move-to-a-new-module">[Changed] Debug functions move to a new module</h2>
+<p>Before this release, debug functions like <code>logRecord()</code> and <code>startTrace()</code> were part of the RATT module. Since debug functions are generic / not RATT-specific, they were moved into a new module.</p>
+<p>Function are imported from this new module in the following way:</p>
+<pre><code class="language-ts">import { logRecord, traceEnd, traceStart } from '@triplyetl/etl/debug'
+</code></pre>
+<h2 id="enhanced-better-error-messages-when-things-go-wrong">[Enhanced] Better error messages when things go wrong</h2>
+<p>This release introduces a new approach for communicating errors back to the user. When TriplyETL functionality detects an error condition, a unified 'trace middleware' is now used to retrieve information from the environment in which the error occurred. This information is then printed to the error output stream for communication with the user.</p>
+<h2 id="bug-fixes_3">Bug fixes</h2>
+<p>The following bug fixes are included in this release:</p>
+<ul>
+<li>Incorrect behavior of the <a href="/docs/triply-etl/control#switch">_switch() control function</a>.</li>
+<li>The <a href="/docs/triply-etl/extract#fromOai">fromOai() extractor</a> now communicates clearer when the accessed OAI-PMH endpoint encounters any issues.</li>
+<li>When a key with a NULL value was accessed, the name of the key is now included in the error message.</li>
+</ul>
+<h1 id="start-of-the-changelog">Start of the changelog</h1>
+<p>TriplyETL 1.0.0 was released on 2023-03-20.</p>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../cli/" title="Command Line Interface (CLI)"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../maintenance/" title="Maintenance">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span><a href="../cli/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../maintenance/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script>var base_url = '../..';</script>
+<script defer="" src="../../js/theme_extra.js"></script>
+<script defer="" src="../../js/theme.js"></script>
+<script defer="" src="../../search/main.js"></script>
+<script defer="">
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"></script><script>mermaid.initialize({});</script></body>
+</html>

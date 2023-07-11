@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>SPARQL pagination - Triply Documentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "SPARQL pagination";
+        var mkdocs_page_input_path = "generics/sparql-pagination.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Triply Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyDB</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../triply-db-getting-started/">Getting started</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyETL</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../triply-etl/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../triply-etl/getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../triply-etl/cli/">Command Line Interface (CLI)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../triply-etl/changelog/">Changelog</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../triply-etl/maintenance/">Maintenance</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Yasgui</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../yasgui/">Introduction</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Triply Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li>SPARQL pagination</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>This page explains how to retrieve all results from a SPARQL query using pagination.</p>
+<p>Often SPARQL queries can return more than 10.000 results, but due to limitations the result set will only consist out of the first 10.000 results. To retrieve more than 10.000 results you can use pagination. TriplyDB supports two methods to retrieve all results from a SPARQL query. Pagination with the saved query API or Pagination with TriplyDB.js.</p>
+<h2 id="pagination-with-the-saved-query-api">Pagination with the saved query API</h2>
+<p>Each TriplyDB instance has a fully RESTful API. The TriplyDB RESTful API is extended for saved SPARQL queries. The API for saved queries is extended with two arguments that the query is able to process paginated result sets. The arguments are ‘page’ and ‘pageSize’. An example of a paginated saved SPARQL query request would look like:
+<code>https://api.triplydb.com/queries/academy/pokemon-color/run?page=3&amp;pageSize=100</code></p>
+<p>The example request argument ‘page’ corresponds to the requested page. In the example request this would correspond to the third page of paginated SPARQL query, according to the ‘pageSize’. There is no maximum ‘page’ limit, as a SPARQL query could return an arbitrary number of results. When no results can be retrieved for the requested page an empty page will be returned.</p>
+<p>The argument ‘pageSize’ corresponds to how many results each page would contain. The ‘pageSize’ has a default of 100 returned results and a maximum ‘pageSize’ limit of 10.000 returned results. The request will return an error when the ‘pageSize’ is set higher than 10.000.</p>
+<p>The RESTful API for the saved SPARQL queries follows the <a href="https://www.rfc-editor.org/rfc/rfc8288.html">RFC 8288</a> standard.</p>
+<p>The request will return an response body containing the result set and a response header. The response header contains a link header with the relative "next" request, the relative "prev" request, and the relative "first" request. By following the "next" link header request you can chain the pagination and retrieve all results.</p>
+<pre><code class="language-json">link:
+    &lt;https://api.triplydb.com/queries/academy/pokemon-color/run?page=4&amp;pageSize=100&gt;; rel=&quot;next&quot;,
+    &lt;https://api.triplydb.com/queries/academy/pokemon-color/run?page=2&amp;pageSize=100&gt;; rel=&quot;prev&quot;,
+    &lt;https://api.triplydb.com/queries/academy/pokemon-color/run?page=1&amp;pageSize=100&gt;; rel=&quot;first&quot;
+</code></pre>
+<h2 id="pagination-with-triplydbjs">Pagination with TriplyDB.js</h2>
+<p><strong>TriplyDB.js</strong> is the official programming library for interacting with <a href="https://triply.cc/docs/triply-db">TriplyDB</a>. TriplyDB.js allows the user to connect to a TriplyDB instance via the TypeScript language. TriplyDB.js has the advantage that it can handle pagination internally so it can reliably retrieve a large number of results.</p>
+<p>To get the output for a <code>construct</code> or <code>select</code> query, follow these steps:</p>
+<ol>
+<li>Import the triplydb library and set your parameters, regarding the TriplyDB instance and the account in which you have saved the query as well as the name of the query. Do not forget that we perform TriplyDB.js requests within an <a href="#create-your-first-script">async context</a>.</li>
+</ol>
+<p><code>ts
+   import Client from '@triply/triplydb'
+   async function run() {
+     // Your code goes here.
+     const client = Client.get({token: process.env.TRIPLYDB_TOKEN})
+     const account = await client.getAccount('account-name')
+     const query = await account.getQuery('name-of-some-query')
+   }
+   run()</code></p>
+<ol>
+<li>Get the results of a query by setting a <code>results</code> variable.  More specifically, for construct queries you use the <code>statements()</code> call:</li>
+</ol>
+<p><code>ts
+   const query = await account.getQuery('name-of-some-query')
+   const results = query.results().statements()</code></p>
+<p>For select queries you use the <code>bindings()</code> call:</p>
+<p><code>ts
+   const query = await account.getQuery('name-of-some-query')
+   const results = query.results().bindings()</code></p>
+<p>Additionally, saved queries can have 'API variables' that allow you to specify variables that are used in the query. Thus, if you have query parameters, pass their values as the first argument to <code>results</code> as follows:</p>
+<p><code>ts
+   // For SPARQL construct queries.
+   const results = query.results({
+     someVariable: 'value of someVariable',
+     anotherVariable: 'value of anotherVariable'
+   }).statements()
+   // For SPARQL select queries.
+   const results = query.results({
+     someVariable: 'value of someVariable',
+     anotherVariable: 'value of anotherVariable'
+   }).bindings()</code></p>
+<ol>
+<li>
+<p>To iterate the results of your SPARQL query you have three options:</p>
+<p>a. Iterate through the results per row in a <code>for</code>-loop:</p>
+<p><code>ts
+  // Iterating over the results.
+  for await (const row of results) {
+    // execute something
+  }</code>
+  Note: For select queries the <code>for</code>-loop iterates over the rows of the result set. For construct queries the <code>for</code>-loop iterates over the statements in the result set.</p>
+<p>b. Save the results to a file. This is only supported for SPARQL <code>construct</code> queries:</p>
+<p><code>ts
+  // Saving the results of a SPARQL construct query to a file.
+  await results.toFile('my-file.nt')</code></p>
+<p>c. Load all results into memory in the form of an Array. Note that this is almost never used. If you want to process results, then use the 3a option; if you want to persist results, then option 3b suits better.</p>
+<p><code>ts
+  // Loading results for a SPARQL construct or SPARQL select query into memory.
+  const array = await results.toArray()</code></p>
+</li>
+</ol>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

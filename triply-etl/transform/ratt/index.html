@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>2. Transform: RATT - Triply Documentation</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "2. Transform: RATT";
+        var mkdocs_page_input_path = "triply-etl/transform/ratt/index.md";
+        var mkdocs_page_url = null;
+      </script>
+<script defer="" src="../../../js/jquery-3.6.0.min.js"></script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> Triply Documentation
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../triply-db-getting-started/">Getting started</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyETL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../">Overview</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/">Command Line Interface (CLI)</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/">Changelog</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintenance/">Maintenance</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Yasgui</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../yasgui/">Introduction</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">Triply Documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a> »</li>
+<li>2. Transform: RATT</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<p>RATT transformations are a core set of functions that are commonly used to change the content of TriplyETL Records.</p>
+<p>RATT transformations started out as <a href="/docs/triply-etl/transform/typescript">TypeScript transformations</a> that turned out to be useful in a wide variety of TriplyETL pipelines. Triply maintains this core set of transformation functions to allow new ETLs to make use of off-the-shelf functionality that has proven useful in the past.</p>
+<h1 id="overview">Overview</h1>
+<p>The following transformation functions are currently available:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#addHashedIri">addHashedIri()</a></td>
+<td>Create a new IRI with a content-based local name.</td>
+</tr>
+<tr>
+<td><a href="#addIri">addIri()</a></td>
+<td>Create a new IRI based on a prefix and a local name.</td>
+</tr>
+<tr>
+<td><a href="#addLiteral">addLiteral()</a></td>
+<td>Create a new literal based on a lexical for and a datatype IRI or language tag.</td>
+</tr>
+<tr>
+<td><a href="#addRandomIri">addRandomIri()</a></td>
+<td>Create a new IRI with a random local name.</td>
+</tr>
+<tr>
+<td><a href="#addSkolemIri">addSkolemIri()</a></td>
+<td>Create a new IRI with a random local name, which advertises that it may be consistently replaced with blank nodes.</td>
+</tr>
+<tr>
+<td><a href="#addTag">addTag()</a></td>
+<td>Create a language tag.</td>
+</tr>
+<tr>
+<td><a href="#addValue">addValue()</a></td>
+<td>Create a TypeScript value.</td>
+</tr>
+<tr>
+<td><a href="#capitalize">capitalize()</a></td>
+<td>Transforms a string value to its capitalized variant.</td>
+</tr>
+<tr>
+<td><a href="#concat">concat()</a></td>
+<td>Combine multiple strings into a new string.</td>
+</tr>
+<tr>
+<td><a href="#copy">copy()</a></td>
+<td>Copy a value from an old into a new key.</td>
+</tr>
+<tr>
+<td><a href="#decodeHtml">decodeHtml()</a></td>
+<td>Decode HTML entities that occur in strings.</td>
+</tr>
+<tr>
+<td><a href="#geojsontowkt">geojsonToWkt()</a></td>
+<td>Change GeoJSON strings to WKT strings.</td>
+</tr>
+<tr>
+<td><a href="#lowercase">lowercase()</a></td>
+<td>Change strings to their lowercase variants.</td>
+</tr>
+<tr>
+<td><a href="#padEnd">padEnd()</a></td>
+<td>Pad the end of strings.</td>
+</tr>
+<tr>
+<td><a href="#padStart">padStart()</a></td>
+<td>Pad the start of strings.</td>
+</tr>
+<tr>
+<td><a href="#replace">replace()</a></td>
+<td>Replace part of a string.</td>
+</tr>
+<tr>
+<td><a href="#split">split()</a></td>
+<td>Split a string into multiple substrings.</td>
+</tr>
+<tr>
+<td><a href="#substring">substring()</a></td>
+<td>Extract a substring from a string.</td>
+</tr>
+<tr>
+<td><a href="#translateAll">translateAll()</a></td>
+<td>Translate <em>all</em> string values to other values.</td>
+</tr>
+<tr>
+<td><a href="#translateSome">translateSome()</a></td>
+<td>Translate <em>some</em> string values to other strings.</td>
+</tr>
+<tr>
+<td><a href="#tryLiteral">tryLiteral()</a></td>
+<td>Create literals for which the datatype is not know beforehand.</td>
+</tr>
+<tr>
+<td><a href="#uppercase">uppercase()</a></td>
+<td>Change a string to its uppercase variant.</td>
+</tr>
+<tr>
+<td><a href="#wktAddPoint">wkt.addPoint()</a></td>
+<td>Add a geospatial point using the Well-Known Text (WKT) format.</td>
+</tr>
+<tr>
+<td><a href="#wktProject">wkt.project()</a></td>
+<td>Change the projection of a Well-Known Text (WKT) literal from from Coordinate Reference System into another.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="function-addhashediri-addhashediri">Function <code>addHashedIri()</code> {#addHashedIri}</h1>
+<p>Creates an IRI based on the specified IRI prefix and the hash calculated over the input content string(s).</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li><code>prefix</code> An IRI, or a key that contains an IRI value.</li>
+<li><code>content</code> A key that contains a string value, or a string value specified with function <a href="/docs/triply-etl/assert/ratt#str">str()</a>.</li>
+<li><code>key</code> A new key where the created hashed IRI is stored.</li>
+</ul>
+<h2 id="use-cases">Use cases</h2>
+<p>This function is used under the following circumstances:
+1. You want to identify something with an IRI.
+2. The thing that you want to identify does not have a readily available identifier.
+3. The thing that you want to identify has one or more properties that together allow the thing to be uniquely identified.</p>
+<p>A benefit of <code>addHashedIri()</code> is that the created IRIs are the same across different ETL runs over the same source data.</p>
+<p>A downside of <code>addHashedIri()</code> is that it can take a lot of time to figure out which set of properties make every IRI unique. (In database theory this process is known as 'composite key detection'.)  Furthermore, having to adjust the hashed content later may pose a maintenance burden.</p>
+<h2 id="example-lazy-identifiers">Example: Lazy identifiers</h2>
+<p>Some source data does not include good identifiers for all data items.</p>
+<p>The following source table does not include a good identifier. What is more, none of the columns contains values that are unique for each row:</p>
+<table>
+<thead>
+<tr>
+<th>First name</th>
+<th>Last name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jane</td>
+<td>Doe</td>
+</tr>
+<tr>
+<td>Jane</td>
+<td>Smith</td>
+</tr>
+<tr>
+<td>John</td>
+<td>Doe</td>
+</tr>
+</tbody>
+</table>
+<p>In such cases it may be an option to take a combination of columns, and use that combined sequence of columns for identification. This is called a 'composite key' in database theory.</p>
+<p>The following snippet uses the combination of the first name and last name fields (in that order) to create a locally unique hash, that can be used to create a globally IRI. (This does assume that every person in the dataset has a unique first/last name combination!)</p>
+<pre><code class="language-ts">fromXlsx(Source.file('data.xlsx')),
+addHashedIri({
+  prefix: prefix.person,
+  content: ['First name', 'Last name'],
+  key: '_person',
+}),
+pairs('_person',
+  [a, sdo.Person],
+  [sdo.givenName, 'First name'],
+  [sdo.familyName, 'Last name'],
+),
+</code></pre>
+<p>This results in the following linked data assertions:</p>
+<pre><code class="language-turtle">person:70020947bea6c39cccea20d27e30fbdf
+  a sdo:Person;
+  sdo:givenName 'John';
+  familyName 'Doe'.
+</code></pre>
+<p>Or diagrammatically:</p>
+<div class="mermaid">graph LR
+  person -- a --&gt; Person
+  person -- sdo:givenName --&gt; john
+  person -- sdo:familyName --&gt; doe
+
+  Person[sdo:Person]:::model
+  doe['Doe']:::data
+  john['John']:::data
+  person([person:70020947bea6c39cccea20d27e30fbdf]):::data
+
+  classDef model fill:lightblue
+  classDef meta fill:sandybrown
+</div>
+<h2 id="example-statement-reification">Example: Statement Reification</h2>
+<p>The RDF standard allows individual statements to be identified. This approach is called 'Statement Reification' and is often used for asserting metadata about statements or to represent modalities such as probability or belief.</p>
+<p>The following snippet uses <code>addHashedIri</code> to create a unique identifier for every reified statement:</p>
+<pre><code class="language-ts">fromJson([{ id: '1', name: 'John Doe' }]),
+
+// We first create the subject term, predicate term, and object.
+addIri({
+  prefix: prefix.person,
+  content: 'id',
+  key: 'subject',
+}),
+addIri({
+  prefix: prefix.def,
+  content: str('name'),
+  key: 'predicate',
+}),
+addLiteral({
+  content: 'name',
+  key: 'object',
+}),
+
+// We then create the triple statement.
+triple('subject', 'predicate', 'object'),
+
+// We can now create the reified statement.
+addHashedIri({
+  prefix: prefix.statement,
+  content: ['subject', 'predicate', 'object'],
+  key: 'statement',
+}),
+pairs('statement',
+  [a, rdf.Statement],
+  [rdf.subject, 'subject'],
+  [rdf.predicate, 'predicate'],
+  [rdf.object, 'object'],
+),
+</code></pre>
+<p>This results in the following linked data assertions:</p>
+<pre><code class="language-turtle">person:1 def:name 'John Doe'.
+statement:549decc4c44204a907aa32b4cc9bfaba
+  a rdf:Statement;
+  rdf:subject person:1;
+  rdf:predicate def:name;
+  rdf:object 'John Doe'.
+</code></pre>
+<p>Or diagrammatically:</p>
+<div class="mermaid">graph TB
+  person --- name
+  name --&gt; johndoe
+  statement -- a --&gt; Statement
+  statement -- rdf:subject --&gt; person
+  statement -- rdf:predicate --&gt; name
+  statement -- rdf:object --&gt; johndoe
+
+  Statement[rdf:Statement]:::model
+  person([person:1]):::data
+  name[def:name]:::model
+  johndoe([John Doe]):::data
+  statement([statement:549decc4c44204a907aa32b4cc9bfaba]):::meta
+
+  classDef model fill:lightblue
+  classDef meta fill:sandybrown
+</div>
+<h1 id="function-addiri-addiri">Function <code>addIri()</code> {#addIri}</h1>
+<h2 id="description">Description</h2>
+<p>Creates an IRI based on the specified parameters.</p>
+<p>This transformation can be used in the following two ways:
+1. By using an IRI prefix and a local name.
+2. By using a full absolute IRI.</p>
+<h2 id="parameters_1">Parameters</h2>
+<ul>
+<li><code>prefix</code> Optionally, an IRI or a key that contains an IRI. If specified, this is the IRI prefix that will appear before the local name that is specified by the <code>content</code> argument. If this parameter is absent, <code>content</code> is assumed to contain a full absolute IRI.</li>
+<li><code>content</code> A string, or a key that contains a string. If the <code>prefix</code> parameter is specified, <code>content</code> specifies the IRI local name that appears after the IRI prefix. If the <code>prefix</code> argument is not specified, <code>content</code> is assumed to encode a full absolute IRI.</li>
+<li><code>key</code> A new key where the created IRI is stored.</li>
+</ul>
+<h2 id="see-also">See also</h2>
+<p>If the created IRI is used exactly once, it is often better to use inline function <a href="/docs/triply-etl/assertions#iri">iri()</a> instead.</p>
+<h2 id="example-prefix-declaration-and-local-name">Example: Prefix declaration and local name</h2>
+<p>The following snippet creates an IRI based on the specified IRI prefix and local name:</p>
+<pre><code class="language-ts">addIri({
+  prefix: prefix.person,
+  content: 'username',
+  key: '_person',
+}),
+triple('_person', a, sdo.Person),
+</code></pre>
+<p>This results in the following linked data assertions:</p>
+<pre><code class="language-turtle">person:johndoe a sdo:Person.
+</code></pre>
+<p>Or diagrammatically:</p>
+<div class="mermaid">graph LR
+  johndoe -- a --&gt; Person
+
+  Person[sdo:Person]:::model
+  johndoe(person:johndoe):::data
+</div>
+<p>The following snippet makes the same assertion, but uses assertion <a href="/docs/triply-etl/assert/ratt#iri">iri()</a> instead of transformation <code>addIri()</code>:</p>
+<pre><code class="language-ts">triple(iri(prefix.person, 'username'), a, sdo.Person),
+</code></pre>
+<h2 id="example-absolute-iri">Example: Absolute IRI</h2>
+<p>The following snippet creates the same IRI, but does not use a predefined prefix IRI:</p>
+<pre><code class="language-ts">addIri({
+  content: 'https://example.com/id/person/johndoe',
+  key: '_person',
+}),
+triple('_person', a, sdo.Person),
+</code></pre>
+<p>Or diagrammatically:</p>
+<div class="mermaid">graph LR
+  johndoe -- a --&gt; Person
+
+  Person[sdo:Person]:::model
+  johndoe(https://example.com/id/person/johndoe):::data
+</div>
+<p>The following snippet uses assertion <a href="/docs/triply-etl/assert/ratt#iri">iri()</a> instead of transformation <code>addIri()</code>:</p>
+<pre><code class="language-ts">triple(iri('https://example.com/id/person/johndoe'), a, sdo.Person),
+</code></pre>
+<h1 id="function-addliteral-addliteral">Function <code>addLiteral()</code> {#addLiteral}</h1>
+<p>Creates an new literal and adds it to the Record under the specified key.</p>
+<p>This transformation can be used in the following 3 ways:</p>
+<ol>
+<li>If a datatype (key: <code>datatype</code>) is given, a typed literal is created.</li>
+<li>If a language tag (key: <code>languageTag</code>) is given, a language-tagged string (datatype <code>rdf:langString</code>) is created.</li>
+<li>If neither a datatype not a language tag is given, a literal with datatype <code>xsd:string</code> is created.</li>
+</ol>
+<h2 id="when-to-use">When to use</h2>
+<p>This transformation is typically used when:</p>
+<ul>
+<li>The same literal occurs in two or more statement assertions (function <a href="/docs/triply-etl/assertions#triple">triple()</a> or <a href="/docs/triply-etl/assertions#quad">quad()</a>). This avoids having to specify the same literal multiple times using function <a href="/docs/triply-etl/assertions#literal">literal()</a>.</li>
+<li>The datatype or language tag is derived from the source data record.</li>
+</ul>
+<h2 id="parameters_2">Parameters</h2>
+<ul>
+<li><code>content</code> A key that contains a string value, or a string specified with function <a href="/docs/triply-etl/assert/ratt#str">str()</a>.</li>
+<li><code>datatype</code> Optionally, a key that stores an IRI or a static IRI.</li>
+<li><code>languageTag</code> Optionally, a language tag from the <a href="/docs/triply-etl/declare#language-declarations"><code>lang</code></a> object, or a key that stores such a language tag.</li>
+<li><code>key</code> A new key where the created literal is stored.</li>
+</ul>
+<h2 id="see-also_1">See also</h2>
+<p>If the created literal is used exactly once, it is often better to use the inline function <a href="/docs/triply-etl/assertions#literal">literal()</a> instead.</p>
+<h2 id="example-typed-literal">Example: Typed literal</h2>
+<p>The following snippet asserts a triple with a typed literal with datatype IRI <code>xsd:date</code>:</p>
+<pre><code class="language-ts">fromJson([{ id: '123', date: '2022-01-30' }]),
+addLiteral({
+  content: 'date',
+  datatype: xsd.date,
+  key: '_dateCreated',
+}),
+triple(iri(prefix.book, 'id'), sdo.dateCreated, '_dateCreated'),
+</code></pre>
+<p>This makes the following linked data assertion:</p>
+<pre><code class="language-ttl">book:123 sdo:dateCreated '2022-30-01'^^xsd:date.
+</code></pre>
+<p>Notice that the same linked data could have been asserted with the following use the the [literal} assertion middleware:</p>
+<pre><code class="language-ts">fromJson([{ id: '123', date: '2022-01-30' }]),
+triple(iri(prefix.book, 'id'), sdo.dateCreated, literal('date', xsd.date)),
+</code></pre>
+<h2 id="example-string-literal">Example: String literal</h2>
+<p>The following snippet asserts a triple with a string literal in the object position:</p>
+<pre><code class="language-ts">fromJson([{name: 'London'}]),
+addLiteral({
+  content: 'name',
+  key: '_name',
+}),
+triple(iri(prefix.city, '_name'), skos.prefLabel, '_name')
+</code></pre>
+<p>This makes the following assertion:</p>
+<pre><code class="language-turtle">city:London sdo:name 'London'.
+</code></pre>
+<p>The literal 'London' has type <code>xsd:string</code>. This is the standard datatype IRI for typed literals in the linked data languages (i.e. Turtle, TriG, and SPARQL).</p>
+<p>Notice that the same linked data could have been asserted with the following snippet, where the string value <code>'London'</code> is automatically cast into a string literal:</p>
+<pre><code class="language-ts">fromJson([{ name: 'London' }]),
+triple(iri(prefix.city, 'name'), skos.prefLabel, 'name'),
+</code></pre>
+<h2 id="example-language-tagged-string">Example: Language-tagged string</h2>
+<p>The following snippet asserts a triple with a language-tagged string in the object position:</p>
+<pre><code class="language-ts">fromJson([{ name: 'London' }]),
+addLiteral({
+  content: 'name',
+  languageTag: lang['en-gb'],
+  key: '_name',
+}),
+triple(iri(prefix.city, 'name'), skos.prefLabel, '_name'),
+</code></pre>
+<p>This results in the following linked data assertion:</p>
+<pre><code class="language-turtle">city:London skos:prefLabel 'London'@en-gb.
+</code></pre>
+<p>Notice that the same linked data could have been asserted with the following use the the [literal} assertion middleware:</p>
+<pre><code class="language-ts">fromJson([{ name: 'London' }]),
+triple(iri(prefix.city, 'name'), skos.prefLabel, literal('name', lang['en-gb'])),
+</code></pre>
+<h1 id="function-addrandomiri-addrandomiri">Function <code>addRandomIri()</code> {#addRandomIri}</h1>
+<p>Creates an IRI based on the specified IRI prefix and a universally unique random identifier.</p>
+<h2 id="when-to-use_1">When to use?</h2>
+<p>This function is used under the following circumstances:</p>
+<ol>
+<li>You want to identify something with an IRI.</li>
+<li>The thing that you want to identify does not have a readily available identifier. If an identifier is available, use transformation <a href="#addiri">addIri()</a> instead.</li>
+<li>The thing that you want to identify does not have unique properties in the source data, or it is too difficult or too expensive to specify these properties. If unique properties are available, use transformation <a href="#addhashediri">addHashedIri()</a> instead.</li>
+</ol>
+<p>This function has the advantage that, unlike transformation <a href="#addhashediri">addHashedIri()</a>, no identifying criteria need to be specified.</p>
+<p>This function has the disadvantage that, unlike transformation <a href="#addhashediri">addHashedIri()</a>, running the same ETL twice over the same source data results in different IRIs.</p>
+<h2 id="parameters_3">Parameters</h2>
+<ul>
+<li><code>prefix</code> An IRI or a key that contains an IRI.</li>
+<li><code>key</code> A new key where the created IRI is stored.</li>
+</ul>
+<h2 id="example">Example</h2>
+<p>The following snippet creates a triple with a subject that that is a random IRI:</p>
+<pre><code class="language-ts">addRandomIri({
+  prefix: prefix.id,
+  key: 'subject',
+}),
+triple('subject', sdo.dateCreated, literal('date', xsd.date)),
+</code></pre>
+<p>This makes the following assertion in linked data:</p>
+<pre><code class="language-turtle">id:acb3ea010fe748bfa73a2ee2b65bef65 sdo:dateCreated '2000-12-30'^^xsd:date.
+</code></pre>
+<h2 id="see-also_2">See also</h2>
+<ul>
+<li>Use transformation <a href="#addiri">addIri()</a> instead, if a unique identifier can be readily specified.</li>
+<li>Use transformation <a href="#addhashediri">addHashedIri</a> instead, if one or more properties that together uniquely identify a thing can be specified.</li>
+<li>Use transformation <a href="#addskolemiri">addSkolemIri()</a> instead, if you want to communicate that the IRI can be replaced with a blank node.</li>
+</ul>
+<h1 id="function-addskolemiri-addskolemiri">Function <code>addSkolemIri()</code> {#addSkolemIri}</h1>
+<p>Creates a globally unique IRI that is intended to be used as a blank node identifier.</p>
+<p>Blank nodes are nodes without identification. It relatively difficult to work which such nodes in graph data, since they cannot be identified or dereferenced online. For this reason TriplyETL uses Skolem IRIs to denote blank nodes. This allows blank nodes to be identified and dereferenced. This Skolemization approach is part of the RDF standard.</p>
+<p>Skolem IRIs are random IRIs whose root path starts with <code>.well-known/genid/</code>. This makes it easy to distinguish them from other random IRIs that are not used to denote blank nodes.</p>
+<ul>
+<li><code>prefix</code> A IRI or a key that contains an IRI whose path starts with <code>.well-known/genid/</code>.</li>
+<li><code>key</code> A new key where the created IRI is stored.</li>
+</ul>
+<h2 id="see-also_3">See also</h2>
+<p>Tne <a href="https://www.w3.org/TR/rdf11-concepts/#section-skolemization">Skolemization section</a> in the RDF standard explains what Skolem IRIs are and how they should be used.</p>
+<h2 id="example_1">Example</h2>
+<p>The following snippet uses a hashed IRI to create a predictable identifier for a geospatial feature, and a Skolem IRI to create an unpredictable identifier for the geometry.</p>
+<p>The snippet includes the prefix declarations to illustrate that the path of the Skolem IRI must start with <code>.well-known/genid.</code>.</p>
+<pre><code class="language-ts">const base = 'https://example.com/'
+const prefix = {
+  feature: declarePrefix(base('id/feature/')),
+  skolem: declarePrefix(base('.well-known/genid/'),
+}
+
+// Etc
+
+fromJson([{ point: 'Point(1.1 2.2)' }]),
+addHashedIri({
+  prefix: prefix.feature,
+  content: 'point',
+  key: '_feature',
+}),
+addSkolemIri({
+  prefix: prefix.skolem,
+  key: '_geometry',
+}),
+triple('_feature', geo.hasGeometry, '_geometry'),
+triple('_geometry', geo.asWKT, literal('point', geo.wktLiteral)),
+</code></pre>
+<p>This results in the following linked data assertions:</p>
+<pre><code class="language-turtle">feature:22238008e490f725979118f8f2dd9b5a geo:hasGeometry skolem:0cf4b63252a0476a8afc20735aa03da6.
+skolem:0cf4b63252a0476a8afc20735aa03da6 geo:asWKT 'Point(1.1 2.2)'^^geo:wktLiteral.
+</code></pre>
+<p>Notice that the feature IRI will be the same across ELT runs if the source
+data stays the same, but the Skolem will always be different.</p>
+<p>Since the Skolem IRIs can be identified by the start of their path
+(<code>.well-known/genid/</code>), the same linked data assertions can be displayed as
+follows:</p>
+<pre><code class="language-turtle">feature:22238008e490f725979118f8f2dd9b5a geo:hasGeometry
+  [ geo:asWKT 'Point(1.1 2.2)'^^geo:wktLiteral ].
+</code></pre>
+<h1 id="function-addtag-addtag">Function <code>addTag()</code> {#addTag}</h1>
+<p>This middleware creates a language tag based on a given string value.</p>
+<h2 id="parameters_4">Parameters</h2>
+<ul>
+<li><code>content</code> A string value that encodes a language tag according to the IANA language subtag registry.</li>
+<li><code>key</code> A new key where the language tag will be stored.</li>
+</ul>
+<h2 id="throws">Throws</h2>
+<p>An error is emitted if the given string value does not follow the language tag
+format, or denotes a language tag that is not currently registered.</p>
+<h2 id="see-also_4">See also</h2>
+<ul>
+<li>The language tag format is defined in the <a href="https://www.rfc-editor.org/rfc/rfc5646.html">IETF BCP 47 standard (RFC 5646)</a>.</li>
+<li>Language tags are registered in the <a href="https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry">IANA language subtag registry</a>.</li>
+</ul>
+<h2 id="example_2">Example</h2>
+<p>The following snippet created a language tag for the Dutch language as spoken in The Netherlands, and uses it to assert a language-tagged string:</p>
+<pre><code class="language-ts">fromJson([{ label: 'Amsterdam' }]),
+addTag({
+  content: 'nl-nl',
+  key: 'lang',
+}),
+triple(iri(prefix.city, 'label'), rdfs.label, literal('label', 'lang')),
+</code></pre>
+<h1 id="function-addvalue-addvalue">Function <code>addValue()</code> {#addValue}</h1>
+<p>This middleware allows any value to be added to the Record.</p>
+<h2 id="description_1">Description</h2>
+<p>This middleware is useful for data that is not present in the source data record, but must be used in one or more assertions.</p>
+<h2 id="parameters_5">Parameters</h2>
+<ul>
+<li><code>content</code> Any value that can be represented in TypeScript.</li>
+<li><code>key</code> A new key where the value is stored.</li>
+</ul>
+<h2 id="example_3">Example</h2>
+<p>The following snippet starts out with an empty source record (<code>{}</code>), and adds a new <code>data</code> key to it. The added value is an array that contains a string and a number (in that order).</p>
+<p>This new value is used in the triple assertion, where <code>'data[0]'</code> extracts the string element and <code>'data[1]'</code> extracts the number elements.</p>
+<pre><code class="language-ts">fromJson([{}]),
+addValue({
+  content: ['johndoe', 22],
+  key: 'data',
+}),
+triple(iri(prefix.person, 'data[0]'), foaf.age, 'data[1]'),
+</code></pre>
+<p>This results in the following linked data assertion:</p>
+<pre><code class="language-ttl">person:johndoe foaf:age 22.
+</code></pre>
+<h2 id="example_4">Example</h2>
+<p>The following snippet adds a key called <code>_startDate</code> that either contains the start date as specified in the data source record, or the value <code>'unknown'</code>:</p>
+<pre><code class="language-ts">fromJson([
+  { id: '123', start: '2022-02-12' },
+  { id: '456' },
+]),
+ifElse({
+  if: 'start',
+  then: addLiteral({
+    content: 'start',
+    datatype: xsd.date,
+    key: '_start',
+  }),
+}, {
+  else: addValue({
+    content: 'unknown',
+    key: '_start',
+  }),
+}),
+triple(iri(prefix.event, 'id'), sdo.startDate, '_start'),
+</code></pre>
+<p>This results in the following linked data assertions:</p>
+<pre><code class="language-ttl">event:123 sdo:startDate '2022-02-12'^^xsd:date.
+event:456 sdo:startDate 'unknown'.
+</code></pre>
+<h1 id="function-capitalize-capitalize">Function <code>capitalize()</code> {#capitalize}</h1>
+<p>Transforms a string value to its capitalized variant.</p>
+<p>If the first character of a string has an uppercase variant, then that variant is used. If the first character does not have an uppercase variant -- because the character is already uppercase or is a punctuation character --  then the string remains unchanged.</p>
+<p>This transformation can uppercase the first character in any language; the Unicode Default Case Conversion algorithm is used.</p>
+<h2 id="parameters_6">Parameters</h2>
+<ul>
+<li><code>content</code> A key that contains a string value.</li>
+<li><code>key</code> A new key where the capitalized result is stored.</li>
+</ul>
+<h2 id="example-class-iris">Example: Class IRIs</h2>
+<p>According to convention, classes in linked data are denoted by IRIs whose local name starts with a capital letter.</p>
+<p>The following source data contains nice values for the <code>type</code> key, but they do not start with a capital letter yet.</p>
+<p>The following snippet capitalizes the values of the <code>type</code> keys, and uses them to create class IRIs.</p>
+<pre><code class="language-ts">fromJson([
+  { id: '1', type: 'location' },
+  { id: '2', type: 'person' },
+]),
+capitalize({
+  content: 'type',
+  key: '_type',
+}),
+triple(iri(prefix.id, 'id'), a, iri(prefix.def, '_type')),
+</code></pre>
+<p>This results in the following linked data assertions:</p>
+<pre><code class="language-turtle">id:1 a def:Location.
+id:2 a def:Person.
+</code></pre>
+<h1 id="function-concat-concat">Function <code>concat()</code> {#concat}</h1>
+<h2 id="description_2">Description</h2>
+<p>Concatenates an array of strings into one new string.</p>
+<p>An optionally specified separator is placed in between every two consecutive string values.</p>
+<h2 id="parameters_7">Parameters</h2>
+<ul>
+<li><code>content</code> An array of key that contain a string and/or strings specified with assertion <a href="/docs/triply-etl/assert/ratt#str">str()</a>.</li>
+<li><code>separator</code> Optionally, the string that is places between every two consecutive string values.</li>
+<li><code>key</code> A new key where the concatenated string is stored.</li>
+</ul>
+<h2 id="example_5">Example</h2>
+<p>The following snippet concatenates the first and last name of a person (in that order), using a space separator.</p>
+<pre><code class="language-ts">fromJson([{ id: '1', first: 'John', last: 'Doe' }]),
+concat({
+  content: ['first', 'last'],
+  separator: ' ',
+  key: '_name',
+}),
+triple(iri(prefix.person, 'id'), foaf.name, '_name'),
+</code></pre>
+<p>This results in the following linked data assertion:</p>
+<pre><code class="language-turtle">person:1 foaf:name 'John Doe'.
+</code></pre>
+<h1 id="function-copy-copy">Function <code>copy()</code> {#copy}</h1>
+<p>Makes a plain copy from the value stored in the given key to a new key.</p>
+<h2 id="parameters_8">Parameters</h2>
+<ul>
+<li><code>content</code> A value of any type, or a key that contains a value of any type.</li>
+<li><code>type</code> Optionally, the name of the TypeScript type of the value. The default value is <code>'string'</code>.</li>
+<li><code>key</code> A new key where the plain copy is stored.</li>
+</ul>
+<h2 id="example_6">Example</h2>
+<p>Plain copies can be used to abbreviate long keys, especially in tree-shaped data like JSON or XML. In the following example, values stored in a long nested key are copies into a short and descriptive key. This is even more useful if the key is used many times in the script.</p>
+<pre><code class="language-ts">copy({
+  content: 'record[0].family[0].children.child[0].id.$text',
+  key: 'childId',
+}),
+</code></pre>
+<h2 id="example_7">Example</h2>
+<p>Since plain copies introduce a new name for an existing value, the new name can be used to store extra information about the value. The following example stores an English name, if available; or a Dutch name, if available; or no name at all. This is a relatively complex example that can only be accomplished by copying the names for the encountered languages under descriptive key names.</p>
+<pre><code class="language-ts">fromJson([
+  {
+    id: '1',
+    names: [
+      { language: 'en', value: 'London' },
+      { language: 'fr', value: 'Londres' },
+      { language: 'nl', value: 'Londen' },
+    ],
+  },
+  {
+    id: '2',
+    names: [
+      { language: 'fr', value: 'Paris' },
+      { language: 'nl', value: 'Parijs' },
+    ],
+  },
+]),
+forEach('names', [
+  _switch('language',
+    // Plain copy of the English label, if available.
+    ['en', copy({ content: 'value', key: '$parent.en' })],
+    // Plain copy of the Dutch label, if available.
+    ['nl', copy({ content: 'value', key: '$parent.nl' })],
+  ),
+]),
+ifElse({
+  // Prefer an English label over a Dutch label.
+  if: 'en',
+  then: copy({ content: 'en', key: '_preferredName' }),
+}, {
+  // If there is no English label, a Dutch label is a second-best option.
+  if: 'nl',
+  then: copy({ content: 'nl', key: '_preferredName' }),
+}),
+// If there is either an English or a Dutch label, assert it.
+when('_preferredName', [
+  triple(iri(prefix.city, 'id'), rdfs.label, '_preferredName'),
+]),
+</code></pre>
+<p>This results in the following linked data assertions:</p>
+<pre><code class="language-turtle">city:1 rdfs:label 'London'.
+city:2 rdfs:label 'Parijs'.
+</code></pre>
+<h1 id="function-encodehtml-encodehtml">Function <code>encodeHtml()</code> {#encodeHtml}</h1>
+<h2 id="description_3">Description</h2>
+<p>This transformation decodes any HTML entities that appear in a given key.</p>
+<p>The following HTML entities are common in source data:</p>
+<table>
+<thead>
+<tr>
+<th>HTML entity</th>
+<th>Decoded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&amp;amp;</code></td>
+<td><code>&amp;</code></td>
+</tr>
+<tr>
+<td><code>&amp;gt;</code></td>
+<td><code>&gt;</code></td>
+</tr>
+<tr>
+<td><code>&amp;lt;</code></td>
+<td><code>&lt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>You do <em>not</em> need to use this transformation if you want to assert literals with datatype IRI <code>rdf:HTML</code>. HTML entities are meaningful in HTML, so there they should be preserved.</p>
+<h2 id="parameters_9">Parameters</h2>
+<ul>
+<li><code>content</code> A key in the Record that contains string values with HTML entities.</li>
+<li><code>key</code> A new key where the decoded content is stored.</li>
+</ul>
+<h2 id="example_8">Example</h2>
+<p>The following snippet takes HTML texts from the source data and asserts them as regular text literals. Since HTML entities are meaningless in regular text, <code>decodeHtml</code> is used to denote these entities.</p>
+<pre><code class="language-ts">fromJson([
+  { id: '1', label: 'A&amp;amp;B' },
+  { id: '2', label: '1 &amp;lt; 2' },
+]),
+decodeHtml({
+  content: 'label',
+  key: '_label',
+}),
+triple(iri(prefix.id, 'id'), rdfs.label, '_label'),
+</code></pre>
+<p>This results in the following linked data assertions:</p>
+<pre><code class="language-turtle">id:1 rdfs:label 'A&amp;B'.
+id:2 rdfs:label '1 &lt; 2'.
+</code></pre>
+<h1 id="function-geojsontowkt-geojsontowkt">Function <code>geojsonToWkt()</code> {#geojsonToWkt}</h1>
+<p>Transforms GeoJSON objects to their corresponding Well-Known Text (WKT) serialization strings.</p>
+<h2 id="parameters_10">Parameters</h2>
+<ul>
+<li><code>content</code> A key that stores a GeoJSON object.</li>
+<li><code>crs</code> Optionally, an IRI that denotes a Coordinate Reference System (CRS). You can use IRIs from the <a href="/docs/triply-etl/declare#geospatial-declarations"><code>epsg</code></a> object. If absent, uses <a href="EPSG:4326/WGS84">https://epsg.io/4326</a> as the CRS.</li>
+<li><code>key</code> A new key where the WKT serialization string is stored</li>
+</ul>
+<h2 id="geojson-and-well-known-text-wkt">GeoJSON and Well-Known Text (WKT)</h2>
+<p>According to the <a href="https://www.rfc-editor.org/rfc/rfc7946">GeoJSON standard</a>, the only Coordinate Reference System (CRS) that is allowed to be used is EPSG:4326/WGS84. In practice, source data sometimes (incorrectly) stores GeoJSON formatted data in other CRSes. An example of this is the <a href="https://ec.europa.eu/eurostat/web/gisco/geodata">GISCO</a> dataset of the European Union, which uses the <a href="https://epsg.io/3857">EPSG:3857</a> CRS. For cases like these, the optional <code>crs</code> parameter comes in handy.</p>
+<h2 id="see-also_5">See also</h2>
+<ul>
+<li>The GeoJSON format is standardized in <a href="https://www.rfc-editor.org/rfc/rfc7946">RFC 7946</a>.</li>
+<li>The <a href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry">Well-Known Text (WKT)</a> serialization format is standardized as part of <a href="https://www.iso.org/standard/60343.html">ISO/IEC 13249-3:2016 standard</a>.</li>
+</ul>
+<h2 id="example_9">Example</h2>
+<p>The following snippet converts GeoJSON objects that denote traffic light
+locations to their GeoSPARQL representation.</p>
+<pre><code class="language-ts">fromJson([
+  {
+    id: '123',
+    geometry: {
+      type: 'Point',
+      coordinates: [6.256, 48.480],
+    },
+  },
+]),
+addIri({
+  prefix: prefix.feature,
+  content: 'id',
+  key: '_feature',
+}),
+geojsonToWkt({
+  content: 'geometry',
+  crs: epsg[3857],
+  key: '_wkt',
+}),
+addHashedIri({
+  prefix: prefix.geometry,
+  content: '_wkt',
+  key: '_geometry'
+}),
+pairs('_feature',
+  [a, def.TrafficLight],
+  [geo.hasGeometry, '_geometry'],
+),
+pairs('_geometry',
+  [a, geo.Geometry],
+  [geo.asWKT, literal('_wkt', geo.wktLiteral)],
+),
+</code></pre>
+<p>This results in the following linked data assertions:</p>
+<pre><code class="language-turtle">feature:123
+  a def:TrafficLight;
+  geo:hasGeometry geometry:197e6376c2bd8192c24911f88c330606.
+geometry:197e6376c2bd8192c24911f88c330606
+  a geo:Geometry;
+  geo:asWKT 'Point(6.256 48.480)'^^geo:wktLiteral.
+</code></pre>
+<p>Or diagrammatically:</p>
+<div class="mermaid">graph LR
+  feature -- a --&gt; TrafficLight
+  feature -- geo:hasGeometry --&gt; geometry
+  geometry -- a --&gt; Geometry
+  geometry -- geo:asWKT --&gt; wkt
+
+  Geometry[geo:Geometry]:::model
+  TrafficLight[def:TrafficLight]:::model
+  feature(feature:123):::data
+  geometry(geometry:197e6376c2bd8192c24911f88c330606):::data
+  wkt("'Point(6.256 48.480)'^^geo:wktLiteral"):::data
+</div>
+<h1 id="function-lowercase-lowercase">Function <code>lowercase()</code> {#lowercase}</h1>
+<h2 id="description_4">Description</h2>
+<p>Translates a string value to its lowercase variant.</p>
+<p>This middleware can lowercase strings in any language; the Unicode Default Case Conversion algorithm is used.</p>
+<h2 id="use-cases_1">Use cases</h2>
+<p>Older data formats sometimes use uppercase letters for header names or codes. The <code>lowercase</code> transformation middleware may be used to change such string values to lowercase.</p>
+<h2 id="parameters_11">Parameters</h2>
+<ul>
+<li><code>content</code> A key that contains a string value.</li>
+<li><code>key</code> A new key where the lowercase variant is stored.</li>
+</ul>
+<h2 id="example_10">Example</h2>
+<p>The following snppet starts out with header values that use uppercase characters exclusively. The <code>lowerCase</code> transformation is used to create lowercase names that can be used to create property IRIs.</p>
+<pre><code class="language-ts">fromJson([
+  { from: '1', rel: 'PARENT', to: '2' },
+  { from: '2', rel: 'CHILD', to: '1' },
+]),
+lowercase({
+  content: 'rel',
+  key: '_relationship',
+}),
+triple(
+  iri(prefix.id, 'from'),
+  iri(prefix.def, '_relationship'),
+  iri(prefix.id, 'to'),
+),
+</code></pre>
+<p>This results in the following linked data assertions:</p>
+<pre><code class="language-turtle">id:1 def:parent id:2.
+id:2 def:child id:1.
+</code></pre>
+<h1 id="function-padend-padend">Function <code>padEnd()</code> {#padEnd}</h1>
+<h2 id="description_5">Description</h2>
+<p>Adds a given padding string zero or more times to the end of a string value, until the resulting string value is exactly a given number of characters long.</p>
+<h2 id="use-cases_2">Use cases</h2>
+<p>This transformation is useful for identifiers that must have fixed length
+and that may be suffixed by zero's.</p>
+<h2 id="parameters_12">Parameters</h2>
+<ul>
+<li><code>content</code> A key that contains a string value. If the key contains a numeric value, that value is first cast to string.</li>
+<li><code>padString</code> The string that is added to the end of the string value in key <code>content</code>, until the result string has exactly <code>targetLength</code> characters. Can be a static string or a key.</li>
+<li><code>targetLength</code> The exact number of characters that the resulting string should have. The string value is copied over as-is when <code>targetLength</code> is smaller than or equal to the length of the string value in key <code>content</code>. This includes cases where <code>targetLength</code> is negative or zero.</li>
+<li><code>key</code> A new key where the padded string is stored.</li>
+</ul>
+<h2 id="example_11">Example</h2>
+<p>The following snippet processes identifiers of varying length, and ensures that they have the same length after suffixing <code>'0'</code> characters.</p>
+<pre><code class="language-ts">fromJson([
+  { id: '16784' },
+  { id: '129' },
+]),
+padEnd({
+  content: 'id',
+  padString: '0',
+  targetLength: 6,
+  key: '_id',
+}),
+</code></pre>
+<p>This results in the following two Records:</p>
+<pre><code class="language-json">[
+  {
+    "id": "16784",
+    "_id": "167840"
+  },
+  {
+    "id": "129",
+    "_id": "129000"
+  }
+]
+</code></pre>
+<h1 id="function-padstart-padstart">Function <code>padStart()</code> {#padStart}</h1>
+<h2 id="description_6">Description</h2>
+<p>Adds a given padding string zero or more times in front of a string value, until the resulting string value is exactly a given number of characters long.</p>
+<h2 id="use-cases_3">Use cases</h2>
+<p>This transformation is useful for identifiers that must have fixed length and that may be prepended by zero's.</p>
+<p>If key <code>content</code> contains a numeric value, then that value is first cast to
+string.</p>
+<ul>
+<li><code>content</code> A key that contains a string value.</li>
+<li><code>padString</code> The string that is added in front of the string value in key <code>content</code>, until the result string has exactly <code>targetLength</code> characters.</li>
+<li><code>targetLength</code> The exact number of characters that the resulting string should have. The string value is copied over as-is when <code>targetLength</code> is smaller than or equal to the length of the string value in key <code>content</code>. This includes cases where <code>targetLength</code> is negative or zero.</li>
+<li><code>key</code> A new key where the lowercased string is stored.</li>
+</ul>
+<h2 id="example-fixed-length-identifiers">Example: Fixed-length identifiers</h2>
+<p>The following snippet processes identifiers of varying length, and ensures that they have the same length after prefixing <code>'0'</code> characters.</p>
+<pre><code class="language-ts">fromJson([
+  { id: '16784' },
+  { id: '129' },
+]),
+padStart({
+  content: 'id',
+  padString: '0',
+  targetLength: 6,
+  key: '_id',
+}),
+</code></pre>
+<p>This results in the following two records:</p>
+<pre><code class="language-json">[
+  {
+    "id": "16784",
+    "_id": "016784"
+  },
+  {
+    "id": "129",
+    "_id": "000129"
+  }
+]
+</code></pre>
+<h2 id="example-create-year-literals">Example: Create year literals</h2>
+<p>In order to create standards-conforming temporal literal, we need to pad the year component to be at least 4 decimal digits long. (This requirement is defined in the <a href="https://www.w3.org/TR/xmlschema11-2/#rf-lexicalMappings-datetime">XML Schema Datatypes 1.1: Part 2 Datatypes</a> standard.)</p>
+<p>Suppose that the source data looks as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Year</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0001</td>
+<td>612</td>
+</tr>
+<tr>
+<td>0002</td>
+<td>1702</td>
+</tr>
+</tbody>
+</table>
+<p>We can ensure that all years have at least 4 decimal digits by calling the following function:</p>
+<pre><code class="language-ts">padStart({
+  content: 'Year',
+  padString: '0',
+  targetLength: 4,
+  key: '_lexicalForm',
+}),
+triple(
+  iri(prefix.id, 'Artifact'),
+  dct.created,
+  literal('_lexicalForm', xsd.gYear),
+),
+</code></pre>
+<p>This makes the following linked data assertions:</p>
+<pre><code class="language-turtle">id:0001 dct:created '0612'^^xsd:gYear.
+id:0002 dct:created '1702'^^xsd:gYear.
+</code></pre>
+<h1 id="function-replace-replace">Function <code>replace()</code> {#replace}</h1>
+<h2 id="description_7">Description</h2>
+<p>Performs a regular expression replacement to the given input string, and stores the result in a new key.</p>
+<h2 id="parameters_13">Parameters</h2>
+<ul>
+<li><code>content</code> A key that contains a string value, or a static string specified with assertion <a href="/docs/triply-etl/assert/ratt#str">str()</a>.</li>
+<li><code>from</code> A <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions">JavaScript Regular Expression</a>.</li>
+<li><code>to</code> Optionally, a string that replaces potential matches of the Regular Expression (<code>from</code>). Use <code>$1</code>, <code>$2</code>, etc. to insert matches. If absent, the empty string is used.</li>
+<li><code>key</code> A new key where the result of the replacement is stored.</li>
+</ul>
+<h2 id="example_12">Example</h2>
+<p>Suppose the source data contains date/time strings, but only the date component is needed:</p>
+<pre><code class="language-json">{
+  "created": "2020-01-02T00:00:00.0Z"
+}
+</code></pre>
+<p>It is possible to extract only the date part (everything up to the <code>T</code>) in the following way:</p>
+<pre><code class="language-ts">replace({
+  content: 'created',
+  from: /^([^T]*).*$/,
+  to: '$1',
+  key: '_created',
+}),
+triple('_creativeWork', dct.created, literal('_created', xsd.date)),
+</code></pre>
+<p>This results in the following Record:</p>
+<pre><code class="language-json">{
+  "created": "2020-01-02T00:00:00.0Z",
+  "_created": "2020-01-02"
+}
+</code></pre>
+<h1 id="function-split-split">Function <code>split()</code> {#split}</h1>
+<h2 id="description_8">Description</h2>
+<p>Splits a string into an array of strings, and stores that array in a new key.</p>
+<h2 id="whitespace-handling">Whitespace handling</h2>
+<p>This transformation removes any trailing whitespace that remains after the strings are split. This ensures that irregular use of whitespace in the source data is taken care of automatically.</p>
+<h2 id="use-cases_4">Use cases</h2>
+<p>The transformation is used when:
+- Tablular source data encodes multiple values inside singular cells. (Such concatenated storage inside cells is a data quality issue, because the table format cannot guarantee that the separator character does not (accidentally) occur inside individual values inside a cell. Tree-shaped source formats are able to store multiple values for the same key reliably, e.g. JSON and XML.)
+- Source data contains complex string values that can be decomposed into stand-alone components with distinct meaning.</p>
+<h2 id="parameters_14">Parameters</h2>
+<ul>
+<li><code>content</code> A key that stores a string, or a string specified with assertion <a href="/docs/triply-etl/assert/ratt#str">str()</a>.</li>
+<li><code>separator</code> A string or a regular expression that is used to separate the content.</li>
+<li><code>key</code> A new key where the array of splitted strings is stored.</li>
+</ul>
+<h2 id="example-multiple-values-in-singular-table-cells">Example: Multiple values in singular table cells</h2>
+<p>Tabular formats are unable to store more than one value in a cell. Because of this limitation, tabular data sources sometimes encode multiple values in cells by encoding them into one string. A separator character is typically used to distinguish between these multiple values.</p>
+<p>Suppose that the source data looks as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Parent</th>
+<th>Child</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>John</td>
+<td>Jane, Jake ,</td>
+</tr>
+<tr>
+<td>Kate</td>
+<td>,,</td>
+</tr>
+</tbody>
+</table>
+<p>The following transformation splits the cells that encode zero or more children for each parent:</p>
+<pre><code class="language-ts">split({
+  content: 'Child',
+  separator: ',',
+  key: 'Children',
+}),
+</code></pre>
+<p>This results in the following transformed records:</p>
+<pre><code class="language-json">{
+  "Parent": "John",
+  "Child": "Jane, Jake , ",
+  "Children": [ "Jane", "Jake" ]
+}
+{
+  "Parent": "Kate",
+  "Child": ",, ",
+  "Children": []
+}
+</code></pre>
+<p>Notice that trailing whitespace and empty values are dealt with automatically.</p>
+<p>Since the <code>split()</code> transformation always results in an array of strings, we can use the term assertion <code>iris()</code> afterwards:</p>
+<pre><code class="language-ts">split({
+  content: 'children',
+  separator: ',',
+  key: '_children',
+}),
+triple(
+  iri(prefix.person, 'parent'),
+  sdo.children,
+  iris(prefix.person, '_children')
+),
+</code></pre>
+<p>This results in the following linked data assertions:</p>
+<pre><code class="language-turtle">person:johndoe
+  sdo:children
+    person:janedoe,
+    person:jakedoe.
+</code></pre>
+<h2 id="example-split-a-complex-string-into-components">Example: Split a complex string into components</h2>
+<p>The following snippet uses a regular expression to split a KIX code. (A <a href="https://en.wikipedia.org/wiki/RM4SCC">KIX code</a> is a standardized format for representing postal addresses in The Netherlands.)</p>
+<pre><code class="language-ts">fromJson([{ id: '1', KIX: '1231FZ13Xhs' }]),
+split({
+  content: 'KIX',
+  separator: /^(\d{4}[A-Z]{2})(\d{1,5})(?:X(.{1,6}))/,
+  key: 'KIX_components',
+}),
+triple(iri(prefix.id, 'id'), sdo.postalCode, 'KIX_components[1]'),
+</code></pre>
+<p>This results in the following record:</p>
+<pre><code class="language-json">{
+  "id": "1",
+  "KIX": "1231FZ13Xhs",
+  "KIX_components": ["", "1231FZ", "13", "hs", ""]
+}
+</code></pre>
+<p>And in the following linked data assertion:</p>
+<pre><code class="language-turtle">id:1 sdo:postalCode '1231FZ'.
+</code></pre>
+<h1 id="function-substring-substring">Function <code>substring()</code> {#substring}</h1>
+<h2 id="description_9">Description</h2>
+<p>This middleware takes a substring from the input string and stores the
+result in a new key.</p>
+<h2 id="parameters_15">Parameters</h2>
+<ul>
+<li><code>content</code> A key that stores a string value, or a string specified with assertion <a href="/docs/triply-etl/assert/ratt#str">str()</a>.</li>
+<li><code>start</code> The index of the first character that is included in the substring. The first character has index 0.</li>
+<li><code>end</code> Optionally, the index of the first character that is excluded from the substring. If absent, the substring ends at the end of the source string.</li>
+<li><code>key</code> The new key in which the substring is stored.</li>
+</ul>
+<h2 id="example_13">Example</h2>
+<p>The Library of Congress MARC format stores the type of record in the sixth character that appears in the leader key. We use <code>substring()</code> to extract this character, and then use transformation <a href="#translateall">translateAll()</a> to map them to a corresponding class IRI:</p>
+<pre><code class="language-ts">substring({
+  content: 'metadata.marc:record.marc:leader.$text',
+  start: 6,
+  end: 7,
+  key: '_typeOfRecord',
+}),
+translateAll({
+  content: '_typeOfRecord',
+  table: {
+    a: dcm.Text,
+    k: dcm.StillImage,
+  },
+  key: '_class',
+}),
+triple('_iri', a, '_class'),
+</code></pre>
+<h1 id="function-translateall-translateall">Function <code>translateAll()</code> {#translateAll}</h1>
+<h2 id="description_10">Description</h2>
+<p>Translates all dynamic strings from a specific key to new values of an arbitrary type <code>To</code>, according to a specified translation table.</p>
+<p>Since this function translates <em>all</em> values, the mapped values can have any type <code>T</code>; they do not need to be strings. For example, this allows strings to be translated to IRIs or to literals.</p>
+<h2 id="when-to-use_2">When to use?</h2>
+<p>This approach is used when:</p>
+<ul>
+<li>The set of source data values is small.</li>
+<li>The set of source data values is known ahead of time.</li>
+<li>The corresponding linked data terms are known ahead of time.</li>
+<li>The appearance of a new value is considered to be an error in the source data.</li>
+</ul>
+<h2 id="parameters_16">Parameters</h2>
+<ul>
+<li><code>content</code> A key that contains a string value.</li>
+<li><code>table</code> A translation table from strings to values of some arbitrary type <code>T</code>.</li>
+<li><code>nulls</code> Optionally, a list of string values that are considered denote NULL values in the source data. When a NULL value is encountered, the special value <code>undefined</code> is added for the target <code>key</code>.</li>
+<li><code>default</code> Optionally, a default value or a default value-determining function that is used for string values that are neither in the translation table (<code>table</code>) nor in the NULL values list (<code>nulls</code>). The function must return a value of type <code>T</code>. Use of a default value <code>value</code> is equivalent to using the following value-determining function: <code>_ =&gt; value</code>.</li>
+<li><code>key</code> A new key where the results of the translation are stored.</li>
+</ul>
+<h2 id="example-map-source-data-to-iri-values">Example: Map source data to IRI values</h2>
+<p>Suppose that source data contains country names. In linked data we want to use IRIs to denote countries, so that we can link additional information. Since the list of countries that appears in the source data is not that long, we can specify a translation table from names to IRIs by hand:</p>
+<pre><code class="language-ts">change.translateAll({
+  content: 'country',
+  table: {
+    'Belgium': country.be,
+    'Germany': country.de,
+    'England': country.gb,
+    ...,
+  },
+  nulls: ['Unknown'],
+  key: '_country',
+}),
+when('country', [
+  triple('_country', a, sdo.Country),
+]),
+</code></pre>
+<h2 id="example-map-source-data-to-iri-properties">Example: Map source data to IRI properties</h2>
+<p>When we relate a creative work to its creator, we sometimes know whether the creator was the actor, architect, author, etc. of the creative work. But in other cases we only know that there is a generic creator relationship. The <a href="https://triplydb.com/loc/relators">Library of Congress Relators vocabulary</a> allows us to express specific and generic predicates of this kind.</p>
+<pre><code class="language-ts">transform.translateAll({
+  table: {
+    'actor': rel.act,
+    'architect': rel.arc,
+    'author': rel.aut,
+    ...,
+  },
+  default: rel.oth, // generic relator
+  key: '_relator',
+}),
+triple('_creativeWork', '_relator', '_creator'),
+</code></pre>
+<h1 id="function-translatesome-translatesome">Function <code>translateSome()</code> {#translateSome}</h1>
+<h2 id="description_11">Description</h2>
+<p>Translates some strings, according to the specified translation table, to other strings. Strings that are not translated according to the translation table are copied over as-is.</p>
+<h2 id="parameters_17">Parameters</h2>
+<ul>
+<li><code>content</code> A key that contains a string value.</li>
+<li><code>table</code> A translation table that specifies translations from strings to strings.</li>
+<li><code>key</code> A new key where the translated strings are stored.</li>
+</ul>
+<h2 id="use-cases_5">Use cases</h2>
+<p>Source data often contains some strings that are correct and some that are incorrect. For example, if source data contains a key with city names, some of the names may be misspelled. In such cases, <code>translateSome()</code> can be used to translate the incorrect strings into correct ones.</p>
+<p>A <code>translateSome()</code> transformation is often performed directly before a <code>translateAll()</code> transformation. The former ensures that all string values are correct (e.g. fixing typo's in city names); the latter ensures that all strings are mapped onto IRIs (e.g. city names mapped onto city-denoting IRIs).</p>
+<h2 id="example_14">Example</h2>
+<p>The following example fixes an encoding issue that occurs in the source data:</p>
+<pre><code class="language-ts">transform.translateSome({
+  content: 'name',
+  table: {
+    'Frysl��n': 'Fryslân',
+    // Other entries for typographic fixes go here.
+    ...,
+  },
+  key: '_name',
+}),
+</code></pre>
+<h1 id="function-tryliteral-tryliteral">Function <code>tryLiteral()</code> {#tryLiteral}</h1>
+<h2 id="description_12">Description</h2>
+<p>This transformation is used when string values must be mapped onto literals with varying datatype IRIs.</p>
+<p>The datatype IRIs that could apply are specified in a list. The specified datatype IRIs are tried out from left to right. The first datatype IRI that results in a valid literal is chosen.</p>
+<ul>
+<li><code>content</code> A key that contains a string value, or a string value specified with assertion <a href="/docs/triply-etl/assert/ratt#str">str()</a>.</li>
+<li><code>datatypes</code> An array of two or more datatype IRIs.</li>
+<li><code>key</code> A new key where the created literal is stored.</li>
+</ul>
+<h2 id="throws_1">Throws</h2>
+<p>An exception is emitted if a string value does not belong to the lexical space of any of the specified datatype IRIs.</p>
+<h2 id="example_15">Example</h2>
+<p>A literal is valid if the given string value appears in the lexical space of a specific datatype IRI. This is best explained with an example:</p>
+<pre><code class="language-ts">tryLiteral({
+  content: 'date',
+  datatypes: [xsd.date, xsd.gYearMonth, xsd.gYear],
+  key: '_publicationDate',
+}),
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Source data in key <code>'date'</code></th>
+<th>Result in key <code>'_date'</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>'1900-01-02'</code></td>
+<td><code>'1900-01-02'^^xsd:date</code></td>
+</tr>
+<tr>
+<td><code>'1900'</code></td>
+<td><code>'1900'^^xsd:gYear</code></td>
+</tr>
+<tr>
+<td><code>'02-01-1900'</code></td>
+<td>An error is emitted.</td>
+</tr>
+</tbody>
+</table>
+<p>If we do not want to emit errors for string values that cannot be satisfy any of the specified datatype IRIs, we may choose to include <code>xsd.string</code> as the last datatype IRI in the list. Do notice however that this will result in dates that cannot be compared on a timeline, since they were not transformed to an XSD date/time datatype.</p>
+<h2 id="see-also_6">See also</h2>
+<p>You only need to use <code>tryLiteral()</code> if the datatype IRI varies from record to record. If the datatype IRI is the same for every record, then the regular assertion function <a href="/docs/triply-etl/assert/ratt#literal">literal()</a> should be used instead.</p>
+<h1 id="function-uppercase-uppercase">Function <code>uppercase()</code> {#uppercase}</h1>
+<h2 id="description_13">Description</h2>
+<p>Translates a string value to its uppercase variant.</p>
+<p>This middleware can uppercase strings in any language; the Unicode Default Case Conversion algorithm is used for this.</p>
+<h2 id="parameters_18">Parameters</h2>
+<ul>
+<li><code>content</code> A key that contains a string value.</li>
+<li><code>key</code> A new key where the uppercase variant is stored.</li>
+</ul>
+<h2 id="example_16">Example</h2>
+<p>We do not have a good example for this transformation middleware yet. Let us know in case you have a good example!</p>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+</span>
+</div>
+<script>var base_url = '../../..';</script>
+<script defer="" src="../../../js/theme_extra.js"></script>
+<script defer="" src="../../../js/theme.js"></script>
+<script defer="" src="../../../search/main.js"></script>
+<script defer="">
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"></script><script>mermaid.initialize({});</script></body>
+</html>

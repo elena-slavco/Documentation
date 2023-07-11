@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>TriplyETL: Declare - Triply Documentation</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "TriplyETL: Declare";
+        var mkdocs_page_input_path = "triply-etl/declare/index.md";
+        var mkdocs_page_url = null;
+      </script>
+<script defer="" src="../../js/jquery-3.6.0.min.js"></script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> Triply Documentation
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../triply-db-getting-started/">Getting started</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyETL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../">Overview</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/">Command Line Interface (CLI)</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../maintenance/">Maintenance</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Yasgui</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../yasgui/">Introduction</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">Triply Documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a> »</li>
+<li>TriplyETL: Declare</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<p>This page documents how you can declare prefixes, graph names, vocabulary terms, and constants that you can use in the rest of your ETL configuration.</p>
+<h1 id="prefix-declarations-declareprefix">Prefix declarations {#declarePrefix}</h1>
+<p>Linked data uses IRIs for uniquely identifying most data items. Since IRIs can be long and complex, it is a best practice to declare short aliases that can be used to abbreviate them. Such aliases are introduced in prefix declarations.</p>
+<p>The function for declaring prefixes can be imported from the generic TriplyETL library:</p>
+<pre><code class="language-ts">import { declarePrefix } from '@triplyetl/etl/generic'
+</code></pre>
+<p>The following function introduces <code>ALIAS</code> as shorthandnotation for <code>IRI_PREFIX</code>:</p>
+<pre><code class="language-ts">const base = declarePrefix('https://example.com/')
+</code></pre>
+<p>Once an alias has been declared, future declarations can make use of that alias to extend it:</p>
+<pre><code class="language-ts">const id = declarePrefix(base('id/'))
+</code></pre>
+<p>Notice that it is common practice to end every IRI prefix in a forward slash.</p>
+<p>It is common to make declarations for the full IRI strategy in one place, with an intent to reuse them through the ETL configuration. To distinguish prefix declarations from other declarations, it is best practice to put all prefix declaration that will be used in transformations and assertions into an single object called <code>prefix</code>:</p>
+<pre><code class="language-ts">const base = declarePrefix('https://example.com/')
+const id = declarePrefix(base('id/'))
+const prefix = {
+  person: declarePrefix(id('person/')),
+  def: declarePrefix(base('model/def/')),
+  vehicle: declarePrefix(id('vehicle/')),
+}
+</code></pre>
+<p>Notice that <code>base</code> and <code>id</code> are not intended to be used in transformations or assertions, but are only used to declare other prefixes that are used.</p>
+<p>With the above declarations in place, the following IRI assertion can be made:</p>
+<pre><code class="language-ts">iri(prefix.person, 'name')
+iri(prefix.person, str('John')),
+iri(prefix.vehicle, 'id')
+iri(prefix.vehicle, str('123')),
+</code></pre>
+<p>See assertion functions <a href="/docs/triply-etl/assert/ratt#iri">iri()</a> and <a href="/docs/triply-etl/assert/ratt#str">str()</a> for more information.</p>
+<h1 id="external-prefix-declarations">External prefix declarations</h1>
+<p>In linked data, it is common to reuse existing vocabularies and datasets. TriplyETL allows you to use popular namespaces from predefined prefix declarations.</p>
+<p>Popular namespaces are imported from the vocabulary library:</p>
+<pre><code class="language-ts">import { prefix } from '@triplyetl/etl/vocab'
+</code></pre>
+<p>For example, you can use the prefix declaration for DBpedia resources as follows:</p>
+<pre><code class="language-ts">iri(prefix.dbr, 'cityName')
+</code></pre>
+<p>This may create IRIs like the following:</p>
+<pre><code class="language-turtle">http://dbpedia.org/resource/Amsterdam
+http://dbpedia.org/resource/Berlin
+</code></pre>
+<p>You can use the prefix declaration for XML Schema Datatypes as follows:</p>
+<pre><code class="language-ts">literal('cityName', xsd.string)
+</code></pre>
+<p>This may create literals like the following:</p>
+<pre><code class="language-turtle">'Amsterdam'^^xsd:string
+'Berlin'^^xsd:string
+</code></pre>
+<h1 id="vocabulary-declarations-vocabulary">Vocabulary declarations {#vocabulary}</h1>
+<p>Vocabularies are collections of IRIs that have the same namespace. The namespace can be declared with a prefix (see <a href="#prefix-declarations">Prefix declarations</a>). We use the following prefix declaration as the namespace for our vocabulary:</p>
+<pre><code class="language-ts">const base = declarePrefix('https://example.com/')
+const prefix = {
+  def: declarePrefix(base('model/def/')),
+}
+</code></pre>
+<p>Individual terms in the vocabulary can be declared by using the declaration of the namespace as a function:</p>
+<pre><code class="language-ts">prefix.def('Person')
+prefix.def('Vehicle')
+prefix.def('knows')
+prefix.def('owns')
+</code></pre>
+<p>These are equivalent to the following full IRIs:</p>
+<pre><code class="language-iri">https://example.com/model/def/Person
+https://example.com/model/def/Vehicle
+https://example.com/model/def/knows
+https://example.com/model/def/owns
+</code></pre>
+<p>It is best practice to place IRI terms that belong to the same vocabulary or namespace in an object:</p>
+<pre><code class="language-ts">const def = {
+  Person: prefix.def('Person'),
+  Vehicle: prefix.def('Vehicle'),
+  knows: prefix.def('knows'),
+  owns: prefix.def('owns'),
+}
+</code></pre>
+<p>With the above declarations in place, we can now make the following assertions:</p>
+<pre><code class="language-ts">pairs(iri(prefix.person, 'name'),
+  [a, def.Person],
+  [def.owns, iri(prefix.vehicle, 'id')],
+),
+</code></pre>
+<p>This results in the following linked data:</p>
+<pre><code class="language-ttl">person:John
+  a def:Person;
+  def:owns vehicle:123.
+</code></pre>
+<p>Or diagrammatically:</p>
+<div class="mermaid">graph LR
+  john -- a --&gt; Person
+  john -- def:owns --&gt; vehicle
+
+  Person[def:Person]:::model
+  john[person:John]:::data
+  vehicle[vehicle:123]:::data
+
+  classDef data fill:yellow
+  classDef model fill:lightblue
+</div>
+<h1 id="external-vocabularies-external-vocabularies">External vocabularies {#external-vocabularies}</h1>
+<p>In linked data, it is common to reuse existing vocabularies. Popular vocabularies can be imported from the TriplyETL vocabulary library:</p>
+<pre><code class="language-ts">import { a, foaf, owl, premis } from '@triplyetl/etl/vocab'
+</code></pre>
+<p>This allows you to make the following assertions:</p>
+<pre><code class="language-ts">triple(foaf.Person, a, owl.Class),
+</code></pre>
+<p>This results in the following linked data:</p>
+<pre><code class="language-turtle">foaf:Person a owl:Class.
+</code></pre>
+<p>Notice that the notation in TriplyETL comes very close to the notation in Turtle/TriG/SPARQL that is familiar to linked data users.</p>
+<p>The following code snippet uses the specialized PREMIS 3.0.0 vocabulary. This vocabulary is published by the Library of Congress and is used to publish metadata about the preservation of digital objects. The following code snippet asserts that a PREMIS file is stored in a PREMIS storage location:</p>
+<pre><code class="language-ts">pairs(iri(id, 'some-file'),
+  [a, premis.File],
+  [premis.storedAt, iri(id, 'some-location')],
+),
+triple(iri(id, 'some-location'), a, premis.StorageLocation),
+</code></pre>
+<h1 id="custom-abbreviations">Custom abbreviations</h1>
+<p>The custom abbreviation <code>a</code> is available in the popular Turtle/TriG/SPARQL languages. TriplyETL allows you to introduce this custom abbreviation from the vocabulary library:</p>
+<pre><code class="language-ts">import { a } from '@triplyetl/etl/vocab'
+</code></pre>
+<p>In Turtle/TriG syntax this abbreviation is only allowed to be used in the predicate position. This restriction is not enforced in TriplyETL, where you can use the <code>a</code> abbreviation in the subject, predicate, object, and even graph position.</p>
+<p>You can introduce your own custom abbreviations as needed. For example, the following code snippet introduces <code>is_a</code> as a custom abbreviation for the IRI <code>rdfs:subClassOf</code>:</p>
+<pre><code class="language-ts">import { foaf, rdfs } from '@triplyetl/etl/vocab'
+const is_a = rdfs.subClassOf
+</code></pre>
+<p>This allows you to write the following assertion:</p>
+<pre><code class="language-ts">triple(foaf.Person, is_a, foaf.Agent),
+</code></pre>
+<p>This may make assertions more readable for users from certain domains. For example, "is a" is a commonly use phrase <a href="https://en.wikipedia.org/wiki/Is-a">in many other modeling languages</a> to denote the subsumption relation.</p>
+<h1 id="instance-declarations">Instance declarations</h1>
+<p>The same approach that is used for <a href="#vocabulary-declarations">vocabulary declarations</a> can also be used for instance declarations.</p>
+<p>The following example introduces constants for individual persons:</p>
+<pre><code class="language-ts">const person = {
+  jane: prefix.person('Jane'),
+  john: prefix.person('John'),
+  mary: prefix.person('Mary'),
+}
+</code></pre>
+<p>Instance declarations are used in assertions similar to how vocabulary declarations as used:</p>
+<pre><code class="language-ts">triple(person.john, def.knows, person.mary),
+</code></pre>
+<h1 id="graph-name-declarations">Graph name declarations</h1>
+<p>A linked dataset contains one or more graphs. Each graph can be given a name. It is common practice to declare a fixed set of graph names that will be used throughout the TriplyETL configuration.</p>
+<p>The following code snippet declares graph names for graphs that store metadata, model, and instances:</p>
+<pre><code class="language-ts">import { declarePrefix } from '@triplyetl/etl/generic'
+
+const id = declarePrefix('https://example.com/id/')
+const prefix = {
+  graph: declarePrefix(id('graph/')),
+}
+
+const graph = {
+  metadata: prefix.graph('metadata'),
+  model: prefix.graph('model'),
+  instances: prefix.graph('instances'),
+}
+</code></pre>
+<p>The declared graph names can now be used in assertions:</p>
+<pre><code class="language-ts">triples(graph.metadata,
+  ['_dataset', a, dcat.Dataset],
+  ['_dataset', rdfs.label, str('My Dataset')],
+),
+</code></pre>
+<p>See assertion function <a href="/docs/triply-etl/assert/ratt#triples">triples()</a> for more information.</p>
+<h1 id="language-declarations">Language declarations</h1>
+<p>Commonly used language tags can be imported in the following way:</p>
+<pre><code class="language-ts">import { lang } from '@triplyetl/etl/vocab'
+</code></pre>
+<p>These language declarations can be used to add language-tagged strings to the Record:</p>
+<pre><code class="language-ts">addLiteral({
+  content: 'label',
+  languageTag: lang.fr,
+  key: '_languageTaggedString',
+}),
+</code></pre>
+<p>Or they can be used to directly assert language-tagged strings in the Internal Store:</p>
+<pre><code class="language-ts">triple('_city', rdfs.label, literal('label', lang.fr)),
+</code></pre>
+<p>See transformation function <a href="/docs/triply-etl/transform#addliteral">addLiteral()</a> and assertion function <a href="/docs/triply-etl/assert#literal">literal()</a> for more information.</p>
+<h1 id="geospatial-declarations">Geospatial declarations</h1>
+<p>IRIs that denote commonly used coordinate reference systems can be imported from the <code>epsg</code> object:</p>
+<pre><code class="language-ts">import { geojsonToWkt } from '@triplyetl/etl/ratt'
+import { epsg } from '@triplyetl/etl/vocab'
+</code></pre>
+<p>Such IRIs that denote coordinate reference systems can be used in several geospatial functions, for example in transformation function <a href="/docs/triply-etl/transform/ratt#geojsontowkt">geojsonToWkt()</a>:</p>
+<pre><code class="language-ts">geojsonToWkt({
+  content: 'geojson',
+  crs: epsg[28992],
+  key: '_wkt',
+}),
+</code></pre>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+</span>
+</div>
+<script>var base_url = '../..';</script>
+<script defer="" src="../../js/theme_extra.js"></script>
+<script defer="" src="../../js/theme.js"></script>
+<script defer="" src="../../search/main.js"></script>
+<script defer="">
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"></script><script>mermaid.initialize({});</script></body>
+</html>

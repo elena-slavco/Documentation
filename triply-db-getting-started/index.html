@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Getting started - Triply Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Getting started";
+        var mkdocs_page_input_path = "triply-db-getting-started/index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Triply Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyDB</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Getting started</a>
+    <ul class="current">
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyETL</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../triply-etl/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../triply-etl/getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../triply-etl/cli/">Command Line Interface (CLI)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../triply-etl/changelog/">Changelog</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../triply-etl/maintenance/">Maintenance</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Yasgui</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../yasgui/">Introduction</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Triply Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+          <li>TriplyDB &raquo;</li>
+      <li>Getting started</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="introduction">Introduction</h1>
+<p>TriplyDB allows you to store, publish, and use linked data Knowledge
+Graphs. TriplyDB makes it easy to upload linked data and expose it
+through various APIs (SPARQL, Elasticsearch, LDF, REST). <a href="/triplydb">Read
+More</a></p>
+<h1 id="uploading-data">Uploading Data</h1>
+<p>This section explains how to create a linked dataset in TriplyDB.</p>
+<h2 id="creating-a-new-dataset">Creating a new dataset</h2>
+<p>The following steps allow a new linked datasets to be created:</p>
+<ol>
+<li>
+<p>Log into a TriplyDB instance.</p>
+</li>
+<li>
+<p>Click the <code>+</code> button on the dataset pane that appears on the
+   right-hand side of the home screen.</p>
+</li>
+<li>
+<p>This brings up the dialog for creating a new dataset. Enter a
+   dataset name that consists of alpha-numeric characters
+   (<code>A-Za-z0-9</code>) and hyphens (<code>-</code>).</p>
+</li>
+<li>
+<p>Optionally, enter a dataset display name. This name will be used
+   in the GUI and will be exposed in dataset metadata.</p>
+</li>
+<li>
+<p>Optionally, enter a dataset description. You can use rich text
+   formatting by using Markdown. See <a href="#markdown-support">our section about
+   Markdown</a> for details.</p>
+</li>
+<li>
+<p>Optionally, change the access level for the dataset. By default
+   this is set to “Private”. See <a href="#access-levels">dataset access
+   levels</a> for more information.</p>
+</li>
+</ol>
+<p><img alt="The “Add dataset” dialog" src="createdataset.png" /></p>
+<p>When datasets are Public (see <a href="#access-levels">Access Levels</a>), they
+automatically expose metadata and are automatically crawled and
+indexed by popular search engines (see <a href="#metadata">Metadata</a>).</p>
+<h2 id="adding-data">Adding data</h2>
+<p>Once the dataset is created, the “Add data” view is displayed (see
+screenshot). In this view data can be added in three ways:</p>
+<dl>
+  <dt>File upload</dt>
+  <dd>Select files from your local machine.  It is also possible to drag-and-drop local files on the cloud icon with the upward pointing arrow.</dd>
+  <dt>URL upload</dt>
+  <dd>Copy/paste a URL that points to an online RDF file.</dd>
+  <dt>Import</dt>
+  <dd>Import a dataset that is already published in the same TriplyDB instance.</dd>
+</dl>
+
+<p><img alt="The “Add data” view.  The three ways in which data can be added are
+displayed on top of one another." src="add-data.png" /></p>
+<p>The “Add data” view is also available for existing datasets:</p>
+<ol>
+<li>
+<p>Go to the “Graphs” view by clicking on the graph icon in the
+   left-hand sidebar.</p>
+</li>
+<li>
+<p>Click the “Import a new graph” button.</p>
+</li>
+</ol>
+<h3 id="adding-data-file-upload">Adding data: File upload</h3>
+<p>The file upload feature allows you to upload RDF files from your local
+machine. This can be done in either of two ways:</p>
+<ul>
+<li>
+<p>Click on the cloud icons to open a dialog that allows local RDF
+  files from your machine to be selected.</p>
+</li>
+<li>
+<p>Drag-and-drop RDF files from your local machine onto the cloud
+  icon.</p>
+</li>
+</ul>
+<p>The following RDF serialization formats are currently supported:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Serialization Format</strong></th>
+<th><strong>File extension</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N-Quads</td>
+<td><code>.nq</code></td>
+</tr>
+<tr>
+<td>N-Triples</td>
+<td><code>.nt</code></td>
+</tr>
+<tr>
+<td>RDF/XML</td>
+<td><code>.rdf</code>, <code>.owl</code>, <code>.owx</code></td>
+</tr>
+<tr>
+<td>TriG</td>
+<td><code>.trig</code></td>
+</tr>
+<tr>
+<td>Turtle</td>
+<td><code>.ttl</code>, <code>.n3</code></td>
+</tr>
+<tr>
+<td>JSON-LD</td>
+<td><code>.jsonld</code>, <code>.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>Up to 1,000 separate files can be uploaded in one go. It is also
+possible to upload compressed files and archives. When the number of
+files exceeds 1,000, it is more efficient to combine them in archives
+and upload those. This allows an arbitrary number of files to be
+uploaded. The following archive/compression formats are currently
+supported:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Format</strong></th>
+<th><strong>File extensions</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gzip</td>
+<td><code>.gz</code></td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td><code>.bz2</code></td>
+</tr>
+<tr>
+<td>tar</td>
+<td><code>tar</code></td>
+</tr>
+<tr>
+<td>XZ</td>
+<td><code>.xz</code></td>
+</tr>
+<tr>
+<td>ZIP</td>
+<td><code>.zip</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="adding-data-by-url-upload">Adding data by URL upload</h3>
+<p>The second option for adding data is to include it from an online URL
+location. This is done by entering the URL inside the “Add data from
+a URL” text field.</p>
+<h3 id="adding-data-by-import">Adding data by import</h3>
+<p>The third option for adding data is to import from datasets that are
+published in the same TriplyDB instance. This is done with the “Add
+data from an existing dataset” dropdown list (see screenshot).</p>
+<h3 id="adding-malformed-data">Adding malformed data</h3>
+<p>TriplyDB only allows valid RDF data to be added. If data is malformed,
+TriplyDB will show an error message that indicates which part of the
+RDF data is malformed (see screenshot). If such malformed data is
+encountered, the RDF file must first be corrected and uploaded again.</p>
+<p><img alt="Screenshot of an error message indicating syntactically malformed RDF data" src="upload-error.png" /></p>
+<p>TriplyDB follows the linked data standards strictly. Many triple
+stores allow incorrect RDF data to be added. This may seem convenient
+during the loading phase, but often results in errors when
+standards-compliant tools start using the data.</p>
+<h2 id="assets-binary-data">Assets: binary data</h2>
+<p>Not all data can be stored as RDF data. For example images and video
+files use a binary format. Such files can also be stored in TriplyDB
+and can be integrated into the Knowledge Graph.</p>
+<h1 id="publishing-data">Publishing data</h1>
+<p>With TriplyDB you can easily make your data available to the outside world.</p>
+<h2 id="publishing-your-dataset">Publishing your dataset</h2>
+<p>You can publish your dataset by setting the visibility to “Public” in
+the dataset settings menu. Making a dataset public in TriplyDB has
+the following consequences:</p>
+<ol>
+<li>The dataset can be searched for and visited by anybody on the web.</li>
+<li>The dataset will be indexed by web search engines such as <a href="">Google
+   Dataset Search</a>.</li>
+<li>Any services that are started for that dataset will be available
+   to anybody on the web. This includes <a href="">SPARQL</a>, <a href="">text
+   search</a>, and <a href="">linked data Fragments</a>.</li>
+</ol>
+<h2 id="entering-metadata">Entering metadata</h2>
+<p>Adding metadata to your datasets is important. This makes it easier
+to find your dataset later and also allows search engines and social
+media applications to understand your dataset.</p>
+<p>Metadata is entered from the dataset settings page, which is accessed
+by clicking on the “Dataset settings” (cog icon) option from the
+left-hand sidebar (see screenshot).</p>
+<p><img alt="“Dataset settings” page" src="cog-wheel.png" /> The dataset homepage looks empty without metadata. Notice the cog wheel icon, which provides access to the “Dataset settings” page.</p>
+<p>The dataset settings page allows the following metadata to be entered:</p>
+<ul>
+<li>The dataset description. This can consist of text with (optional) Markdown formatting.</li>
+<li>The avatar (image) of the dataset.</li>
+<li>The access level of the dataset.</li>
+<li>The topics of the dataset.</li>
+<li>The example resources for the dataset.</li>
+<li>The license of the dataset.</li>
+</ul>
+<p><img alt="The dataset settings page" src="dataset-settings-page.png" /> The dataset settings page allows various forms of dataset metadata to be added.</p>
+<p>Within the TriplyDB instance your dataset is now more findable for users. Whenever
+a user searches on one of the topics of your dataset, or types in a word that is
+present in the description of your dataset, the dataset will be shown as a search
+result. The metadata will allow TriplyDB to give a better impression of your dataset
+when a user visits:</p>
+<p><img alt="The dataset home page" src="dataset-homepage-with-metadata.png" /> The dataset home page after metadata has been entered.</p>
+<p>Search engines and social media applications can recognize the
+metadata that is entered for datasets in TriplyDB. The following
+screenshot shows the widget created by the Slack chat application upon
+entering a link to the dataset. Notice that the chat application
+understands metadata properties like title, description, and image.</p>
+<p><img alt="A Slack widget" src="slack-widget.png" /> Widget created by the Slack chat application upon sharing a link to a dataset in TriplyDB.</p>
+<h2 id="starting-services">Starting services</h2>
+<p>By default, datasets in TriplyDB can be queried through <a href="/docs/triplydb-js">TriplyDB-js</a> as well as through the Linked Data Fragments API.</p>
+<p>In order to allow additional query paradigms, specific services can be
+started from the “Create service” page. This page is accessed by
+clicking on the “Services” icon in the left-hand sidebar.</p>
+<p>TriplyDB instances can be configured with different types of services.
+The below screenshot shows the “Create service” page for a TriplyDB
+instance that allows SPARQL, Jena SPARQL, and Elasticsearch services
+to be created.</p>
+<p><img alt="The “Create service” page" src="create-service.png" /> Notice that three different types of services can be created.</p>
+<p>It is possible to create multiple services for one dataset.</p>
+<h3 id="existing-services">Existing services</h3>
+<p>Existing services are displayed on service widgets (see screenshot).
+From these widgets, services can be created or deleted.</p>
+<p><img alt="An example of a service widget" src="service-widget.png" /></p>
+<p>Datasets can change whenever a graph is added, deleted or renamed. When this
+happens, the data in a service is out of sync with the data in the dataset and
+a synchronization button will appear in the service widget. By clicking the
+button, the service will be synchronized with the current state of the dataset.</p>
+<h1 id="viewing-data">Viewing Data</h1>
+<p>TriplyDB offers several ways to explore your datasets.</p>
+<h2 id="linked-data-browser">Linked Data Browser</h2>
+<p>The linked data browser offers to traverse the data by focusing on one node
+at the time. The node is describe using it's properties, which can be followed
+to other nodes in the graph.
+<img alt="Image of the linked Data Browser" src="ld-browser.png" /></p>
+<p>The following properties provide additional information about your linked data, enabling the LD-browser to display visualizations and provide a better user experience.</p>
+<h4 id="types">Types</h4>
+<p>The predicate <code>rdf:type</code> allows you to specify the type or class of a resource in your linked data:</p>
+<p>By using <code>rdf:type</code>, you can indicate the category or classification of the resource, which can help the LD-browser understand the nature of the data and display it appropriately.</p>
+<p>In the <a href="https://triplydb.com/Triply/iris/browser?resource=http%3A%2F%2Fdbpedia.org%2Fresource%2FIris_setosa">example below</a>, you can see that "Iris setosa" is the type of flowering plant due to the usage of the <code>rdf:type</code> property.</p>
+<p><img alt="rdf:type in the LD-browser" src="type.png" /></p>
+<h4 id="labels">Labels</h4>
+<p>Labels are typically used to provide a concise and meaningful title or display name for a resource, making it easier for users to understand the content of your linked data.
+These predicates allow you to provide human-readable labels or names for your resources:</p>
+<ul>
+<li>The property <code>rdfs:label</code></li>
+<li>The property <code>skos:prefLabel</code></li>
+</ul>
+<p>In the <a href="https://triplydb.com/academy/pokemon/browser?resource=https%3A%2F%2Ftriplydb.com%2Facademy%2Fpokemon%2Fid%2Fpokemon%2Fpikachu">example below</a>, the <code>rdfs:label</code> property was used to denote the label(name) of the Pokemon, resulting in the display of "Pikachu" above its corresponding image.</p>
+<p><img alt="rdfs:label in the LD-browser" src="label.png" /></p>
+<h4 id="descriptions">Descriptions</h4>
+<p>Descriptions can provide additional context or information about a resource, helping users understand its purpose, content, or significance.
+These predicates allow you to provide textual descriptions or comments about your resources:</p>
+<ul>
+<li>The property <code>sdo:description</code></li>
+<li>The property <code>rdfs:comment</code></li>
+</ul>
+<p>In the <a href="https://triplydb.com/Triply/iris/browser?resource=http%3A%2F%2Fdbpedia.org%2Fresource%2FIris_setosa">following example</a> <code>rdfs:comment</code> was used to provide additional information on Iris Setosa.</p>
+<p><img alt="rdfs:comment in the LD-browser" src="description.png" /></p>
+<h4 id="geo">Geo</h4>
+<p>These are some of the predicates used for representing geographic information in your LD-browser:</p>
+<ul>
+<li>The property <code>geo:asWKT</code>: This property allows you to specify the geometries of geographic features using the Well-Known Text (WKT) format, which can be visualized on a map in the LD-browser.</li>
+<li>The property <code>geo:hasGeometry</code>: This property is used to link a geographic feature with its corresponding geometry.</li>
+<li>The property <code>geo:location</code>: This property is used to indicate the location of a resource using geographic coordinates, such as latitude and longitude, in your linked data.</li>
+</ul>
+<p>In the <a href="https://triplydb.com/osm/osm/browser?resource=https%3A%2F%2Fdata.osm.pldn.nl%2Fway%2F34997507">following example</a> <code>geo:hasGeometry</code> property was used to showcase a map depicting the location of Instituut voor Beeld en Geluid.</p>
+<p><img alt="geo:hasGeometry in the LD-browser" src="geo.png" /></p>
+<h4 id="images">Images</h4>
+<p>These predicates allow you to associate images or visual representations with your resources:</p>
+<ul>
+<li>Class <code>sdo:ImageObject</code></li>
+<li>The property <code>foaf:depiction</code></li>
+<li>The property <code>foaf:thumbnail</code></li>
+<li>The property <code>foaf:img</code></li>
+<li>The property <code>sdo:image</code></li>
+<li>The property <code>sdo:contentUrl</code></li>
+</ul>
+<p>By using these predicates, you can provide URLs or references to images that can be displayed alongside your linked data in the LD-browser.</p>
+<p>In the <a href="https://triplydb.com/academy/pokemon/browser?resource=https%3A%2F%2Ftriplydb.com%2Facademy%2Fpokemon%2Fid%2Fpokemon%2Fpikachu">example below</a>, <code>foaf:depiction</code> was used to display picture of Pikachu in the LD-browser:</p>
+<p><img alt="foaf:depiction in the LD-browser" src="image.png" /></p>
+<h4 id="audio">Audio</h4>
+<p>These predicates allow you to associate audio content with your resources:</p>
+<ul>
+<li>The class <code>sdo:AudioObject</code></li>
+<li>The property <code>sdo:audio</code></li>
+<li>The property <code>sdo:contentUrl</code></li>
+</ul>
+<p>You can use these predicates to provide URLs or references to audio files that can be played or streamed within the LD-browser.</p>
+<p>In the <a href="https://nightly.triplydb.com/Triply/efteling/browser?resource=https%3A%2F%2Fnightly.triplydb.com%2Fefteling%2FCarnavalFestival">following example</a>, <code>sdo:audio</code> was used to showcase audio content of the Carnival Festival within the LD-browser.</p>
+<p><img alt="sdo:audio in the LD-browser" src="audio.png" /></p>
+<h4 id="video">Video</h4>
+<p>These predicates allow you to associate video content with your resources:</p>
+<ul>
+<li>Class <code>sdo:VideoObject</code></li>
+<li>Property <code>sdo:video</code></li>
+<li>Property <code>sdo:contentUrl</code></li>
+</ul>
+<p>You can use these predicates to provide URLs or references to video files that can be played or streamed within the LD-browser.The video formats that are included in this dataset are ".mp4", ".webm", ".ogg".</p>
+<p>In the <a href="https://test.triply.cc/Philippe/ld-patterns/browser?resource=https%3A%2F%2Ftest.triply.cc%2FPhilippe%2Fld-patterns%2Fid%2Fvideo%2Fkleine-piep_0.0">following example</a>, <code>sdo:contentUrl</code> was used to showcase video content of the Kleine Piep within the LD-browser.</p>
+<p><img alt="sdo:contentUrl in the LD-browser" src="video.png" /></p>
+<h2 id="linked-data-table">Linked Data Table</h2>
+<p>The linked data Table shows a dataset at the triple level. The first
+three columns represent the subject, predicate, and object position of
+the triple. The fourth column represents the graph to which the
+triple belongs.</p>
+<p><img alt="Image of the linked data Table" src="linked-data-table.png" /></p>
+<p>The linked data Table can be used to perform simple queries by filling
+in the subject, predicate, object, and/or graph using the text field.</p>
+<p>Terms in the linked data Table can be dragged and dropped between
+columns. This allows a simple form of graph navigation. For example,
+an object term can be dragged to the subject column in order to
+show the triples in which that term appears in the subject position.</p>
+<p>Queries in the linked data Table can also be performed automatically
+through the Statements API and the <a href="/docs/triply-api#triple-pattern-fragments-tpf">Triple Pattern Fragments
+API</a>.</p>
+<h2 id="sparql-ide">SPARQL IDE</h2>
+<p>When a dataset has a running SPARQL service, the data can be queried
+from the SPARQL IDE. The SPARQL IDE is an extended version of the
+Open Source <a href="/docs/yasgui">Yasgui</a> query editor.</p>
+<h3 id="saving-a-sparql-query">Saving a SPARQL query</h3>
+<p>It is often useful to save a SPARQL query for later use. This is
+achieved by clicking on the save icon in the top-right corner of the
+SPARQL Editor. Doing so will create a <a href="#saved-queries">Save Query</a>.</p>
+<h3 id="sharing-a-sparql-query">Sharing a SPARQL query</h3>
+<p>It is sometimes useful to share a SPARQL query with somebody else, or
+to have a cURL command that can be used to run the same SPARQL query
+from a command line. This is achieved by clicking on the share icon
+in the top-right corner of the SPARQL Editor. This brings us a dialog
+from which the SPARQL query can be copied in the following three forms:</p>
+<ol>
+<li>
+<p>The URL-encoded SPARQL query. This is a long URL that includes
+   the endpoint, the query, and visualization settings. Notice that
+   this URL can be quite long for complex queries and/or
+   visualizations. Long URLs are not supported by some application
+   that cut off a URL after a maximum length (often 1,024
+   characters). Use one of the other two options or use <a href="https://triply.cc/docs/triply-db-getting-started#saved-queries">Saved
+   Queries</a> to avoid such restrictions.</p>
+</li>
+<li>
+<p>A short URL that redirects to the full URL-encoded SPARQL query.</p>
+</li>
+<li>
+<p>A cURL command that can be copy/pasted into a terminal
+   application that supports this command. cURL is often used by
+   programmers to test HTTP(S) requests.</p>
+</li>
+</ol>
+<p><a href="https://triply.cc/docs/triply-db-getting-started#saved-queries">Saved Queries</a> are a more modern way of sharing SPARQL queries.
+They do not have any of the technical limitations that occur with
+URL-encoded queries.</p>
+<h3 id="transfer-a-sparql-query">Transfer a SPARQL query</h3>
+<p>The SPARQL queries could be transferred to another account or an organization. To do that, go to the setting field at the query page,</p>
+<p><img alt="Transfer a SPARQL query" src="where-find-transfer.png" /></p>
+<p>choose transfer</p>
+<p><img alt="Transfer a SPARQL query" src="transfer-query.png" /></p>
+<p>and then choose where the SPARQL query should be moved to.</p>
+<p><img alt="Transfer a SPARQL query" src="transfer-to-organization.png" /></p>
+<p>After the destination is set you would be redirected to the SPARQL query new page. The SPARQL query could be transferred from an account to an organization and vice versa.</p>
+<h3 id="copy-a-sparql-query">Copy a SPARQL query</h3>
+<p>Users can copy SPARQL queries to another account or an organization. To do that, click on three dots in the upper right corner of the query and choose the copy option.</p>
+<p><img alt="Copy query" src="copyQuery.png" /></p>
+<p>Then, choose where the SPARQL query should be moved to.</p>
+<p><img alt="Select organization" src="selectOrganization.png" /></p>
+<p>After setting the destination, you will be redirected to the SPARQL query new page. The SPARQL query can be copied from an account to an organization and vice versa.</p>
+<h2 id="elasticsearch">ElasticSearch</h2>
+<p>When a dataset has a running Elasticsearch service, textual searches
+can be performed over the entire dataset. Text search with Elasticsearch works like a
+search engine and returns any node that contains your search term, or
+contains the search term in any of its properties. It is also possible to write a custom query using the Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html">Query DSL (Domain Specific Language)</a>.</p>
+<h2 id="insights">Insights</h2>
+<p>The insights page has been developed to give you a succinct overview of the linked data at hand. It holds two views: the class frequency and the
+class hierarchy view.</p>
+<h3 id="class-frequency">Class frequency</h3>
+<p>The class frequency diagram shows how often classes and properties appear in a
+graph. The drop-down on the top of the visualization selects the graph for which
+the class frequency is drawn.
+The visualization shows the 10 most frequent classes in the selected graph. The
+exact number of occurrences can be seen when hovering over the bar of a class, also
+showing the complete IRI/prefixed IRI. When clicking on the bar of a class the node
+will expand and show the 10 most frequent predicates of that class.</p>
+<h3 id="class-hierarchy">Class hierarchy</h3>
+<p>The class hierarchy diagram shows the hierarchy of the dataset in three
+different visualizations. Each of the diagrams are created by the
+<code>rdfs:subClassOf</code> relations and the classes in the dataset.
+TriplyDB has three different visualization methods for the classHierarchy:</p>
+<ul>
+<li>Bubbles visualization</li>
+<li>Treemap visualization</li>
+<li>Sunburst visualization</li>
+</ul>
+<p>All three visualizations are interactive in two ways. It is possible to hover over them, which will show information about the layer the mouse is on, or to click on them,
+so the visualization zooms in one or more layers. For each visualization it
+is also possible to zoom out:</p>
+<ul>
+<li>Bubbles visualization: click the outside of the bubble</li>
+<li>Treemap visualization: use the breadcrumbs trail shown above the visualization</li>
+<li>Sunburst visualization: click the innermost circle of the visualization</li>
+</ul>
+<h4 id="when-does-the-class-hierarchy-show">When does the class hierarchy show?</h4>
+<ul>
+<li>A class only appears in the class hierarchy tab if it has instances (connected to the class via <code>rdf:type</code>).</li>
+<li>The class hierarchy cannot be shown if it contains a cycle, meaning that some class is (indirectly) its own subclass.</li>
+</ul>
+<h1 id="exporting-data">Exporting Data</h1>
+<p>This section explains how a user of TriplyDB can export linked data stored in the triple store.</p>
+<h2 id="export-datasets">Export Datasets</h2>
+<p>The data stored on TriplyDB is stored in two different containers: datasets and graphs. Each triple contained in a dataset is part of exactly one graph. A graph is always a part of a dataset and a dataset can have multiple graphs. The following screenshot shows the dataset "Pokémon" that contains three graphs: "data" and "vocab". The graph "data" contains 28.588 triples and the graph "vocab" 185 triples. By summing up the amount of triples contained in the two graphs the dataset "Pokémon" contains 28.773 triples in total.</p>
+<p><img alt="Export a dataset" src="export-dataset.png" /></p>
+<p>To export the dataset users can click on the downwards facing arrow. In our example, the dataset is automatically downloaded as the file "pokemon.trig" and compressed with .gz. The name of the file is the name of the dataset. The used serialization format is ".trig" because that is the standard format to store triples that are appended to graphs.</p>
+<p>It is also possible to export the whole dataset on the graphs interface. Select "Graphs" and "EXPORT ALL GRAPHS".</p>
+<p><img alt="Export all graphs" src="export-all-graphs.png" /></p>
+<h2 id="export-graphs">Export Graphs</h2>
+<p>To export only one graph select "Graphs" and the arrow next to the graph that should be exported.</p>
+<p><img alt="Export the graph https://data.netwerkdigitaalrefgoed.nl/hackalod/gvn/pkl01" src="export-one-graph.png" /></p>
+<p>In this case the downloaded file "https___triplydb.com_academy_pokemon_graphs_data.trig.gz" is named after the graph and also compressed with "gz".</p>
+<h2 id="extract">Extract</h2>
+<p>The process of extracting the compressed file is the same for exporting graphs and datasets. The downloaded and compressed file is automatically stored in the "Downloads" folder. Select the file with the ending ".gz" and open it with a double click. This opens an application that looks similar to the following screenshot:</p>
+<p><img alt="Extract the compressed file" src="extract.png" /></p>
+<p>Select the file that should be extracted. In this case select "pokemon.trig" and click on "Extract". In the following step choose the location where the extracted file should be stored.</p>
+<h1 id="saved-queries">Saved Queries</h1>
+<p>A Saved Query is a versioned SPARQL query with its own URL. Using this URL,
+users are able to view any version of the query and its results. It can also be
+used to run the query and retrieve the results from a browser or a program,
+removing the hassle of figuring out how to run a SPARQL query.</p>
+<h2 id="how-to-save-a-query">How to save a query</h2>
+<p>There are two ways to create a saved query.
+<em>You need to be logged in and have authorization rights on the dataset to use this feature</em></p>
+<ol>
+<li>When working from the <a href="#sparql-ide">SPARQL IDE</a></li>
+<li>Using the Saved Queries tab in a dataset</li>
+</ol>
+<p>Creating a saved query with the SPARQL IDE is done by writing a query/visualization and hitting the save button <img alt="The save query button highlighted" src="save-query-highlighted.png" /></p>
+<h2 id="creating-a-new-version">Creating a new version</h2>
+<p>Updating the saved query can be done by clicking a query in the Saved Queries tab and editing the query or the visualization. Hit the save button to save it as a new version.</p>
+<h2 id="using-a-saved-query">Using a saved query</h2>
+<h3 id="sharing-a-saved-query">Sharing a saved query</h3>
+<p>To share a saved query, for example in <a href="#data-stories">Data Stories</a>, you can copy the link that is
+used when you open the query in TriplyDB. Let's say you have a query called
+<code>Timelined-Cars-BETA</code> in the dataset <code>core</code> under the account <code>dbpedia</code> and you
+want to use version 6. Then the following link would be used</p>
+<pre><code class="language-url">https://triplydb.com/DBpedia-association/-/queries/timeline-cars/8
+</code></pre>
+<p>If you want to always use the <strong>latest</strong> query, you can simply omit the version
+number like so</p>
+<pre><code class="language-url">https://triplydb.com/DBpedia-association/-/queries/timeline-cars
+</code></pre>
+<h3 id="downloading-a-query-result">Downloading a query result</h3>
+<p>The result of a query can be downloaded via the TriplyDB interface. After downloading the query, open it in TriplyDB. e.g. https://triplydb.com/DBpedia-association/-/queries/timeline-cars/8. Choose the option <code>Response</code> and click on the download icon or scroll down and click on <code>Download result</code>. </p>
+<p><img alt="Download the query result via the download icon." src="queryResult.png" />
+<img alt="Download the query result via the button Download result." src="queryResult2.png" /></p>
+<p>The downloaded file is automatically stored in the <code>Downloads</code>-folder and has the name of the query. In our example, the file is called <code>timeline-cars.json</code>. The downloaded file contains the query result as a json-object. TriplyDB also displays the json-object when selecting the option <code>Response</code>.</p>
+<p>To download the query result in CSV-format, select the option <code>Table</code> and click on the download icon. The downloaded file is named after the query with the suffix <code>.csv</code>.</p>
+<h3 id="download-more-than-10-000-query-results-sparql-pagination">Download more than 10 000 query results - SPARQL pagination</h3>
+<p>This section explains how to retrieve all results from a SPARQL query using pagination.</p>
+<p>Often SPARQL queries can return more than 10.000 results, but due to limitations the result set will only consist out of the first 10.000 results. To retrieve more than 10.000 results you can use pagination. TriplyDB supports two methods to retrieve all results from a SPARQL query. Pagination with the saved query API or Pagination with TriplyDB.js.</p>
+<h4 id="pagination-with-the-saved-query-api">Pagination with the saved query API</h4>
+<p>Each TriplyDB instance has a fully RESTful API. The TriplyDB RESTful API is extended for saved SPARQL queries. The API for saved queries is extended with two arguments that the query is able to process paginated result sets. The arguments are ‘page’ and ‘pageSize’. An example of a paginated saved SPARQL query request would look like:
+<code>https://api.triplydb.com/queries/academy/pokemon-color/run?page=3&amp;pageSize=100</code></p>
+<p>The example request argument ‘page’ corresponds to the requested page. In the example request this would correspond to the third page of paginated SPARQL query, according to the ‘pageSize’. There is no maximum ‘page’ limit, as a SPARQL query could return an arbitrary number of results. When no results can be retrieved for the requested page an empty page will be returned.</p>
+<p>The argument ‘pageSize’ corresponds to how many results each page would contain. The ‘pageSize’ has a default of 100 returned results and a maximum ‘pageSize’ limit of 10.000 returned results. The request will return an error when the ‘pageSize’ is set higher than 10.000.</p>
+<p>he RESTful API for the saved SPARQL queries follows the <a href="https://www.rfc-editor.org/rfc/rfc8288.html">RFC 8288</a> standard.</p>
+<p>The request will return an response body containing the result set and a response header. The response header contains a link header with the relative "next" request, the relative "prev" request, and the relative "first" request. By following the "next" link header request you can chain the pagination and retrieve all results.</p>
+<pre><code class="language-json">link:
+    &lt;https://api.triplydb.com/queries/academy/pokemon-color/run?page=4&amp;pageSize=100&gt;; rel=&quot;next&quot;,
+    &lt;https://api.triplydb.com/queries/academy/pokemon-color/run?page=2&amp;pageSize=100&gt;; rel=&quot;prev&quot;,
+    &lt;https://api.triplydb.com/queries/academy/pokemon-color/run?page=1&amp;pageSize=100&gt;; rel=&quot;first&quot;
+</code></pre>
+<h4 id="pagination-with-triplydbjs">Pagination with TriplyDB.js</h4>
+<p><strong>TriplyDB.js</strong> is the official programming library for interacting with <a href="https://triply.cc/docs/triply-db-getting-started/">TriplyDB</a>. TriplyDB.js allows the user to connect to a TriplyDB instance via the TypeScript language. TriplyDB.js has the advantage that it can handle pagination internally so it can reliably retrieve a large number of results.</p>
+<p>To get the output for a <code>construct</code> or <code>select</code> query, follow these steps:</p>
+<ol>
+<li>Import the TriplyDB library and set your parameters, regarding the TriplyDB instance and the account in which you have saved the query as well as the name of the query. Do not forget that we perform TriplyDB.js requests within an <a href="#create-your-first-script">async context</a>.</li>
+</ol>
+<p><code>ts
+   import Client from '@triply/triplydb'
+   async function run() {
+     // Your code goes here.
+     const client = Client.get({token: process.env.TRIPLYDB_TOKEN})
+     const account = await client.getAccount('account-name')
+     const query = await account.getQuery('name-of-some-query')
+   }
+   run()</code></p>
+<ol>
+<li>Get the results of a query by setting a <code>results</code> variable.  More specifically, for construct queries you use the <code>statements()</code> call:</li>
+</ol>
+<p><code>ts
+   const query = await account.getQuery('name-of-some-query')
+   const results = query.results().statements()</code></p>
+<p>For select queries you use the <code>bindings()</code> call:</p>
+<p><code>ts
+   const query = await account.getQuery('name-of-some-query')
+   const results = query.results().bindings()</code></p>
+<p>Additionally, saved queries can have 'API variables' that allow you to specify variables that are used in the query. Thus, if you have query parameters, pass their values as the first argument to <code>results</code> as follows:</p>
+<p><code>ts
+   // For SPARQL construct queries.
+   const results = query.results({
+     someVariable: 'value of someVariable',
+     anotherVariable: 'value of anotherVariable'
+   }).statements()
+   // For SPARQL select queries.
+   const results = query.results({
+     someVariable: 'value of someVariable',
+     anotherVariable: 'value of anotherVariable'
+   }).bindings()</code></p>
+<ol>
+<li>
+<p>To iterate the results of your SPARQL query you have three options:</p>
+<p>a. Iterate through the results per row in a <code>for</code>-loop:</p>
+<p><code>ts
+  // Iterating over the results.
+  for await (const row of results) {
+    // execute something
+  }</code>
+  Note: For select queries the <code>for</code>-loop iterates over the rows of the result set. For construct queries the <code>for</code>-loop iterates over the statements in the result set.</p>
+<p>b. Save the results to a file. This is only supported for SPARQL <code>construct</code> queries:</p>
+<p><code>ts
+  // Saving the results of a SPARQL construct query to a file.
+  await results.toFile('my-file.nt')</code></p>
+<p>c. Load all results into memory in the form of an Array. Note that this is almost never used. If you want to process results, then use the 3a option; if you want to persist results, then option 3b suits better.</p>
+<p><code>ts
+  // Loading results for a SPARQL construct or SPARQL select query into memory.
+  const array = await results.toArray()</code></p>
+</li>
+</ol>
+<h3 id="using-a-saved-query-as-rest-api-advanced">Using a saved query as REST-API (Advanced)</h3>
+<p>Each TriplyDB instance has a fully RESTful API. The TriplyDB RESTful API is extended for saved SPARQL queries. A saved query can be used as a RESTful API to retrieve data from your linked dataset. The URL next to the keywork <code>API</code> is the RESTful API URL and can be used with RESTful API libraries. You can copy the RESTful API by pressing the copy button just behind the URL. Pressing the copy button from the above query will result in the following run url:</p>
+<pre><code class="language-url">https://api.triplydb.com/queries/DBpedia-association/timeline-cars/run
+</code></pre>
+<p>When you copy this URL in your browser or fetch the URL with curl, you will get a get request to a RESTful API and get a JSON representation of the data in your browser or command window.</p>
+<h3 id="using-a-saved-query-in-python-or-r-notebooks-advanced">Using a saved query in Python or R notebooks (Advanced)</h3>
+<p>SPARQL queries as a RESTful API, also means you can transport your data to your Python script, R script or Jupyter notebook. To use the result set from your SPARQL query you need to connect your script to the saved SPARQL query. To do this you will need to write a small connector. To help you out TriplyDB has added a code snippet generator for Python and R. This snippet contains the code to retrieve the data from the SPARQL query into your script or notebook. You can open the code snippet generator by clicking on the '' button on the right side of the screen.</p>
+<p>Clicking the '' button opens the code snippet screen. Here you select the snippet in the language you want to have, either Python or R. You can then copy the snippet, by clicking the 'copy to clipboard' button or selecting the snippet and pressing <code>ctrl-c</code>. Now you can paste the code in the location you want to use the data. The data is stored in the <code>data</code> variable in <code>JSON</code> format.</p>
+<p>When the SPARQL query is not public, but instead either private or internal, you will need to add an authorization header to the get request. Without the authorization header the request will return an incorrect response. Checkout <a href="https://triply.cc/docs/api-token">Creating your API token</a> about creating your API-token for the authorization header.</p>
+<p>Check out the <a href="https://triply.cc/docs/pagination">SPARQL pagination page</a> when you want to query a SPARQL query that holds more than 10.000 results. The <a href="https://triply.cc/docs/pagination">SPARQL pagination page </a> will explain how you can retrieve the complete set.   </p>
+<h2 id="query-metadata-query-metadata">Query metadata {#query-metadata}</h2>
+<p>Every Saved Query has a metadata section. This metadata section includes the following two links:
+- A link to the dataset over which the query is executed. Clicking this links navigates to the dataset homepage.
+- A link to the service by which the query is executed. Clicking this link navigates to the services page that includes that service.</p>
+<p>Users can specify a query title and description, both of which are included as metadata. The access level and version of the query are also exposed as metadata. See the following screenshot for how the metadata fields are shown in TriplyDB:</p>
+<p><img alt="Metadata fields for a Saved Query in TriplyDB" src="saved-query-metadata.png" /></p>
+<p>Users can specify additional metadata inside the query string, by using the GRLC annotation format. GRLC annotations start with the hash and plus sign characters (<code>#+</code>). Visit the <a href="https://github.com/CLARIAH/grlc">GRLC project</a> to learn more about this format. For example, the following GRLC annotation could indicate to a software application that the query should be repeated every hour:</p>
+<pre><code class="language-sparql">#+ frequency: hourly
+</code></pre>
+<p>See the <a href="/docs/triply-api#queries">Triply API documentation</a> for how to retrieve query metadata, including how to retrieve GRLC annotations.</p>
+<h1 id="data-stories-data-stories">Data stories {#data-stories}</h1>
+<p>A TriplyDB data story is a way of communicating information about your linked data along with explanatory text while also being able to integrate query results.</p>
+<h2 id="creating-a-data-story">Creating a data story</h2>
+<p>You can create your own data story via the <a href="https://triplydb.com/me/-/stories">stories</a> tab on TriplyDB. If this is your first time creating a data story, your view will look something like the image below. If you already are a proud owner of a data story, you will find it here. To create a new one, you can click the orange "Create story" button and you’ll see the same form.</p>
+<p><img alt="Form for adding a new story" src="Create-datastory-UI-2.png" /></p>
+<p>In this form, you can fill in the title and set the access level for a data story. When everything is set, press the "Create story" button.This will take you to a new page where you can customize the data story.</p>
+<h2 id="editing-a-data-story">Editing a data story</h2>
+<p>As shown in the image below, in the top right corner of the page, there is a menu button. Here you will find the following:
+- <strong>Story settings</strong>: Here you can change the title and the access level of your story.
+- <strong>Change banner</strong>: Here you can change the banner, just choose an image that you want as your banner (wide images work best).
+- <strong>Transfer</strong>: To transfer the story to a different user or organization.
+- <strong>Copy</strong>: To copy the story to a different user or organization.
+- <strong>Delete</strong>: To delete the story.</p>
+<p>In the right lower corner you see a button with a notepad. With this button, you can toggle between the edit view, which allows you to edit the story, and the reader view, which is how readers of your story will perceive this page.</p>
+<p><img alt="Stories interface" src="My-first-story-UI.png" /></p>
+<h2 id="adding-elements">Adding elements</h2>
+<p>To create your first element press "+ Add new element". This will open a new form as shown in the images below. Here you can select what kind of  element you want to add to your data story; you’ll have the option to write text, to select an already existing SPARQL query, or even to create a new SPARQL query.</p>
+<h3 id="existing-query">Existing query</h3>
+<p>Let’s start by selecting a query for our data story. Maybe you have already created one, but if you haven’t, you can select one of the queries available to you. You can search in the Query search bar and select the one you want, for example "our-first-select-query". Optionally you can select the version of the query and set the caption. When everything is set, press "Create story element". And look, we have added our first element to our story!</p>
+<p><img alt="Form for adding a new query" src="Add-new-story-element-query-UI.png" /></p>
+<h3 id="paragraph">Paragraph</h3>
+<p>Data sometimes needs accompanying text to be completely understandable. TriplyDB not only supports writing plain text, but TriplyDB paragraphs are also markdown compliant. The markdown that you’ll add in the paragraph text box will be rendered as HTML and can be previewed. TriplyDB also supports images, and even code blocks with highlighting for the most common linked data and programming languages.</p>
+<p><img alt="Form for adding a new paragraph" src="Add-new-story-element-UI.png" /></p>
+<h2 id="sharing-and-embedding">Sharing and embedding</h2>
+<p>Before you know it, you will have created your first data story. Congratulations! Now it is time to share it with the world, but don’t forget to set the access level to “public”. Then you have two options:
+1. You can simply share the URL in TriplyDB.
+2. You can embed the Data Story on your own webpage. Scroll all the way to the end of your Data Story and click the “ Embed” button. This brings up a code snippet that you can copy/paste into your own HTML web page.</p>
+<p><img alt="Dialog for embedding a Data Story" src="data-stories-embed.png" /></p>
+<h1 id="admin-settings-pages">Admin settings Pages</h1>
+<p>You can use the console to perform administrator tasks. The administrator tasks are performed within the admin settings page. The admin settings pages are accessible by clicking on the user menu in the top-right corner and selecting the “Admin settings” menu item. You must have administrator privileges to access these pages and perform administrator tasks.</p>
+<h2 id="overview-page">Overview page</h2>
+<p>The first page that comes into view when opening the admin settings pages is the overview page. This page contains an overview of all the important statistics of the instance. The page also shows how close the instance is to hitting one or more limits.</p>
+<p>If no limit is set, the statistics are shown as a counter. If a limit is set a gauge is shown with a green, orange or red bar. The colors denote how far that statistic of the instance is to the limit. Green means not close to the limit, Orange means close to the limit, Red means over the limit.    </p>
+<h3 id="general-overview">General overview</h3>
+<p>The general overview gives an insight into the software version of the instance. Each instance consists of a console and an API. The console is the web interface of the instance and has a build date corresponding to the build date of the docker image of the console and a version number corresponding to the version of the docker image. The API is the layer between the console and the data. The API is separate from the console and is a different docker image. The API also has a version and build date of the docker image. Also contains a starting time, and an updated time, the moments when the docker image is started for this instance or when the docker image is updated for the instance.</p>
+<h3 id="accounts-overview">Accounts overview</h3>
+<p>The accounts overview shows how many organizations and users are in this instance. The organizations and users are shown in a counter if no limit is set. If a limit is set on the number of organizations and/or users of the instance a gauge is shown.</p>
+<h3 id="data-overview">Data overview</h3>
+<p>The data overview shows multiple statistics about datasets. The first counter shows the amount of datasets on the instance. The second and third counters show the amount of graphs and statements in all graphs.  The fourth and fifth counters show the amount of unique graphs and statements. When a graph is copied from one dataset to another, the data in that graph does not change. The amount of unique data does not change either. The amount of unique data is a more representative way of calculating the amount of data in the instance. All statistics are shown in a counter, if no limit is set. If a limit is set on one of the statistics of the instance a gauge is shown.</p>
+<h3 id="services-overview">Services overview</h3>
+<p>The data overview shows how multiple statistics about services. The first counter shows the total amount of services on the instance, The second counter shows the total amount of statements in all the services. Then for each of our service types a specific counter is created. Each containing the amount of services and the amount of statements in that service. All statistics are shown in a counter if no limit is set. If a limit is set on one of the statistics of the instance a gauge is shown.</p>
+<h2 id="settings-page">Settings page</h2>
+<p>The settings page is the main page for administrators to institute instance wide changes. An administrator can change the site logo's here, change the contact email or update site wide prefixes.</p>
+<h3 id="set-logos-and-banner">Set logos and banner</h3>
+<p>For changing the logos and the banner follow the next steps:
+1. Click on the “Admin settings” link in the user menu (top-right corner) and click the "Settings" tab. This brings up an overview of all the settings an admin can set for the TriplyDB instance.</p>
+<ol>
+<li>Under "Site logos" and "Site banner" you can upload a site logo (square and landscape) or a banner. Make sure you use SVG files with a maximum size of 5 MB.</li>
+</ol>
+<h3 id="setting-metadata">Setting metadata</h3>
+<p>For changing the metadata follow the next steps:
+1. Click on the “Admin settings” link in the user menu (top-right corner) and click the "Settings" tab. This brings up an overview of all the settings an admin can set for the TriplyDB instance.</p>
+<ol>
+<li>On that page navigate to "Site metadata", it looks as follows:</li>
+</ol>
+<p><img alt="Metadata settings" src="metadata-settings.png" /></p>
+<ol>
+<li>Here you can set the name, tag line, description and welcome text. The name of your website appears in your browser tab. The welcome text appears on the homepage of your TriplyDB instance. The tagline and description are for metadata purposes (e.g. findability and website previews).</li>
+</ol>
+<h3 id="setting-contact-email">Setting contact email</h3>
+<p>For changing the contact email follow the next steps:
+1. Click on the “Admin settings” link in the user menu (top-right corner) and click the "Settings" tab. This brings up an overview of all the settings an admin can set for the TriplyDB instance.</p>
+<ol>
+<li>On that page navigate to "Contact Email". Here, you can change the contact email to a new contact email for the instance.</li>
+</ol>
+<h3 id="setting-example-datasets">Setting example datasets</h3>
+<p>Example datasets are introduction datasets on the frontpage of your instance. The Example datasets are datasets that are interesting for people that visit your page to see and interact with. Most often you'll use open datasets to show them off on the frontpage. You can also use internal or private datasets, but these will only be visible if the person seeing them has the right access rights.</p>
+<p>For editing the example datasets follow the next steps:
+1. Click on the “Admin settings” link in the user menu (top-right corner) and click the "Settings" tab. This brings up an overview of all the settings an admin can set for the TriplyDB instance.</p>
+<ol>
+<li>
+<p>On that page, navigate to "Example datasets". Here, you can execute the following changes:</p>
+</li>
+<li>
+<p>You can move datasets up and down in the order by clicking and holding your left mouse button over the three horizontal lines in front of the dataset name. You can then drag the selected dataset to their new spot.</p>
+</li>
+<li>In the search field below the already added datasets you can add a new example dataset by typing in the search field and selecting the correct dataset.</li>
+<li>You can remove datasets by pressing the <code>x</code> on the right side of the dataset name to remove it from the example dataset list.</li>
+</ol>
+<h3 id="setting-starter-dataset">Setting Starter dataset</h3>
+<p>The starter dataset is a beginner-friendly linked dataset that can be an introduction into linked data when a user creates an account for the first time. The starter dataset is visible for a user when the user has not yet created a dataset on its own account.</p>
+<p>For editing the example datasets follow the next steps:
+1. Click on the “Admin settings” link in the user menu (top-right corner) and click the "Settings" tab. This brings up an overview of all the settings an admin can set for the TriplyDB instance.</p>
+<ol>
+<li>On that page navigate to "Starter dataset". Here you can change the starter dataset to a new starter dataset for the instance by typing in the search bar a name of an existing dataset to replace the started dataset. This dataset then will be presented to users on their account page, with an option to import(copy) them immediately. This needs to be a public dataset! If it's not public, new users will have to create a dataset. The starter dataset is only shown if the user currently has no datasets.</li>
+</ol>
+<h3 id="setting-authentication">Setting Authentication</h3>
+<p>One of the roles of an administrator is to make sure only the right people will sign up for the TriplyDB instance. To do this, an administrator can set up authentication protocols. The authentication protocols can block people from signing up to instances where they are not allowed to sign up to.</p>
+<p>For changing the authentication protocols follow the next steps:
+1. Click on the “Admin settings” link in the user menu (top-right corner) and click the "Settings" tab. This brings up an overview of all the settings an admin can set for the TriplyDB instance.</p>
+<ol>
+<li>On that page navigate to "Authentication". Now you can change the password sign up. Allowing people to only register with a password or they are only allowed to register with a google or Github account. When password signup is enabled, the administrator can also set the permitted signup domains.
+Only users with e-mail addresses that match these domains are allowed to sign-up. Wildcards are allowed and domains are comma separated, for example: mydomain.com,*.mydomain.com.</li>
+</ol>
+<h3 id="setting-site-wide-prefixes">Setting Site-wide prefixes</h3>
+<p>One of the advantages of using TriplyDB is that you can set site-wide prefixes once and use them everywhere on the instance. Site-wide prefixes are prefixes defined in the admin settings and can be used for all datasets that contain the IRIs matching the prefixes.</p>
+<p>For editing the side-wide prefixes follow the next steps:
+1. Click on the “Admin settings” link in the user menu (top-right corner) and click the "Settings" tab. This brings up an overview of all the settings an admin can set for the TriplyDB instance.</p>
+<ol>
+<li>
+<p>On that page navigate to "Site-wide prefixes". Here, you can execute the following changes:</p>
+</li>
+<li>
+<p>Each field of the already added site-wide prefixes you can edit. You can edit the prefix label by typing in the first field. You can edit the prefix IRI and in the second field. Pressing <code>UPDATE PREFIXES</code> updates the list.</p>
+</li>
+<li>In the last field below the already added site-wide prefixes you can add a new site-wide prefix by typing in the first field the prefix label, and in the second field the prefix IRI. Pressing <code>UPDATE PREFIXES</code> updates the list.</li>
+<li>You can remove prefixes by pressing the <code>x</code> on the right side of the prefixes name to remove it from the site-wide prefixes list.</li>
+</ol>
+<h2 id="account-overview-page">Account overview page</h2>
+<p>The account page governs all the accounts of an instance. The paginated table shows all the accounts of the instance. The table is equipped with filters and sorting mechanisms to quickly search for and locate specific accounts according to search and filter criteria. The table also has a search field at the right side to quickly do wildcard searching.
+The table sorts all accounts automatically on the created at date with the latest created at date accounts first.</p>
+<p>The filters on top of the table can be used to filter the following columns:</p>
+<dl>
+  <dt>Name</dt>
+  <dd>The name of the account, you can order the table based on the alphanumeric ordering, and filter based on the sequence of characters appearing in the filter. The name is also a URL that brings you to the location of the account. </dd>
+
+  <dt>Type</dt>
+  <dd>Type of the account, this can either be 'Organization' or 'User'. In the filter you can select a specific account type or 'All' account types.</dd>
+
+  <dt>Display name</dt>
+  <dd>The display name of the account, often an account has both a name and a display name. The display name is not limited to a specific set of characters, as it is not used as an URL. You can order the table based on the alphanumeric ordering, and filter based on the sequence of characters appearing in the filter. </dd>
+
+  <dt>Email</dt>
+  <dd>The email address of the account. You can order the table based on the alphanumeric ordering, and filter based on the sequence of characters appearing in the filter. </dd>
+
+  <dt>Created at</dt>
+  <dd>How long ago an account was created. When you hover over the text you can see the precise moment an account is created. You can order accounts based on the moment of creation.</dd>
+
+  <dt>Updated at</dt>
+  <dd>How long ago an account has been updated with new metadata such as display name or password. When you hover over the text you can see the precise moment an account is last updated. You can order accounts based on the moment of updated at time.</dd>
+
+  <dt>Last activity</dt>
+  <dd>How long ago the account has been last active. When you hover over the text you can see the precise moment an account was last active. You can order the accounts based on the moment of last time the account was active.</dd>
+
+  <dt>Role</dt>
+  <dd>Role of the account, this can either be 'light', 'regular' or 'administrator'. In the filter you can select a specific role or 'All' roles.</dd>
+
+  <dt>Verified</dt>
+  <dd>An account can be verified or not, to verify an account, the user needs to click on the verify button in the email. Or an administrator has verified the account in the account settings of that account. Only 'users' need to be verified.</dd>
+
+  <dt>Disabled</dt>
+  <dd>An account can be disabled or not, to disabled an account, the user needs to click on the disabled button in their user settings. Or an administrator has disabled the account in the account settings of that account.</dd>
+
+  <dt>legal consent</dt>
+  <dd>An account can have accepted the legal consent or not, to accept legal consent, the user needs to click on the accept legal consent either when creating an account or by checking it in the user settings. Only 'users' need to have accepted legal consent.</dd>
+</dl>
+
+<p>For each account you can execute the following actions:</p>
+<dl>
+  <dt>Open account settings</dt>
+  <dd>For each account, there is a button such that the administrator can directly go to the account settings of the user or organization. The account settings are behind the `cogwheel` button. </dd>
+</dl>
+
+<h3 id="add-new-users">Add new user(s)</h3>
+<p>Go to the “Accounts tab” to receive an overview of all accounts on the
+TriplyDB instance.</p>
+<p>The type of account can be observed based on the following icons:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Icon</strong></th>
+<th><strong>Account type</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="" src="organization.png" /></td>
+<td>organization</td>
+</tr>
+<tr>
+<td><img alt="" src="user.png" /></td>
+<td>user</td>
+</tr>
+</tbody>
+</table>
+<h3 id="create-a-new-user">Create a new user</h3>
+<p>New users can only be created by administrators by performing the
+following steps:</p>
+<ol>
+<li>
+<p>Click on the “Admin settings” link in
+   the user menu (top-right corner) and click the “Accounts” tab.
+   This brings up an overview of all users and organizations on the
+   TriplyDB instance.</p>
+</li>
+<li>
+<p>Click the “Add user” button.</p>
+</li>
+<li>
+<p>Fill in the user name and email address of the prospective user.
+   The user name must consist of alphanumeric characters (<code>A-Za-z</code>)
+   and hyphens (<code>-</code>).</p>
+</li>
+<li>
+<p>Click the “Add user” button. This sends an account creation
+   email to the prospective user, containing a link that allows them
+   to log in.</p>
+</li>
+</ol>
+<p>In addition to the above default procedure, the following two options
+are provided for user account creation:</p>
+<ul>
+<li>
+<p><strong>Temporary account</strong>: By default, user accounts do not expire.
+  Sometimes it is useful to create a temporary account by specifying
+  a concrete date in the “Account expiration date” widget.</p>
+</li>
+<li>
+<p><strong>Preset password</strong>: By default, a user can set her password after
+  logging in for the first time by clicking on the link in the
+  account creation email. When a password is entered in the
+  “Password” field, the user must enter this password in order to
+  log in for the first time.</p>
+</li>
+</ul>
+<h2 id="datasets-page">Datasets page</h2>
+<p>The account page governs all the datasets of an instance. The paginated table shows all the datasets of the instance. The table is equipped with filters and sorting mechanisms to quickly search for and locate specific datasets according to search and filter criteria. The table also has a search field at the right side to quickly do wildcard searching.
+The table sorts all datasets automatically on the created at date with the latest created at date datasets first.</p>
+<p>The filters on top of the table can be used to filter the following columns:</p>
+<dl>
+  <dt>Name</dt>
+  <dd>The name of the dataset, you can order the table based on the alphanumeric ordering, and filter based on the sequence of characters appearing in the filter. The name is also a URL that brings you to the location of the dataset. </dd>
+
+  <dt>Access level</dt>
+  <dd>Access level of the dataset, this can either be 'Public', 'Internal' or 'Private'. In the filter you can select a specific access level or 'All' access levels.</dd>
+
+  <dt>Display name</dt>
+  <dd>The display name of the dataset, often a dataset has both a name and a display name. The display name is not limited to a specific set of characters, as it is not used as an URL. You can order the table based on the alphanumeric ordering, and filter based on the sequence of characters appearing in the filter. </dd>
+
+  <dt>Owner</dt>
+  <dd>The owner of the dataset. The owner is a URL and brings you to the overview page of the owner. The owners can be filtered based on the sequence of characters appearing in the filter.</dd>
+
+  <dt>Graph count</dt>
+  <dd>The amount of graphs in a dataset. These are all the total amount of graphs in a dataset, and can be filtered with the slider.</dd>
+
+  <dt>Statement count</dt>
+  <dd>The amount of statements in a dataset. These are all the statements of all the graphs, and can be filtered with the slider.</dd>
+
+  <dt>Service count</dt>
+  <dd>The amount of services in a dataset. These can be filtered with the slider.</dd>
+
+  <dt>Asset count</dt>
+  <dd>The amount of assets in a dataset. These can be filtered with the slider.</dd>
+
+  <dt>Created at</dt>
+  <dd>How long ago a dataset has been created. When you hover over the text you can see the precise moment a dataset is created. You can order datasets based on the moment of creation.</dd>
+
+  <dt>Updated at</dt>
+  <dd>How long ago a dataset has been updated with new metadata such as display name or new data. When you hover over the text you can see the precise moment an account is last updated. You can order dataset based on the moment of updated at time.</dd>
+
+  <dt>Last graph edit</dt>
+  <dd>How long ago the last graph has been edited, either new data is uploaded or removed, or the graph names changed. When you hover over the text you can see the precise moment a dataset was edited. You can order the accounts based on the moment of last time the dataset was last edited.</dd>
+</dl>
+
+<p>For each dataset you can execute the following actions:</p>
+<dl>
+  <dt>Open dataset settings</dt>
+  <dd>For each dataset there is button such that the administrator can directly go to the dataset settings of the dataset. The dataset settings are behind the `cogwheel` button. </dd>
+</dl>
+
+<h2 id="services-page">Services page</h2>
+<p>The services page governs all the services of an instance. The paginated table shows all the services of the instance. The table is equipped with filters and sorting mechanisms to quickly search for and locate specific services according to search and filter criteria. The table also has a search field at the right side to quickly do wildcard searching.
+The table sorts all services automatically if a service is in an error state or not. All services that are in error state will be shown at the top of the table. This way immediate action can be taken to check the service.</p>
+<p>The filters on top of the table can be used to filter the following columns:</p>
+<dl>
+  <dt>Name</dt>
+  <dd>The name of the SPARQL service, you can order the table based on the alphanumeric ordering, and filter based on the sequence of characters appearing in the filter. The name is also a URL that brings you to the location of the service. </dd>
+
+  <dt>Type</dt>
+  <dd>Type of the service, this can either be 'Virtuoso', 'Jena', 'Blazegraph', 'Prolog' or 'Elasticsearch'. In the filter you can select a specific service type or 'All' service types.</dd>
+
+  <dt>Status</dt>
+  <dd>The status of the service, can be 'Starting', 'Running', 'Stopped', 'Updating' or 'Error'. In the filter you can select a specific service status or 'All' services statuses</dd>
+
+  <dt>Statements</dt>
+  <dd>The amount of statements in a service. These are all the loaded statements in the service, and can be filtered with the slider.</dd>
+
+  <dt>Loaded graphs</dt>
+  <dd>Amount of graphs loaded in the service. All the statements of all the graphs together will count up to the total amount of statements.</dd>
+
+  <dt>Dataset</dt>
+  <dd>The dataset the service belongs to. The dataset is clickable and brings you to the dataset page. The datasets can be filtered based on the sequence of characters appearing in the filter.</dd>
+
+  <dt>Owner</dt>
+  <dd>The owner of the dataset is also the owner of the service. The owner is a URL and brings you to the overview page of the owner. The owners can be filtered based on the sequence of characters appearing in the filter.</dd>
+
+  <dt>Created</dt>
+  <dd>How long ago a service has been created. When you hover over the text you can see the precise moment a service is created. You can order the services based on the moment of creation.</dd>
+
+  <dt>Last queried</dt>
+  <dd>How long ago the service has been last queried. When you hover over the text you can see the precise moment a service is last queried. You can order the services based on the moment of last time the service has been queried.</dd>
+
+  <dt>Auto stops</dt>
+  <dd>Some services are equipped with an auto stop feature. This feature reduces the memory resources when a service is not queried in a while. The column `Auto stops` shows how long it will take before a service is auto-stopped. You can order the services on when the auto-stop feature kicks in. Each time a service is used the timer is reset.</dd>
+
+  <dt>Version</dt>
+  <dd>A service always has a particular version. A service is not automatically updated as it could be that the service has possible down time. The owner of the service can update a service when they deem it necessary to update to the latest version.</dd>
+</dl>
+
+<p>For each service you can execute the following actions:</p>
+<dl>
+  <dt>Update the service</dt>
+  <dd>When a service can be updated an orange arrow will appear just below the service. When you press the update service button the service is automatically updated to the latest service version.</dd>
+
+  <dt>Open additional information</dt>
+  <dd>For each service there is additional information available. The additional information is behind the `i` button. The additional information contains information about the graphs in the dataset and a raw information view of the service metadata.</dd>
+
+  <dt>Inspect the logs</dt>
+  <dd>For each service there is a log available. The logs are behind the `text` button. The logs contain information </dd>
+
+  <dt>Synchronize the service</dt>
+  <dd>The service can be outdated. This happens when the data in the dataset does not corresponds with the data in the service. When this happens the service can be synchronized from here to make it up to date with the latest version of the data.</dd>
+
+  <dt>Remove the service</dt>
+  <dd>When a service is no longer necessary or there needs to be made some space on the instance a service can be removed from here.</dd>
+</dl>
+
+<p>Some of these actions can be cumbersome when you need to do them one at a time. To help with this, on the left side of the table you can click on the tickbox. This will select all the services that match search criteria if there search criteria and all tables when there are no search criteria. When pressed you can now remove all selected services or update all selected services to a new software version.</p>
+<h2 id="redirects-page">Redirects page</h2>
+<p>The great thing about linked data is that IRIs are used to define objects in linked data. Then when you visit the IRIs you find useful information about the object. But sometimes the data is not on the location where the IRI is pointing towards. You have the IRI: https://example.org/resource/Amsterdam but the information about the object is located in the dataset https://api.triplydb.com/MyAccount/myCities. This is a problem as the IRI is pointing to a location that does not contain the data, and the data is at a location that is not found without the correct IRI. This is where you can use redirects to redirect the user from the IRI to the location where the data is found.  </p>
+<h3 id="how-to-setup-a-redirects-for-dereferencing">How to setup a redirects for dereferencing</h3>
+<p>Redirects enable easy dereferencing of resources. For example, you can dereference a resource https://example.org/resource/Amsterdam into dataset https://api.triplydb.com/MyAccount/myCities by following these steps:</p>
+<ol>
+<li>
+<p>First update the web server of where the IRI is originally pointing towards the redirect API. In this example all subpaths of <code>/resource</code> are to be redirected from https://example.org to https://api.triplydb.com/redirect/$requestUri. this means that when a request for https://example.org/resource/Amsterdam comes to the web server of <code>https://example.org</code> it will be redirected to https://api.triplydb.com/redirect/https://example.org/resource/Amsterdam.</p>
+</li>
+<li>
+<p>Now that the external web server is set up to redirect to TriplyDB, TriplyDB needs to be configured to accept the request and redirect it to the correct dataset. This is done by adding a rule on the administrator redirects page. To add a rule, press the <code>ADD RULE</code> button to begin with the creation of a new rule. For this example we want to add a prefix rule with the pattern to match https://example.org/resource/City/. The prefix rule needs a dataset to redirect to. This will be the dataset https://api.triplydb.com/myAccount/myCities. Press <code>CREATE RULE</code> to create the rule. Each rule is evaluated when a request comes in <code>https://api.triplydb.com/redirect/$requestUri</code> and mapping rules are evaluated from top (highest priority) to bottom (lowest priority). When a match is found the requestUri is then redirected to that location.</p>
+</li>
+</ol>
+<p>TriplyDB supports two types of mapping rules:</p>
+<dl>
+  <dt>Prefix</dt>
+  <dd>Prefix rules trigger when the start of a resource matches the specified string.</dd>
+
+  <dt>Regex</dt>
+  <dd>Regular Expression rules trigger when a resource matches a Regular Expression.</dd>
+</dl>
+
+<h1 id="reference">Reference</h1>
+<h2 id="access-levels">Access levels</h2>
+<p>TriplyDB uses the following access levels for datasets, queries, and
+stories.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Access level</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Icon</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Private</td>
+<td>The dataset/query/story is only visible to you.</td>
+<td><img alt="" src="private.png" /></td>
+</tr>
+<tr>
+<td>Internal</td>
+<td>The dataset/query/story is only visible to people who are logged in to the same TriplyDB.</td>
+<td><img alt="" src="internal.png" /></td>
+</tr>
+<tr>
+<td>Public</td>
+<td>The dataset/query/story is visible to everybody on the Internet.</td>
+<td><img alt="" src="public.png" /></td>
+</tr>
+</tbody>
+</table>
+<h3 id="access-level-dependencies">Access level dependencies</h3>
+<p>The access levels for datasets, queries, and stories may affect each
+other. For example, if a public query references a private dataset,
+other users will be able to view the query string, but none of the
+query results. TriplyDB always uses the most conservative access
+level in such cases, ensuring that information is never exposed
+unintentionally.</p>
+<h3 id="access-levels-and-workflows">Access levels and workflows</h3>
+<p>These access levels are often used for the following workflow:</p>
+<ul>
+<li>You create a new dataset/query/story starts with access level
+  ‘Private’.</li>
+<li>As the dataset/query/story progresses, give it access level
+  ‘Internal’ to receive feedback from other users.</li>
+<li>Once the dataset/query/story is ready, give it access level
+  ‘Public’ to publish it to the world.</li>
+</ul>
+<h2 id="markdown-support">Markdown support</h2>
+<p>Triply allows rich text formatting to be used in the following places:</p>
+<ul>
+<li>Dataset description</li>
+<li>Account description</li>
+<li>Saved Query description</li>
+<li>Data Story elements</li>
+<li>Site welcome message</li>
+</ul>
+<p>The following Markdown elements are supported:</p>
+<h3 id="headings">Headings</h3>
+<p>Headings are used to divide a text into different sections. The hash
+character (<code>#</code>) at the beginning of a line indicates a heading is
+used. Multiple hash characters indicate nested headings.</p>
+<pre><code class="language-md"># Heading 1
+
+## Heading 2
+
+### Heading 3
+
+#### Heading 4
+
+##### Heading 5
+
+###### Heading 6
+</code></pre>
+<h3 id="text-styling">Text styling</h3>
+<table>
+<thead>
+<tr>
+<th><em>Style</em></th>
+<th><em>Syntax</em></th>
+<th><em>Output</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bold</td>
+<td><code>**bold**</code></td>
+<td><strong>bold</strong></td>
+</tr>
+<tr>
+<td>Italic</td>
+<td><code>_italic_</code></td>
+<td><em>italic</em></td>
+</tr>
+<tr>
+<td>Strikethrough</td>
+<td><code>~~strikethrough~~</code></td>
+<td>~~strikethrough~~</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hyperlinks">Hyperlinks</h3>
+<table>
+<thead>
+<tr>
+<th><em>Style</em></th>
+<th><em>Syntax</em></th>
+<th><em>Output</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Raw URL</td>
+<td><code>&lt;https://triply.cc&gt;</code></td>
+<td><a href="https://triply.cc">https://triply.cc</a></td>
+</tr>
+<tr>
+<td>Labeled URL</td>
+<td><code>[label](https://triply.cc)</code></td>
+<td><a href="https://triply.cc">label</a></td>
+</tr>
+</tbody>
+</table>
+<p>Notice that URLs can also be relative. This allows you to refer to
+other datasets, saved queries, etc. by using relative paths.</p>
+<h3 id="code">Code</h3>
+<p>There are options for formatting in-line code as well as multi-line
+code blocks.</p>
+<h4 id="in-line-code">In-line code</h4>
+<p>Code can also be used in-line with single backticks:</p>
+<pre><code class="language-md">Use `code` inside a sentence.
+</code></pre>
+<h4 id="multi-line-code-blocks">Multi-line code blocks</h4>
+<p>Multi-line code blocks start and end with three consecutive backticks.
+The following Markdown denotes two lines of Turtle:</p>
+<pre>
+
+<pre><code class="language-sparql">select * {
+  graph ?g {
+    ?s ?p ?o.
+  }
+}
+</code></pre>
+
+</pre>
+
+<p>The above is rendered as follows:</p>
+<pre><code class="language-sparql">select * {
+  graph ?g {
+    ?s ?p ?o.
+  }
+}
+</code></pre>
+<h4 id="code-language">Code language</h4>
+<p>The opening backticks are optionally following by the name of the code
+language. The following code languages are supported:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Language</strong></th>
+<th><strong>Syntax</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SPARQL</td>
+<td><code>sparql</code></td>
+</tr>
+<tr>
+<td>Turtle</td>
+<td><code>ttl</code></td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td><code>typescript</code></td>
+</tr>
+<tr>
+<td>R</td>
+<td><code>r</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>python</code></td>
+</tr>
+</tbody>
+</table>
+<p>The other supported languages are: Bash (<code>bash</code>), C (<code>c</code>), C++
+(<code>cpp</code>), C# (<code>csharp</code>), Extended Backus-Naur Form (<code>ebnf</code>), Go (<code>go</code>),
+Haskell (<code>haskell</code>), Java (<code>java</code>), JavaScript (<code>javascript</code>), LaTeX
+(<code>latex</code>), Makefile (<code>makefile</code>), Markdown (<code>markdown</code>), Objective C
+(<code>objectivec</code>), Pascal (<code>pascal</code>), Perl (<code>perl</code>), Powershell
+(<code>powershell</code>), Prolog (<code>prolog</code>), Regular Expression (<code>regex</code>), Ruby
+(<code>ruby</code>), Scala (<code>scala</code>), SQL (<code>sql</code>), Yaml (<code>yaml</code>).</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../triply-etl/" class="btn btn-neutral float-right" title="Overview">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../triply-etl/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

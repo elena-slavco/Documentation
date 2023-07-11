@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>TriplyETL: Debug - Triply Documentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "TriplyETL: Debug";
+        var mkdocs_page_input_path = "triply-etl/debug/index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Triply Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyDB</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../triply-db-getting-started/">Getting started</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">TriplyETL</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../cli/">Command Line Interface (CLI)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../maintenance/">Maintenance</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Yasgui</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../yasgui/">Introduction</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Triply Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li>TriplyETL: Debug</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>TriplyETL includes functions that can be used during debugging. These debug function allow you to inspect in a detailed way how data flows through your pipeline. This allows you to find problems more quickly, and allows you to determine whether data is handled correctly by your TriplyETL configuration.</p>
+<h1 id="overview">Overview</h1>
+<p>The following debug function are available:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#logMemory">logMemory()</a></td>
+<td>Prints the current memory consumption.</td>
+</tr>
+<tr>
+<td><a href="#logQuads">logQuads()</a></td>
+<td>Prints the contents of the internal store to standard output.</td>
+</tr>
+<tr>
+<td><a href="#logQuery">logQuery()</a></td>
+<td>Prints a query string to standard output.</td>
+</tr>
+<tr>
+<td><a href="#logRecord">logRecord()</a></td>
+<td>Prints the record in its current state to standard output.</td>
+</tr>
+<tr>
+<td><a href="#trace">traceEnd()</a></td>
+<td>Ends a trace of the record and internal store.</td>
+</tr>
+<tr>
+<td><a href="#trace">traceStart()</a></td>
+<td>Starts a trace of the record and internal store.</td>
+</tr>
+</tbody>
+</table>
+<p>These functions can be imported from the debug module:</p>
+<pre><code class="language-ts">import { logMemory, logQuads, logQuery, logRecord, traceEnd,
+         traceStart } from '@triplyetl/etl/debug'
+</code></pre>
+<h1 id="function-logmemory-logmemory">Function <code>logMemory()</code> {#logMemory}</h1>
+<p>This function prints information about the current memory consumption. It includes the following fields:</p>
+<p>| Field name | Meaning | Use case |
+| --- | --- |
+| CallCount | The number of times that a specific use of <code>logMemory()</code> can been invoked. | Find a location in your ETL script that is visited many times, e.g. because it occurs inside a (nested) loop. |
+| RecordId | The numeric identifier of the record that is currently processed. | Find a specific record that causes memory consumption to increase. |
+| Heap used | The number of megabytes that are currently used on the heap. | Find places in your ETL where an unexpected amount of memory is used. |
+| Heap total | The number of megabytes that are currently allocated on the heap. | Find places in your ETL where memory reallocation occurs. |</p>
+<p>The following code snippet prints the memory consumption of TriplyETL for each record (first call), and for each member of key <code>'a'</code> (second call):</p>
+<pre><code class="language-ts">fromJson([{ a: [{ b: 1 }, { b: 2 }] }, { a: [] }, { a: [] }]),
+logMemory(),
+forEach('a', logMemory()),
+</code></pre>
+<p>This prints the following messages to standard output:</p>
+<pre><code>Info CallCount: 1 | RecordId: 1 | Heap (MB) used: 92 / total: 122
+Info CallCount: 1 | RecordId: 1 | Heap (MB) used: 92 / total: 122
+Info CallCount: 2 | RecordId: 1 | Heap (MB) used: 92 / total: 122
+Info CallCount: 2 | RecordId: 2 | Heap (MB) used: 92 / total: 122
+Info CallCount: 3 | RecordId: 2 | Heap (MB) used: 92 / total: 122
+</code></pre>
+<h1 id="function-logquads-logquads">Function <code>logQuads()</code> {#logQuads}</h1>
+<p>This function prints the current contents of the internal store to standard output.</p>
+<p>The following snippet asserts one triple into the default graph of the internal store, and then prints the contents of the internal store:</p>
+<pre><code class="language-ts">fromJson([{}]),
+triple(rdfs.Class, a, rdfs.Class),
+logQuads(),
+</code></pre>
+<p>This results in the following output:</p>
+<pre><code class="language-turtle">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;.
+@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;.
+@prefix sdo: &lt;https://schema.org/&gt;.
+
+&lt;https://triplydb.com/graph/default&gt; {
+rdfs:Class a rdfs:Class
+}
+</code></pre>
+<h1 id="function-logquery-logquery">Function <code>logQuery()</code> {#logQuery}</h1>
+<p>This function prints a query string to standard output. This is specifically useful when the query string is stored in an external system, e.g. a SPARQL query string that is stored on a TriplyDB server:</p>
+<pre><code class="language-ts">logQuery(Source.TriplyDb.query('my-account', 'my-query')),
+</code></pre>
+<p>Depending on the query string that is stored in <code>'my-query'</code>, this could result in the following output:</p>
+<pre><code class="language-sparql">select * {
+  ?s ?p ?o.
+}
+limit 10
+</code></pre>
+<h1 id="function-logrecord-logrecord">Function <code>logRecord()</code> {#logRecord}</h1>
+<p>This function prints the current state of the record to standard output. The record is a generic representation of the data that is extracted from one of the data sources (see the <a href="/docs/triply-etl/extract/record">Record documentation page</a> for more information).</p>
+<p>The following snippet prints the inline JSON record to standard output:</p>
+<pre><code class="language-ts">fromJson([{ a: 1 }]),
+logRecord(),
+</code></pre>
+<p>This emits the following:</p>
+<pre><code class="language-json">{
+  &quot;a&quot;: 1,
+  &quot;$recordId&quot;: 1,
+  &quot;$environment&quot;: &quot;Development&quot;
+}
+</code></pre>
+<h2 id="use-when-writing-a-new-etl">Use when writing a new ETL</h2>
+<p>When writing a new ETL, <code>logRecord()</code> is often used as the first function to invoke immediately after extracting the record. For example:</p>
+<pre><code class="language-ts">fromJson(Source.url('https://example.com/some/api/call')),
+logRecord(),
+</code></pre>
+<p>Since this prints a full overview of what is available in the data source, this forms a good starting point for writing the rest of the ETL configurations.</p>
+<h2 id="observe-the-effects-of-transformations">Observe the effects of transformations</h2>
+<p>Another common use case for <code>logRecord()</code> is to observe the record at different moments in time. This is specifically useful to observe the effects of <a href="/docs/triply-etl/transform">transformation functions</a>, since these are the functions that modify the record.</p>
+<p>The following snippet logs the record directly before and directly after the transformation function <code>split()</code> is called.</p>
+<pre><code class="language-ts">fromJson([{ a: '1, 2, 3' }]),
+logRecord(),
+split({ content: 'a', separator: ',', key: 'b' }),
+logRecord(),
+</code></pre>
+<p>This makes it easy to observe the result of applying the transformation function:</p>
+<pre><code class="language-json">Running lib/main.js
+{
+  &quot;a&quot;: &quot;1, 2, 3&quot;,
+  &quot;$recordId&quot;: 1,
+  &quot;$environment&quot;: &quot;Development&quot;
+}
+{
+  &quot;a&quot;: &quot;1, 2, 3&quot;,
+  &quot;$recordId&quot;: 1,
+  &quot;$environment&quot;: &quot;Development&quot;,
+  &quot;b&quot;: [
+    &quot;1&quot;,
+    &quot;2&quot;,
+    &quot;3&quot;
+  ]
+}
+</code></pre>
+<h2 id="log-a-specific-key">Log a specific key</h2>
+<p>Since records can be quite long, in some cases it may be easier to print only a specific key.</p>
+<p>The following code snippet only prints the key that was added by the transformation function:</p>
+<pre><code class="language-ts">fromJson([{ a: '1, 2, 3' }]),
+split({ content: 'a', separator: ',', key: 'b' }),
+logRecord({ key: 'b' }),
+</code></pre>
+<p>This results in the following output:</p>
+<pre><code class="language-json">[
+  &quot;1&quot;,
+  &quot;2&quot;,
+  &quot;3&quot;
+]
+</code></pre>
+<h1 id="functions-tracestart-and-traceend-trace">Functions <code>traceStart()</code> and <code>traceEnd()</code> {#trace}</h1>
+<p>Sometimes you are interested to find one specific record based on a certain value of a key and/or to see the changes in this record made by specific middlewares. For these purposes, <code>trace</code> middleware can be used.</p>
+<p>Below, there is an example of how this middleware can be used:</p>
+<pre><code class="language-ts">fromJson([
+  { a: 1, b: 1 }, // first dummy record
+  { a: 2, b: 2 }, // second dummy record
+]),
+change({key:'a', type:'number', change: (val) =&gt; val +100}), // change the 'a' key
+traceStart(),
+change({key:'b', type:'number', change: (val) =&gt; val +100}), // change the 'b' key
+traceEnd(),
+</code></pre>
+<p>The result would be:</p>
+<pre><code class="language-sh">┌─────────────────────────────────────┐
+│      Record trace information       │
+│ {                                   │
+│   &quot;a&quot;: 101,                         │
+│   &quot;b&quot;: 1                            │
+│   &quot;b&quot;: 101                          │
+│ }                                   │
+│                                     │
+└─────────────────────────────────────┘
+
+┌─────────────────────────────────────┐
+│ Quads trace information (unchanged) │
+│ empty                               │
+│                                     │
+└─────────────────────────────────────┘
+
+
+ To rerun the traced middlewares for this record use the following command:
+ &gt; npx etl lib/{script-name} --trace .trace-1650542307095
+</code></pre>
+<p>In your terminal the line with <span style="color:red">"b": 1</span> will be red colored, showing the previous state of this key-value and the line with <span style="color:green">"b": 101</span> will be green colored, showing the new state.</p>
+<p>Also you can rerun the  trace information for this specific record by running:</p>
+<pre><code class="language-sh">npx etl lib/{script-name} --trace .trace-1650542307095
+</code></pre>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>1. Extract: Source types - Triply Documentation</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "1. Extract: Source types";
+        var mkdocs_page_input_path = "triply-etl/extract/types/index.md";
+        var mkdocs_page_url = null;
+      </script>
+<script defer="" src="../../../js/jquery-3.6.0.min.js"></script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> Triply Documentation
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../triply-db-getting-started/">Getting started</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TriplyETL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../">Overview</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/">Command Line Interface (CLI)</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/">Changelog</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintenance/">Maintenance</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Yasgui</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../yasgui/">Introduction</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">Triply Documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a> »</li>
+<li>1. Extract: Source types</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="overview">Overview</h1>
+<p>This page documents the different data source types that can be used in TriplyETL:</p>
+<table>
+<thead>
+<tr>
+<th>Source type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#local-files">Local files</a></td>
+<td>Local files that contain data.</td>
+</tr>
+<tr>
+<td><a href="#online-files">Online files</a></td>
+<td>Online files that contain data.</td>
+</tr>
+<tr>
+<td><a href="#apis">APIs</a></td>
+<td>APIs that return data.</td>
+</tr>
+<tr>
+<td><a href="#triplydb-assets">TriplyDB assets</a></td>
+<td>Files stored in TriplyDB ('Assets').</td>
+</tr>
+<tr>
+<td><a href="#triplydb-datasets">TriplyDB datasets</a></td>
+<td>Linked datasets stored in TriplyDB graphs.</td>
+</tr>
+<tr>
+<td><a href="#triplydb-queries">TriplyDB queries</a></td>
+<td>Saved queries in TriplyDB that return data.</td>
+</tr>
+<tr>
+<td><a href="#inline-json">Inline JSON</a></td>
+<td>A JSON object or an array of JSON objects.</td>
+</tr>
+<tr>
+<td><a href="#strings">Strings</a></td>
+<td>A string serialization of data.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="local-files">Local files</h1>
+<p>The following code snippet extracts records from a local file that uses the <a href="/docs/triply-etl/extract/formats#fromJson">JSON format</a>:</p>
+<pre><code class="language-ts">fromJson(Source.file('./static/example.json')),
+</code></pre>
+<p>It is possible to specify an arbitrary number of local files by using array notation:</p>
+<pre><code class="language-ts">fromJson(Source.file([
+  './static/data-001.json',
+  './static/data-002.json',
+  ...,
+  './static/data-999.json',
+])),
+</code></pre>
+<p>Notice that local files are not typically used in production systems, since it is difficult to guarantee that all project partners have exactly the same local files on their computer. The risk of using outdated files, and the overhead of securely sharing them with multiple team members, are often sufficient reason to use <a href="#triplydb-assets">TriplyDB assets</a> instead.</p>
+<h1 id="online-files">Online files</h1>
+<p>The following code snippet connects to a JSON source that is stored in a publicly accessible location on the Internet:</p>
+<pre><code class="language-ts">fromJson(Source.url('https://somewhere.com/example.json')),
+</code></pre>
+<p>If needed, you can configure details about how the HTTP request should be made made. This can be done with the optional options parameter. All options provided by the <a href="https://github.com/node-fetch/node-fetch#options">node-fetch library</a> can be used.</p>
+<p>For example, the following requests private data that is accessed using basic authentication with username and password:</p>
+<pre><code class="language-ts">fromJson(Source.url(
+  'https://somewhere.com/example.json',
+  {
+    request: {
+      headers: {
+        Authorization: `Basic ${username}:${password}`
+      }
+    }
+  }
+)),
+</code></pre>
+<h2 id="use-in-production-systems">Use in production systems</h2>
+<p>Online files are typically not used in production pipelines, because the availability of many Internet resources is outside of the control of the project team. Internet resources that are not maintained by team members may be subject to content-wise changes, which may affect the production pipeline.</p>
+<p>If the project team controls the Internet resources, then risks are smaller. But at that point it is even better to upload the online files as <a href="#triplydb-assets">TriplyDB asset</a> for additional benefits such as access controls.</p>
+<h1 id="apis">APIs</h1>
+<p>The URL source type can also be used to extract records from online endpoints and APIs.</p>
+<p>The following code snippet extracts records from a TriplyDB REST API:</p>
+<pre><code class="language-ts">fromJson(Source.url('https://api.triplydb.com/datasets')),
+</code></pre>
+<h2 id="raw-sparql-endpoints">Raw SPARQL endpoints</h2>
+<p>SPARQL endpoints are online APIs. The following code snippet issues a raw SPARQL query against a public SPARQL endpoint. Since we specified CSV as the result set format (Media Type <code>text/csv</code>), the result set can be accessed as any other CSV source:</p>
+<pre><code class="language-typescript">fromCsv(
+  Source.url(
+    'https://dbpedia.org/sparql',
+    {
+      request: {
+        headers: {
+          accept: 'text/csv',
+          'content-type': 'application/query-string',
+        },
+        body: 'select * { ?s ?p ?o. } limit 1',
+        method: 'POST',
+      },
+    }
+  )
+)
+</code></pre>
+<h3 id="use-in-production-systems_1">Use in production systems</h3>
+<p>Raw SPARQL endpoints lack several features that are essential for use in production systems:
+- secure access control
+- pagination
+- reliable retrieval of large result sets
+- API variables
+- versioning</p>
+<p>These features are all supported by <a href="#triplydb-queries">TriplyDB queries</a>. It is therefore simpler and safer to use TriplyDB queries. Still, when used outside of production systems, raw SPARQL endpoints can still be used as regular web APIs.</p>
+<h1 id="triplydb-assets-triplydb-assets">TriplyDB assets {#triplydb-assets}</h1>
+<p>Assets are a core feature of TriplyDB. Assets allow arbitrary files to be stored in the context of a linked dataset. A typical use case for assets is to upload (new versions of) source files. The TriplyETL pipeline can pick the latest versions of these source files and publish the resulting linked data in the the same dataset.</p>
+<p>The following code snippet uses a JSON source that is stored in a TriplyDB asset:</p>
+<pre><code class="language-ts">fromJson(
+  Source.TriplyDb.asset(
+    'some-account',
+    'some-dataset',
+    { name: 'example.json' }
+  )
+),
+</code></pre>
+<p>As with other TriplyDB sources, the account name is optional. When omitted, the user account that is associated with the current API Token is used:</p>
+<pre><code class="language-ts">loadRdf(
+  Source.TriplyDb.rdf('my-dataset', { name: 'example.json' })
+),
+</code></pre>
+<p>As with other source type, multiple assets can be specified:</p>
+<pre><code class="language-ts">fromCsv([
+  Source.TriplyDb.asset('my-dataset', { name: 'table1.csv' }),
+  Source.TriplyDb.asset('my-dataset', { name: 'table2.csv' }),
+]),
+</code></pre>
+<h2 id="filtering">Filtering</h2>
+<p>If the asset name is omitted, <em>all</em> assets are returned. This is often unpractical, since only some assets must be processed. For example, if a dataset has PDF and JSON assets, only the latter should be processed by the <code>fromJson()</code> source extractor.</p>
+<p>For such use cases the <code>filter</code> option can be used instead of the <code>name</code> option. The <code>filter</code> option takes a TypeScript function that maps assets names onto Boolean values (true or false). Only the assets for which the function returns truth are included.</p>
+<p>The following snippet processes all and only assets whose name ends in <code>.json</code>:</p>
+<pre><code class="language-ts">fromJson(
+  Source.TriplyDb.asset(
+    'my-dataset',
+    { filter: name =&gt; name.endsWith('json') }
+  )
+),
+</code></pre>
+<h2 id="versioning">Versioning</h2>
+<p>It is possible to upload new versions of an existing TriplyDB asset. When no specific version is specified, a TriplyETL pipeline will use the latest version automatically. In order to use a specific version, the <code>version</code> option can be set to a version number.</p>
+<p>The following snippet uses a specific version of an asset:</p>
+<pre><code class="language-ts">fromJson(
+  Source.TriplyDb.asset(
+    'some-account',
+    'some-dataset',
+    { name: 'example.json', assetVersion: 2 }
+  )
+),
+</code></pre>
+<h2 id="access">Access</h2>
+<p>Since TriplyDB assets are part of a TriplyDB dataset:
+- they are accessible under the same access level as the rest of the dataset, and
+- they are accessible with the same API Token that allows linked data to be published in that dataset.</p>
+<p>Notice that this makes it <em>easier</em> and <em>safer</em> to deal with source data that is not public. When private data is retrieved from <a href="#online-files">online files</a> or <a href="#apis">APIs</a>, authorization information must be configured at the HTTP level. This is possible but cumbersome. And, depending on the authentication approach, it is required to create a new API Token and securely configure that in addition to the TriplyDB API Token.</p>
+<p>Notice that access also is more <em>transparent</em> when TriplyDB assets are used. All and only collaborators that have access to the TriplyDB dataset also have access to the source data. It is clear for all collaborators which source files should be used, and which versions are available. This is more transparent than having to share (multiple versions of) source files over email or by other indirect means.</p>
+<h2 id="triplydb-instance-triplydb-option">TriplyDB instance {#triplydb-option}</h2>
+<p>By default, assets are loaded from the TriplyDB instance that is associated with the currently used API Token. In some situations it is useful to connect to a linked dataset from a different TriplyDB instance. This can be configured with the <code>triplyDb</code> option.</p>
+<p>The following snippet loads the OWL vocabulary from TriplyDB.com. Notice that the URL of the API must be specified; this is different from the URL of the web-based GUI.</p>
+<pre><code class="language-ts">loadRdf(
+  Source.TriplyDb.rdf(
+    'w3c',
+    'owl',
+    { triplyDb: { url: 'https://triplydb.com' } }
+  )
+),
+</code></pre>
+<p>If an asset is part of a non-public dataset, specifying the URL is insufficient. In such cases an API Token from this other TriplyDB instance must be created and configured using the <code>token</code> option in combination with the <code>url</code> option.</p>
+<h2 id="compression">Compression</h2>
+<p>Source data is often text-based. This means that such source data can often be compressed to minimize storage space and/or Internet bandwidth.</p>
+<p>TriplyETL provides automatic support for the GNU zip (file name extension <code>*.gz</code>) compression format.</p>
+<p>The following snippet uses a TriplyDB assets that was compressed with GNU zip (file extension <code>*.gz</code>):</p>
+<pre><code class="language-ts">fromCsv(
+  Source.TriplyDb.asset('my-dataset', { name: 'example.csv.gz' })
+),
+</code></pre>
+<h1 id="triplydb-datasets">TriplyDB datasets</h1>
+<p>Datasets in TriplyDB store linked data in one or more graphs. Such datasets can be loaded as a TriplyETL source. The following snippet loads a dataset from TriplyDB into the internal RDF store of TriplyETL:</p>
+<pre><code class="language-ts">loadRdf(Source.TriplyDb.rdf('my-account', 'my-dataset')),
+</code></pre>
+<p>As with other TriplyDB sources, the account name is optional. When omitted, a dataset from the user account that is associated with the current API Token is used:</p>
+<pre><code class="language-ts">loadRdf(Source.TriplyDb.rdf('my-dataset')),
+</code></pre>
+<h2 id="graphs-option">Graphs option</h2>
+<p>By default, all graphs from a linked dataset are loaded. It is possible to specify a only those graphs that should be loaded. The following snippet only loads the data model, but not the instance data:</p>
+<pre><code class="language-ts">loadRdf(
+  Source.TriplyDb.rdf(
+    'my-account',
+    'my-dataset',
+    { graphs: ['https://example.com/id/graph/model'] }
+  )
+),
+</code></pre>
+<h2 id="triplydb-instance">TriplyDB instance</h2>
+<p>The <code>triplyDb</code> option can be used to specify that a linked dataset from a different TriplyDB instance should be used. This option works in the same way as for TriplyDB assets: <a href="#triplydb-option">link</a></p>
+<h1 id="triplydb-queries">TriplyDB queries</h1>
+<p>Saved SPARQL queries in TriplyDB can be used as data sources. SPARQL queries are very powerful data sources, since they allow complex filters to be expressed. There are 4 SPARQL query forms, with different source extractors that can process their results:</p>
+<table>
+<thead>
+<tr>
+<th>Query form</th>
+<th>Source extractor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#ask">SPARQL Ask</a></td>
+<td><a href="/docs/triply-etl/extract/formats#fromJson">fromJson()</a>, <a href="/docs/triply-etl/extract/formats#fromXml">fromXml()</a></td>
+</tr>
+<tr>
+<td><a href="#construct-describe">SPARQL Construct</a></td>
+<td><a href="/docs/triply-etl/extract/formats#loadRdf">loadRdf()</a></td>
+</tr>
+<tr>
+<td><a href="#construct-describe">SPARQL Describe</a></td>
+<td><a href="/docs/triply-etl/extract/formats#loadRdf">loadRdf()</a></td>
+</tr>
+<tr>
+<td><a href="#select">SPARQL Select</a></td>
+<td><a href="/docs/triply-etl/extract/formats#fromCsv">fromCsv()</a>, <a href="/docs/triply-etl/extract/formats#fromJson">fromJson()</a>, <a href="/docs/triply-etl/extract/formats#fromTsv">fromTsv()</a>, <a href="/docs/triply-etl/extract/formats#fromXml">fromXml()</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="sparql-ask-queries-ask">SPARQL Ask queries {#ask}</h2>
+<p>SPARQL Ask queries can return data in either the JSON or the XML format. This allows them to be processed with the extractors <a href="/docs/triply-etl/extract/formats#fromCsv">fromCsv()</a> and <a href="/docs/triply-etl/extract/formats#fromXml">fromXml()</a>.</p>
+<p>The following code snippet connects to the XML results of a SPARQL Ask query in TriplyDB:</p>
+<pre><code class="language-ts">fromXml(Source.TriplyDb.query('my-account', 'my-ask-query')),
+</code></pre>
+<h2 id="sparql-construct-and-describe-queries-construct-describe">SPARQL Construct and Describe queries {#construct-describe}</h2>
+<p>SPARQL Construct and Describe queries return data in the RDF format. This allows them to be used with function <a href="/docs/triply-etl/extract/formats#loadRdf">loadRdf()</a>. The following snippet loads the results of a SPARQL query into the internal RDF store of TriplyETL:</p>
+<pre><code class="language-ts">loadRdf(Source.TriplyDb.query('my-account', 'my-construct-query')),
+</code></pre>
+<h2 id="sparql-select-queries-select">SPARQL Select queries {#select}</h2>
+<p>SPARQL Select queries return data in either the CSV, JSON, TSV, or XML format. This allows them to be used with the following four extractors: <a href="/docs/triply-etl/extract/formats#fromCsv">fromCsv()</a>, <a href="/docs/triply-etl/extract/formats#fromJson">fromJson()</a>, <a href="/docs/triply-etl/extract/formats#fromTsv">fromTsv()</a>, and <a href="/docs/triply-etl/extract/formats#fromXml">fromXml()</a>.</p>
+<p>The following code snippet connects to the table returned by a SPARQL Select query in TriplyDB:</p>
+<pre><code class="language-ts">fromCsv(Source.TriplyDb.query('my-account', 'my-select-query')),
+</code></pre>
+<p>As with other TriplyDB sources, the account name is optional. When omitted, the user account that is associated with the current API Token is used:</p>
+<pre><code class="language-ts">loadRdf(Source.TriplyDb.query('my-construct-query')),
+</code></pre>
+<h2 id="versioning_1">Versioning</h2>
+<p>In production systems, applications must be able to choose whether they want to use the latest version of a query (acceptance mode), or whether they want to use a specific recent version (production mode), or whether they want to use a specific older version (legacy mode).</p>
+<p>Versioning is supported by TriplyDB saved queries. When no specific version is specified, a TriplyETL pipeline will use the latest version of a query automatically. In order to use a specific version, the <code>version</code> option can be set to a version number.</p>
+<p>The following snippet uses a specific version of a query:</p>
+<pre><code class="language-ts">fromJson(Source.TriplyDb.query('my-query', { version: 2 })),
+</code></pre>
+<p>Not specifying the <code>version</code> option automatically uses the latest version.</p>
+<h2 id="api-variables">API variables</h2>
+<p>In production systems, applications often need to request distinct information based on a limited set of input variables. This is supported in TriplyDB saved queries which API variables. API variables ensure that the query string is parameterized correctly, while adhering to the RDF and SPARQL standards.</p>
+<p>The following example binds the <code>?country</code> variable inside the query string to literal <code>'Holland'</code>. This allows the results for Holland to be returned:</p>
+<pre><code class="language-ts">fromCsv(
+  Source.TriplyDb.query(
+    'information-about-countries',
+    {
+      variables: {
+        country: 'Holland'
+      }
+    }
+  )
+),
+</code></pre>
+<!-- TODO
+### Dynamic API variables
+
+In [the previous section](#api-variables) the value `'Holland'` for the API variable `country` was known at the time of writing the TriplyETL configuration. But what do we do if the requested country is not known at the time of writing, but depends on data that is read/transformed during the execution of the TriplyETL pipeline?
+
+In such cases we can use the following [custom middleware](/docs/triply-etl/custom-middlewares) to run the SPARQL query:
+
+
+<pre><code class="language-ts">etl.use(
+  async (context, next) =&gt; {
+    const api_variables = {
+      country: context.getString('COUNTRY')
+    }
+    const myQuery = await account.getQuery('my-query')
+    for await (const statement of myQuery.results(api_variables).statements()) {
+      statement.graph = graph('enrichment')
+      context.store.addQuad(statement)
+    }
+    return next()
+  }),
+</code></pre>
+
+
+In the above example, different countries are specified by data values that are read dynamically from the `COUNTRY` key. This key can be a column in a table, or an element in XML, or some other dynamic data location, depending on the data source that is used.
+
+The following line is used to configure the graph where the results from the queries are stored:
+
+
+<pre><code class="language-typescript">statement.graph = graph('enrichment')
+</code></pre>
+
+-->
+<h2 id="pagination">Pagination</h2>
+<p>When a bare SPARQL endpoint is queried as an <a href="#apis">online API</a>, there are sometimes issues with retrieving the full result set for larger queries. With TriplyDB saved queries, the process of obtaining all results is abstracted away from the user, with the TriplyETL source performing multiple requests in the background as needed.</p>
+<h2 id="result-graph">Result graph</h2>
+<p>It is often useful to store the results of SPARQL Construct and Describe queries in a specific graph. For example, when internal data is enriched with external sources, it is often useful to store the external enrichments in a separate graph. Another example is the use of a query that applies RDF(S) and/or OWL reasoning. In such cases the results of the reasoner may be stored in a specific graph.</p>
+<p>The following snippet stores the results of the specified <code>construct</code> query in a special enrichment graph:</p>
+<pre><code class="language-typescript">loadRdf(
+  Source.TriplyDb.query('my-query', { toGraph: graph.enrichment })
+)
+</code></pre>
+<p>This snippet assumes that the graph names have been declared (see <a href="/docs/triply-etl/declarations#graphs">Delcarations</a>).</p>
+<h2 id="triplydb-instance_1">TriplyDB instance</h2>
+<p>The <code>triplyDb</code> option can be used to specify that a query from a different TriplyDB instance should be used. This option works in the same way as for TriplyDB assets: <a href="#triplydb-option">link</a></p>
+<h1 id="strings">Strings</h1>
+<p>Data in the JSON or RDF formats can be specified with inline strings.</p>
+<p>The following code snippet loads triples into the Internal Store:</p>
+<pre><code class="language-ts">loadRdf(
+  Source.string(`
+prefix person: &lt;https://example.com/id/person/&gt;
+prefix sdo: &lt;https://schema.org/&gt;
+
+person:1 a sdo:Person;
+         sdo:name 'J. Doe'.`),
+  { contentType: 'text/turtle' }
+),
+</code></pre>
+<p>This loads the following triples:</p>
+<div class="mermaid">graph LR
+  person:1 -- a --&gt; sdo:Person
+  person:1 -- sdo:name --&gt; J.Doe
+</div>
+<p>Notice that we must specify the RDF serialization format that we use. This is necessary because <code>loadRdf()</code> supports a large number of formats, some of which are difficult to autodetect. The following formats are supported:</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th><code>contentType</code> value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTML</td>
+<td><code>'text/html'</code></td>
+</tr>
+<tr>
+<td>JSON-LD</td>
+<td><code>'application/ld+json'</code></td>
+</tr>
+<tr>
+<td>JSON</td>
+<td><code>'application/json'</code></td>
+</tr>
+<tr>
+<td>N-Quads</td>
+<td><code>'application/n-quads'</code></td>
+</tr>
+<tr>
+<td>N-Triples</td>
+<td><code>'application/n-triples'</code></td>
+</tr>
+<tr>
+<td>N3</td>
+<td><code>'text/n3'</code></td>
+</tr>
+<tr>
+<td>RDF/XML</td>
+<td><code>'application/rdf+xml'</code></td>
+</tr>
+<tr>
+<td>SVG</td>
+<td><code>'image/svg+xml'</code></td>
+</tr>
+<tr>
+<td>TriG</td>
+<td><code>'application/trig'</code></td>
+</tr>
+<tr>
+<td>Turtle</td>
+<td><code>'text/turtle'</code></td>
+</tr>
+<tr>
+<td>XHTML</td>
+<td><code>'application/xhtml+xml'</code></td>
+</tr>
+<tr>
+<td>XML</td>
+<td><code>'application/xml'</code></td>
+</tr>
+</tbody>
+</table>
+<p>The following example makes RDF source data available to the SHACL <a href="/docs/triply-etl/validation">validate()</a> function:</p>
+<pre><code class="language-ts">import { Source } from '@triplyetl/etl/generic'
+import { validate } from '@triplyetl/etl/shacl'
+
+validate(Source.string(`
+prefix sh: &lt;http://www.w3.org/ns/shacl#&gt;
+prefix shp: &lt;https://example.com/model/shp/&gt;
+prefix sdo: &lt;https://schema.org/&gt;
+
+shp:Person
+  a sh:NodeShape;
+  sh:property shp:Person_name;
+  sh:targetClass sdo:Person.
+
+shp:Person_name
+  a sh:PropertyShape;
+  sh:datatype xsd:string;
+  sh:minLength 1;
+  sh:path sdo:name.`))
+</code></pre>
+<p>This makes the following linked data SHACL specification available:</p>
+<div class="mermaid">graph LR
+  shp:Person -- a --&gt; sh:NodeShape
+  shp:Person -- sh:property --&gt; shp:Person_name
+  shp:Person -- sh:targetClass --&gt; sdo:Person
+  shp:Person_name -- a --&gt; sh:PropertyShape
+  shp:Person_name -- sh:datatype --&gt; xsd:string
+  shp:Person_name -- sh:minLength --&gt; 1
+  shp:Person_name -- sh:path --&gt; sdo:name
+</div>
+<p>Notice that <code>validate()</code> does not require us to set the content-type, since it only supports N-Quads, N-Triples, TriG and Turtle (and these formats can be detected automatically).</p>
+<p>The following example makes a string source available to the <code>fromJson()</code> source extractor:</p>
+<pre><code class="language-ts">fromJson(Source.string(`
+[
+  { id: '123', name: 'John' },
+  { id: '456', name: 'Jane' }
+]`)),
+</code></pre>
+<p>Notice that the <a href="#inline-json">inline JSON</a> source is often a more intuitive specification format for the <code>fromJson()</code> source extractor than its corresponding string source.</p>
+<p>While <a href="#inline-json">inline JSON</a> and <a href="#strings">string sources</a> are mostly used for small examples, local files are somewhat more widely used.</p>
+<h1 id="inline-json">Inline JSON</h1>
+<p>Because TriplyETL configurations are implemented in TypeScript, it is possible to specify JSON data inline with TypeScript Objects. JSON is the only data format that be specified in such a native inline way in TriplyETL.</p>
+<p>The following code snippet specifies two records using inline TypeScript objects:</p>
+<pre><code class="language-ts">fromJson([
+  { id: '123', name: 'John' },
+  { id: '456', name: 'Jane' },
+]),
+</code></pre>
+<p>This results in the following two records:</p>
+<pre><code class="language-json">{
+  "id": "123",
+  "name": "John"
+}
+{
+  "id": "456",
+  "name": "Jane"
+}
+</code></pre>
+<p>In documentation, we often use such inline JSON sources since that makes code snippets self-contained, without having to rely on external sources such as files. In production systems this native inline source type is almost never used.</p>
+</div>
+</div><footer>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+</span>
+</div>
+<script>var base_url = '../../..';</script>
+<script defer="" src="../../../js/theme_extra.js"></script>
+<script defer="" src="../../../js/theme.js"></script>
+<script defer="" src="../../../search/main.js"></script>
+<script defer="">
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"></script><script>mermaid.initialize({});</script></body>
+</html>
